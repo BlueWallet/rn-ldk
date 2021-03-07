@@ -10,9 +10,11 @@ class RnLdkImplementation {
 
   async start(entropyHex: string, blockHeight?: number): Promise<boolean> {
     if (!blockHeight) {
-      const response = await fetch("https://blockstream.info/api/blocks/tip/height");
+      const response = await fetch(
+        'https://blockstream.info/api/blocks/tip/height'
+      );
       blockHeight = parseInt(await response.text());
-      console.warn(blockHeight)
+      console.warn(blockHeight);
     }
     return RnLdk.start(entropyHex, blockHeight);
   }
