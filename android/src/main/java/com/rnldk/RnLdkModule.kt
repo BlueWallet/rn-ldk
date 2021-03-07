@@ -2,6 +2,7 @@ package com.rnldk
 
 import com.facebook.react.bridge.*
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
+import org.ldk.batteries.ChannelManagerConstructor
 import org.ldk.batteries.NioPeerHandler
 import org.ldk.enums.LDKConfirmationTarget
 import org.ldk.enums.LDKNetwork
@@ -17,6 +18,8 @@ import java.net.InetSocketAddress
 val feerate = 253; // estimate fee rate in BTC/kB
 
 var nio_peer_handler: NioPeerHandler? = null;
+var channel_manager: ChannelManager? = null;
+var peer_manager: PeerManager? = null;
 
 class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
@@ -89,13 +92,21 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     // Filter allows LDK to let you know what transactions you should filter blocks for. This is
     // useful if you pre-filter blocks or use compact filters. Otherwise, LDK will need full blocks.
     val tx_filter: Filter? = Filter.new_impl(object : FilterInterface {
-      override fun register_tx(txid: ByteArray?, script_pubkey: ByteArray?) {
-        // <insert code for you to watch for this transaction on-chain>
+      override fun register_tx(txid: ByteArray, script_pubkey: ByteArray) {
+        println("ReactNativeLDK: register_tx");
+        val params = Arguments.createMap()
+        params.putString("txid", byteArrayToHex(txid))
+        params.putString("script_pubkey", byteArrayToHex(script_pubkey))
+        that.sendEvent("register_tx", params);
       }
 
-      override fun register_output(outpoint: OutPoint?, script_pubkey: ByteArray?) {
-        // <insert code for you to watch for any transactions that spend this
-        // output on-chain>
+      override fun register_output(outpoint: OutPoint, script_pubkey: ByteArray) {
+        println("ReactNativeLDK: register_output");
+        val params = Arguments.createMap()
+        params.putString("txid", byteArrayToHex(outpoint._txid))
+        params.putString("index", outpoint._index.toString())
+        params.putString("script_pubkey", byteArrayToHex(script_pubkey))
+        that.sendEvent("register_output", params);
       }
     })
 
@@ -103,7 +114,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     // INITIALIZE THE KEYSMANAGER ##################################################################
     // hat it's used for: providing keys for signing lightning transactions
-    val keys_manager = KeysManager.constructor_new(hexStringToByteArray(entropyHex), LDKNetwork.LDKNetwork_Bitcoin, System.currentTimeMillis() / 1000, (System.currentTimeMillis() * 1000).toInt())
+    val keys_manager = KeysManager.constructor_new(hexStringToByteArray(entropyHex), System.currentTimeMillis() / 1000, (System.currentTimeMillis() * 1000).toInt())
 
     // READ CHANNELMONITOR STATE FROM DISK #########################################################
 
@@ -122,7 +133,9 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     // INITIALIZE THE CHANNELMANAGER ###############################################################
     // What it's used for: managing channel state
-    val channel_manager = ChannelManager.constructor_new(LDKNetwork.LDKNetwork_Bitcoin, fee_estimator, chain_monitor.as_Watch(), tx_broadcaster, logger, keys_manager.as_KeysInterface(), UserConfig.constructor_default(), blockHeight.toLong());
+//    channel_manager = ChannelManager.constructor_new(LDKNetwork.LDKNetwork_Bitcoin, fee_estimator, chain_monitor.as_Watch(), tx_broadcaster, logger, keys_manager.as_KeysInterface(), UserConfig.constructor_default(), blockHeight.toLong());
+    channel_manager = ChannelManagerConstructor(LDKNetwork.LDKNetwork_Bitcoin, UserConfig.constructor_default(), hexStringToByteArray("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"), blockHeight, keys_manager.as_KeysInterface(), fee_estimator, chain_monitor.as_Watch(), tx_broadcaster, logger).channel_manager;
+    // TODO:  hash of the last block
 
 
 //      val chain_watch = chain_monitor.as_Watch();
@@ -135,7 +148,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     // INITIALIZE THE PEERMANAGER ##################################################################
     // What it's used for: managing peer data
-    val peer_manager = PeerManager.constructor_new(channel_manager.as_ChannelMessageHandler(), router.as_RoutingMessageHandler(), keys_manager.as_KeysInterface()._node_secret, keys_manager.as_KeysInterface()._secure_random_bytes, logger);
+    peer_manager = PeerManager.constructor_new(channel_manager?.as_ChannelMessageHandler(), router.as_RoutingMessageHandler(), keys_manager.as_KeysInterface()._node_secret, keys_manager.as_KeysInterface()._secure_random_bytes, logger);
 
     try {
       nio_peer_handler = NioPeerHandler(peer_manager)
@@ -156,6 +169,40 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     } catch (e: IOException) {
       promise.resolve(false)
     }
+  }
+
+  @ReactMethod
+  fun listPeers(promise: Promise) {
+    if (peer_manager === null) {
+      promise.resolve("[]");
+      return;
+    }
+    val peer_node_ids: Array<ByteArray> = peer_manager!!.get_peer_node_ids()
+    var json: String = "[";
+    peer_node_ids.iterator().forEach {
+      json += "'" + byteArrayToHex(it) + "',";
+    }
+    json += "]";
+    promise.resolve(json);
+  }
+
+  @ReactMethod
+  fun handleEvents(promise: Promise) {
+    val channel_manager_events: Array<Event> = channel_manager!!.as_EventsProvider().get_and_clear_pending_events()
+    //    val chain_monitor_events: Array<Event> = chain_watch.as_EventsProvider().get_and_clear_pending_events()
+
+    val all_events: Array<Event> = channel_manager_events
+    for (e in all_events) {
+      // <insert code to handle each event>
+    }
+
+    promise.resolve(true);
+  }
+
+  @ReactMethod
+  fun timerChanFreshness(promise: Promise) {
+    channel_manager?.timer_chan_freshness_every_min();
+    promise.resolve(true);
   }
 
 

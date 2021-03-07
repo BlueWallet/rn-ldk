@@ -17,7 +17,9 @@ export default function App() {
       <Button
         onPress={() => {
           console.warn('starting...');
-          RnLdk.start('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff', 666777).then(console.warn);
+          RnLdk.start(
+            'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+          ).then(console.warn);
         }}
         title="Start"
         color="#841584"
@@ -25,9 +27,21 @@ export default function App() {
 
       <Button
         onPress={() => {
-          RnLdk.connectPeer('02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1', '165.227.95.104', 9735).then(console.warn);
+          RnLdk.connectPeer(
+            '02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1',
+            '165.227.95.104',
+            9735
+          ).then(console.warn);
         }}
         title="connect peer"
+        color="#841584"
+      />
+
+      <Button
+        onPress={() => {
+          RnLdk.listPeers().then(console.warn);
+        }}
+        title="listPeers"
         color="#841584"
       />
 
