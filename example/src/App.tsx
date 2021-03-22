@@ -1,7 +1,7 @@
 import * as React from 'react';
-
 import { StyleSheet, View, Text, Button } from 'react-native';
 import RnLdk from 'rn-ldk';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
@@ -17,9 +17,8 @@ export default function App() {
       <Button
         onPress={() => {
           console.warn('starting...');
-          RnLdk.start(
-            'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-          ).then(console.warn);
+          RnLdk.setStorage(AsyncStorage);
+          RnLdk.start('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff').then(console.warn);
         }}
         title="Start"
         color="#841584"
@@ -27,11 +26,8 @@ export default function App() {
 
       <Button
         onPress={() => {
-          RnLdk.connectPeer(
-            '02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1',
-            '165.227.95.104',
-            9735
-          ).then(console.warn);
+          // RnLdk.connectPeer('02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1', '165.227.95.104', 9735).then(console.warn);
+          RnLdk.connectPeer('037cc5f9f1da20ac0d60e83989729a204a33cc2d8e80438969fadf35c1c5f1233b', '165.227.103.83', 9735).then(console.warn);
         }}
         title="connect peer"
         color="#841584"
@@ -42,6 +38,14 @@ export default function App() {
           RnLdk.listPeers().then(console.warn);
         }}
         title="listPeers"
+        color="#841584"
+      />
+
+      <Button
+        onPress={() => {
+          RnLdk.storeChannelManager();
+        }}
+        title="storeChannelManager (do this periodically)"
         color="#841584"
       />
 

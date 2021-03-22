@@ -11,6 +11,7 @@ import org.ldk.structs.FeeEstimator
 import org.ldk.structs.Filter.FilterInterface
 import org.ldk.structs.Persist
 import org.ldk.structs.Persist.PersistInterface
+import org.ldk.util.TwoTuple
 import java.io.IOException
 import java.net.InetSocketAddress
 
@@ -20,6 +21,7 @@ val feerate = 253; // estimate fee rate in BTC/kB
 var nio_peer_handler: NioPeerHandler? = null;
 var channel_manager: ChannelManager? = null;
 var peer_manager: PeerManager? = null;
+var chain_monitor: ChainMonitor? = null;
 
 class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
@@ -35,7 +37,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
-  fun start(entropyHex: String, blockHeight: Int, promise: Promise) {
+  fun start(entropyHex: String, blockchainTipHeight: Int, blockchainTipHashHex: String, serializedChannelManagerHex: String, promise: Promise) {
     println("ReactNativeLDK: " + "start")
     val that = this;
 
@@ -68,7 +70,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         val channel_monitor_bytes = data.write()
         println("ReactNativeLDK: persist_new_channel")
         val params = Arguments.createMap()
-        params.putString("id", id.toString())
+        params.putString("id", byteArrayToHex(id.to_channel_id()))
         params.putString("data", byteArrayToHex(channel_monitor_bytes))
         that.sendEvent("persist", params);
         return Result_NoneChannelMonitorUpdateErrZ.Result_NoneChannelMonitorUpdateErrZ_OK();
@@ -78,7 +80,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         val channel_monitor_bytes = data.write()
         println("ReactNativeLDK: update_persisted_channel");
         val params = Arguments.createMap()
-        params.putString("id", id.toString())
+        params.putString("id", byteArrayToHex(id.to_channel_id()))
         params.putString("data", byteArrayToHex(channel_monitor_bytes))
         that.sendEvent("persist", params);
         return Result_NoneChannelMonitorUpdateErrZ.Result_NoneChannelMonitorUpdateErrZ_OK();
@@ -110,10 +112,10 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       }
     })
 
-    val chain_monitor = ChainMonitor.constructor_new(tx_filter, tx_broadcaster, logger, fee_estimator, persister);
+    chain_monitor = ChainMonitor.constructor_new(tx_filter, tx_broadcaster, logger, fee_estimator, persister);
 
     // INITIALIZE THE KEYSMANAGER ##################################################################
-    // hat it's used for: providing keys for signing lightning transactions
+    // What it's used for: providing keys for signing lightning transactions
     val keys_manager = KeysManager.constructor_new(hexStringToByteArray(entropyHex), System.currentTimeMillis() / 1000, (System.currentTimeMillis() * 1000).toInt())
 
     // READ CHANNELMONITOR STATE FROM DISK #########################################################
@@ -133,9 +135,16 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     // INITIALIZE THE CHANNELMANAGER ###############################################################
     // What it's used for: managing channel state
-//    channel_manager = ChannelManager.constructor_new(LDKNetwork.LDKNetwork_Bitcoin, fee_estimator, chain_monitor.as_Watch(), tx_broadcaster, logger, keys_manager.as_KeysInterface(), UserConfig.constructor_default(), blockHeight.toLong());
-    channel_manager = ChannelManagerConstructor(LDKNetwork.LDKNetwork_Bitcoin, UserConfig.constructor_default(), hexStringToByteArray("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"), blockHeight, keys_manager.as_KeysInterface(), fee_estimator, chain_monitor.as_Watch(), tx_broadcaster, logger).channel_manager;
-    // TODO:  hash of the last block
+
+    val channelMonitors = arrayOf<ByteArray>(); // TODO should be passed from outside
+
+    if (serializedChannelManagerHex != "") {
+      // loading from disk
+      channel_manager = ChannelManagerConstructor(hexStringToByteArray(serializedChannelManagerHex), channelMonitors, keys_manager.as_KeysInterface(), fee_estimator, chain_monitor?.as_Watch(), tx_filter, tx_broadcaster, logger).channel_manager;
+    } else {
+      // fresh start
+      channel_manager = ChannelManagerConstructor(LDKNetwork.LDKNetwork_Bitcoin, UserConfig.constructor_default(), hexStringToByteArray(blockchainTipHashHex), blockchainTipHeight, keys_manager.as_KeysInterface(), fee_estimator, chain_monitor?.as_Watch(), tx_broadcaster, logger).channel_manager;
+    }
 
 
 //      val chain_watch = chain_monitor.as_Watch();
@@ -161,10 +170,25 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
+  fun transactionConfirmed(headerHex: String, height: Int, txPos: Int, transactionHex: String, promise: Promise) {
+    val tx = TwoTuple(txPos.toLong(), hexStringToByteArray(transactionHex));
+    val txarray = arrayOf(tx);
+//    channel_manager?.transactions_confirmed(hexStringToByteArray(headerHex), height, txarray);
+    promise.resolve(true);
+  }
+
+  @ReactMethod
+  fun updateBestBlock(headerHex: String, height: Int, promise: Promise) {
+//    channel_manager?.update_best_block(hexStringToByteArray(headerHex), height);
+    promise.resolve(true);
+  }
+
+  @ReactMethod
   fun connectPeer(pubkeyHex: String, hostname: String, port: Int, promise: Promise) {
+    println("ReactNativeLDK: connecting to peer " + pubkeyHex);
     try {
 //      nio_peer_handler?.connect(hexStringToByteArray("02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1"), InetSocketAddress("165.227.95.104", 9735));
-      nio_peer_handler?.connect(hexStringToByteArray(pubkeyHex), InetSocketAddress(hostname, port));
+      nio_peer_handler?.connect(hexStringToByteArray(pubkeyHex), InetSocketAddress(hostname, port), 9000);
       promise.resolve(true)
     } catch (e: IOException) {
       promise.resolve(false)
@@ -203,6 +227,16 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   fun timerChanFreshness(promise: Promise) {
     channel_manager?.timer_chan_freshness_every_min();
     promise.resolve(true);
+  }
+
+  @ReactMethod
+  fun getChannelManagerBytes(promise: Promise) {
+    val channel_manager_bytes_to_write = channel_manager?.write()
+    if (channel_manager_bytes_to_write !== null) {
+      promise.resolve(byteArrayToHex(channel_manager_bytes_to_write));
+    } else {
+      promise.resolve("");
+    }
   }
 
 
