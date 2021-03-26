@@ -27,7 +27,7 @@ export default function App() {
       <Button
         onPress={() => {
           // RnLdk.connectPeer('02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1', '165.227.95.104', 9735).then(console.warn);
-          RnLdk.connectPeer('037cc5f9f1da20ac0d60e83989729a204a33cc2d8e80438969fadf35c1c5f1233b', '165.227.103.83', 9735).then(console.warn);
+          RnLdk.connectPeer('02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1', '165.227.95.104', 9735).then(console.warn);
         }}
         title="connect peer"
         color="#841584"
@@ -70,6 +70,14 @@ export default function App() {
           RnLdk.fireAnEvent().then(console.warn);
         }}
         title="fireAnEvent"
+        color="#841584"
+      />
+
+      <Button
+        onPress={() => {
+          RnLdk.openChannelStep1('02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1', 100000).then(console.warn);
+        }}
+        title="openChannelStep1"
         color="#841584"
       />
     </View>

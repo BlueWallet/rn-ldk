@@ -118,6 +118,10 @@ class RnLdkImplementation {
     await this.updateBestBlock();
   }
 
+  async openChannelStep1(pubkey: string, sat: number) {
+    return RnLdk.openChannelStep1(pubkey, sat);
+  }
+
   async getHeaderHexByHeight(height: number) {
     const response2 = await fetch('https://blockstream.info/api/block-height/' + height);
     const hash = await response2.text();

@@ -22,6 +22,7 @@ var nio_peer_handler: NioPeerHandler? = null;
 var channel_manager: ChannelManager? = null;
 var peer_manager: PeerManager? = null;
 var chain_monitor: ChainMonitor? = null;
+var temporary_channel_id: ByteArray? = null;
 
 class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
@@ -256,6 +257,94 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     } else {
       promise.resolve("");
     }
+  }
+
+  @ReactMethod
+  fun openChannelStep1(pubkey: String, channelValue: Int, promise: Promise) {
+    val peer_node_pubkey = hexStringToByteArray(pubkey);
+    val create_channel_result = channel_manager?.create_channel(
+      peer_node_pubkey, channelValue.toLong(), 0, 42, null
+    );
+
+    if (create_channel_result !is Result_NoneAPIErrorZ.Result_NoneAPIErrorZ_OK) {
+      println("ReactNativeLDK: " + "create_channel_result !is Result_NoneAPIErrorZ.Result_NoneAPIErrorZ_OK, = " + create_channel_result);
+      promise.resolve(false);
+      return;
+    }
+
+    var events: Array<Event>?;
+    var counter = 0;
+    do {
+      Thread.sleep(500L);
+      nio_peer_handler?.check_events();
+      events = channel_manager?.as_EventsProvider()?.get_and_clear_pending_events()
+      if (events?.size != 1) {
+        println("ReactNativeLDK: " + "event 33 not yet arrived = " + events?.size);
+      }
+      if (counter++ >= 30) {
+        println("ReactNativeLDK: " + "waiting for event 33 timeout");
+        promise.resolve(false);
+        return;
+      }
+    } while (events?.size != 1);
+
+    if (events[0] !is Event.FundingGenerationReady) {
+      println("ReactNativeLDK: " + "events[0] !is Event.FundingGenerationReady, = " + events[0]);
+      promise.resolve(false);
+      return;
+    }
+    if ((events[0] as Event.FundingGenerationReady).channel_value_satoshis != channelValue.toLong()) {
+      println("ReactNativeLDK: " + "channel value = " + (events[0] as Event.FundingGenerationReady).channel_value_satoshis);
+      promise.resolve(false);
+      return;
+    }
+    if ((events[0] as Event.FundingGenerationReady).user_channel_id.toInt() != 42) {
+      println("ReactNativeLDK: " + "user_id = " + (events[0] as Event.FundingGenerationReady).user_channel_id.toInt());
+      promise.resolve(false);
+      return;
+    }
+    val funding_spk = (events[0] as Event.FundingGenerationReady).output_script
+    if (!(funding_spk.size == 34 && funding_spk[0].toInt() == 0 && funding_spk[1].toInt() == 32)) {
+      println("ReactNativeLDK: " + "funding_spk = " + byteArrayToHex(funding_spk));
+      promise.resolve(false);
+      return;
+    }
+
+    temporary_channel_id = (events[0] as Event.FundingGenerationReady).temporary_channel_id
+    println("ReactNativeLDK: " + "temporary_channel_id = " + byteArrayToHex(temporary_channel_id!!));
+    println("ReactNativeLDK: " + "funding script = " + byteArrayToHex(funding_spk!!));
+
+    promise.resolve(byteArrayToHex(funding_spk));
+  }
+
+  @ReactMethod
+  fun openChannelStep2(txidHex: String, promise: Promise) {
+    if (temporary_channel_id == null) return promise.resolve(false);
+
+    val chan_id = temporary_channel_id;
+    channel_manager?.funding_transaction_generated(chan_id, OutPoint.constructor_new(hexStringToByteArray(txidHex), 0.toShort()))
+
+    // Ensure that the funding transaction is then broadcasted.
+    nio_peer_handler?.check_events();
+    val events = channel_manager?.as_EventsProvider()?.get_and_clear_pending_events()
+    if (events?.size != 1) {
+      println("ReactNativeLDK: " + "events?.size = " + events?.size);
+      promise.resolve(false);
+      return;
+    }
+    if (events[0] !is Event.FundingBroadcastSafe) {
+      println("ReactNativeLDK: " + "events.get(0) = " + events[0]);
+      promise.resolve(false);
+      return;
+    }
+
+    if ((events[0] as Event.FundingBroadcastSafe).user_channel_id != 42.toLong()) {
+      println("ReactNativeLDK: " + "user_channel_id = " + (events[0] as Event.FundingBroadcastSafe).user_channel_id);
+      promise.resolve(false);
+      return;
+    }
+
+    promise.resolve(true);
   }
 
 
