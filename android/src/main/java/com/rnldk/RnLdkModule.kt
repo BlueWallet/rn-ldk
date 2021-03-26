@@ -41,7 +41,6 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     println("ReactNativeLDK: " + "start")
     val that = this;
 
-
     // INITIALIZE THE FEEESTIMATOR #################################################################
     // What it's used for: estimating fees for on-chain transactions that LDK wants broadcasted.
     val fee_estimator = FeeEstimator.new_impl { confirmation_target: LDKConfirmationTarget? -> feerate }
@@ -173,13 +172,33 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   fun transactionConfirmed(headerHex: String, height: Int, txPos: Int, transactionHex: String, promise: Promise) {
     val tx = TwoTuple(txPos.toLong(), hexStringToByteArray(transactionHex));
     val txarray = arrayOf(tx);
-//    channel_manager?.transactions_confirmed(hexStringToByteArray(headerHex), height, txarray);
+    channel_manager?.transactions_confirmed(hexStringToByteArray(headerHex), height, txarray);
     promise.resolve(true);
   }
 
   @ReactMethod
+  fun transactionUnconfirmed(txidHex: String, promise: Promise) {
+    channel_manager?.transaction_unconfirmed(hexStringToByteArray(txidHex));
+    promise.resolve(true);
+  }
+
+  @ReactMethod
+  fun getRelevantTxids(promise: Promise) {
+    if (channel_manager === null) {
+      promise.resolve("[]");
+      return;
+    }
+    var json: String = "[";
+    channel_manager?._relevant_txids?.iterator()?.forEach {
+      json += "'" + byteArrayToHex(it) + "',";
+    }
+    json += "]";
+    promise.resolve(json);
+  }
+
+  @ReactMethod
   fun updateBestBlock(headerHex: String, height: Int, promise: Promise) {
-//    channel_manager?.update_best_block(hexStringToByteArray(headerHex), height);
+    channel_manager?.update_best_block(hexStringToByteArray(headerHex), height);
     promise.resolve(true);
   }
 

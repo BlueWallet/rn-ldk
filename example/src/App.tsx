@@ -51,11 +51,17 @@ export default function App() {
 
       <Button
         onPress={() => {
-          RnLdk.subscribeCallback(() => {
-            console.warn('yo im in callback!');
-          });
+          RnLdk.checkBlockchain();
         }}
-        title="subscribeCallback"
+        title="checkBlockchain (do this periodically)"
+        color="#841584"
+      />
+
+      <Button
+        onPress={() => {
+          RnLdk.updateBestBlock();
+        }}
+        title="debug: updateBestBlock"
         color="#841584"
       />
 

@@ -85,7 +85,54 @@ class RnLdkImplementation {
     }
 
     // now, got all data packed in `confirmedBlocks[block_number][tx_position]`
-    // TODO: feed to LDK
+    // lets feed it to LDK:
+
+    for (const height of Object.keys(confirmedBlocks).sort((a, b) => parseInt(a) - parseInt(b))) {
+      for (const pos of Object.keys(confirmedBlocks[height]).sort((a, b) => parseInt(a) - parseInt(b))) {
+        await RnLdk.transactionConfirmed(await this.getHeaderHexByHeight(parseInt(height)), parseInt(height), parseInt(pos), confirmedBlocks[height][pos]);
+      }
+    }
+
+    let txidArr = [];
+    try {
+      const jsonString = await RnLdk.getRelevantTxids();
+      txidArr = JSON.parse(jsonString);
+    } catch (error) {
+      console.warn(error);
+    }
+
+    // we need to check if any of txidArr got unconfirmed, and then feed it back to LDK if they are unconf
+    for (const txid of txidArr) {
+      let confirmed = false;
+      try {
+        const response = await fetch('https://blockstream.info/api/tx/' + txid + '/merkle-proof');
+        const tx: any = await response.json();
+        if (tx && tx.block_height) confirmed = true;
+      } catch (_) {
+        confirmed = false;
+      }
+
+      if (!confirmed) await RnLdk.transactionUnconfirmed(txid);
+    }
+
+    await this.updateBestBlock();
+  }
+
+  async getHeaderHexByHeight(height: number) {
+    const response2 = await fetch('https://blockstream.info/api/block-height/' + height);
+    const hash = await response2.text();
+    const response3 = await fetch('https://blockstream.info/api/block/' + hash + '/header');
+    return response3.text();
+  }
+
+  async updateBestBlock() {
+    const response = await fetch('https://blockstream.info/api/blocks/tip/height');
+    const height = parseInt(await response.text());
+    const response2 = await fetch('https://blockstream.info/api/block-height/' + height);
+    const hash = await response2.text();
+    const response3 = await fetch('https://blockstream.info/api/block/' + hash + '/header');
+    const headerHex = await response3.text();
+    return RnLdk.updateBestBlock(headerHex, height);
   }
 
   multiply(a: number, b: number): Promise<number> {
@@ -110,10 +157,6 @@ class RnLdkImplementation {
 
   listPeers(): Promise<string> {
     return RnLdk.listPeers();
-  }
-
-  subscribeCallback(cb: Function): void {
-    return RnLdk.subscribeCallback(cb);
   }
 
   fireAnEvent(): Promise<boolean> {
