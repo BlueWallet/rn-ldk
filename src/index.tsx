@@ -30,13 +30,13 @@ class RnLdkImplementation {
   private registeredTxs: RegisterTxMsg[] = [];
 
   registerOutput(event: RegisterOutputMsg) {
-    event.txid = this.reverseTxid(event.txid); // achtunhg, little-endian
+    event.txid = this.reverseTxid(event.txid); // achtung, little-endian
     console.log('registerOutput', event);
     this.registeredOutputs.push(event);
   }
 
   registerTx(event: RegisterTxMsg) {
-    event.txid = this.reverseTxid(event.txid); // achtunhg, little-endian
+    event.txid = this.reverseTxid(event.txid); // achtung, little-endian
     console.log('registerTx', event);
     this.registeredTxs.push(event);
   }
@@ -278,6 +278,10 @@ class RnLdkImplementation {
       method: 'POST',
       body: event.txhex,
     });
+  }
+
+  async sendPayment(destPubkeyHex: string, paymentHashHex: string, paymentSecretHex: string, shortChannelId: string, paymentValueMsat: number, finalCltvValue: number) {
+    return RnLdk.sendPayment(destPubkeyHex, paymentHashHex, paymentSecretHex, 'chan id', paymentValueMsat, finalCltvValue);
   }
 }
 

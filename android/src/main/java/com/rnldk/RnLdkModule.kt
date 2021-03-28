@@ -16,6 +16,7 @@ import org.ldk.util.TwoTuple
 import java.io.IOException
 import java.net.InetSocketAddress
 
+
 val feerate = 7500; // estimate fee rate in BTC/kB
 
 var nio_peer_handler: NioPeerHandler? = null;
@@ -143,10 +144,14 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     if (serializedChannelManagerHex != "") {
       // loading from disk
-      channel_manager = ChannelManagerConstructor(hexStringToByteArray(serializedChannelManagerHex), channelMonitors, keys_manager.as_KeysInterface(), fee_estimator, chain_monitor?.as_Watch(), tx_filter, tx_broadcaster, logger).channel_manager;
+      val channel_manager_constructor = ChannelManagerConstructor(hexStringToByteArray(serializedChannelManagerHex), channelMonitors, keys_manager.as_KeysInterface(), fee_estimator, chain_monitor?.as_Watch(), tx_filter, tx_broadcaster, logger);
+      channel_manager = channel_manager_constructor.channel_manager;
+      channel_manager_constructor.chain_sync_completed();
     } else {
       // fresh start
-      channel_manager = ChannelManagerConstructor(LDKNetwork.LDKNetwork_Bitcoin, UserConfig.constructor_default(), hexStringToByteArray(blockchainTipHashHex), blockchainTipHeight, keys_manager.as_KeysInterface(), fee_estimator, chain_monitor?.as_Watch(), tx_broadcaster, logger).channel_manager;
+      val channel_manager_constructor = ChannelManagerConstructor(LDKNetwork.LDKNetwork_Bitcoin, UserConfig.constructor_default(), hexStringToByteArray(blockchainTipHashHex), blockchainTipHeight, keys_manager.as_KeysInterface(), fee_estimator, chain_monitor?.as_Watch(), tx_broadcaster, logger);
+      channel_manager = channel_manager_constructor.channel_manager;
+      channel_manager_constructor.chain_sync_completed();
     }
 
 
@@ -218,6 +223,33 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       promise.resolve(true)
     } catch (e: IOException) {
       promise.resolve(false)
+    }
+  }
+
+  @ReactMethod
+  fun sendPayment(destPubkeyHex: String, paymentHashHex: String, paymentSecretHex: String, shortChannelId: String, paymentValueMsat: Int, finalCltvValue: Int, promise: Promise) {
+    val counterparty_pubkey = hexStringToByteArray(destPubkeyHex);
+    val r = Route.constructor_new(
+      arrayOf(
+        arrayOf(
+          RouteHop.constructor_new(
+            counterparty_pubkey,
+            NodeFeatures.constructor_known(),
+            744031822077165568, //  fixme: shortChannelId,
+            ChannelFeatures.constructor_known(),
+            paymentValueMsat.toLong(),
+            finalCltvValue
+          )
+        )
+      )
+    );
+    val payment_hash = hexStringToByteArray(paymentHashHex);
+    val payment_secret = hexStringToByteArray(paymentSecretHex);
+    val payment_res = channel_manager?.send_payment(r, payment_hash, payment_secret);
+    if (payment_res is Result_NonePaymentSendFailureZ.Result_NonePaymentSendFailureZ_OK) {
+      promise.resolve(true);
+    } else {
+      promise.resolve(false);
     }
   }
 
