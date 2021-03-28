@@ -11,12 +11,12 @@ import org.ldk.structs.FeeEstimator
 import org.ldk.structs.Filter.FilterInterface
 import org.ldk.structs.Persist
 import org.ldk.structs.Persist.PersistInterface
+import org.ldk.structs.Result_NoneAPIErrorZ.Result_NoneAPIErrorZ_OK
 import org.ldk.util.TwoTuple
 import java.io.IOException
 import java.net.InetSocketAddress
 
-
-val feerate = 253; // estimate fee rate in BTC/kB
+val feerate = 7500; // estimate fee rate in BTC/kB
 
 var nio_peer_handler: NioPeerHandler? = null;
 var channel_manager: ChannelManager? = null;
@@ -38,7 +38,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
-  fun start(entropyHex: String, blockchainTipHeight: Int, blockchainTipHashHex: String, serializedChannelManagerHex: String, promise: Promise) {
+  fun start(entropyHex: String, blockchainTipHeight: Int, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, promise: Promise) {
     println("ReactNativeLDK: " + "start")
     val that = this;
 
@@ -58,6 +58,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     // INITIALIZE THE BROADCASTERINTERFACE #########################################################
     // What it's used for: broadcasting various lightning transactions
     val tx_broadcaster = BroadcasterInterface.new_impl { tx ->
+      println("ReactNativeLDK: " + "broadcaster sends an event asking to broadcast some txhex...")
       val params = Arguments.createMap()
       params.putString("txhex", byteArrayToHex(tx))
       that.sendEvent("broadcast", params)
@@ -122,21 +123,23 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     // Initialize the hashmap where we'll store the `ChannelMonitor`s read from disk.
     // This hashmap will later be given to the `ChannelManager` on initialization.
-    val channel_monitors: HashMap<String, ChannelMonitor> = HashMap()
 
-    val monitor_bytes = ByteArray(0); // TODO
-    val channel_monitor_read_result = UtilMethods.constructor_BlockHashChannelMonitorZ_read(monitor_bytes,
-      keys_manager.as_KeysInterface())
 
-    if (channel_monitor_read_result !is Result_C2Tuple_BlockHashChannelMonitorZDecodeErrorZ.Result_C2Tuple_BlockHashChannelMonitorZDecodeErrorZ_OK) {
-//        throw Exception("bad channel_monitor_read_result");
+    var channelMonitors = arrayOf<ByteArray>();
+    if (monitorHexes != "") {
+      println("ReactNativeLDK: initing channel monitors...");
+      val channelMonitorHexes = monitorHexes.split(",").toTypedArray();
+      val channel_monitor_list = ArrayList<ByteArray>()
+      channelMonitorHexes.iterator().forEach {
+        val channel_monitor_bytes = hexStringToByteArray(it);
+        channel_monitor_list.add(channel_monitor_bytes);
+      }
+      channelMonitors = channel_monitor_list.toTypedArray();
     }
-
 
     // INITIALIZE THE CHANNELMANAGER ###############################################################
     // What it's used for: managing channel state
 
-    val channelMonitors = arrayOf<ByteArray>(); // TODO should be passed from outside
 
     if (serializedChannelManagerHex != "") {
       // loading from disk
@@ -189,9 +192,12 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       promise.resolve("[]");
       return;
     }
+    var first = true;
     var json: String = "[";
     channel_manager?._relevant_txids?.iterator()?.forEach {
-      json += "'" + byteArrayToHex(it) + "',";
+      if (!first) json += ",";
+      first = false;
+      json += "\"" + byteArrayToHex(it.reversedArray()) + "\"";
     }
     json += "]";
     promise.resolve(json);
@@ -261,6 +267,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun openChannelStep1(pubkey: String, channelValue: Int, promise: Promise) {
+    temporary_channel_id = null;
     val peer_node_pubkey = hexStringToByteArray(pubkey);
     val create_channel_result = channel_manager?.create_channel(
       peer_node_pubkey, channelValue.toLong(), 0, 42, null
@@ -318,41 +325,70 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
-  fun openChannelStep2(txidHex: String, promise: Promise) {
+  fun openChannelStep2(txhex: String, promise: Promise) {
     if (temporary_channel_id == null) return promise.resolve(false);
 
-    val chan_id = temporary_channel_id;
-    channel_manager?.funding_transaction_generated(chan_id, OutPoint.constructor_new(hexStringToByteArray(txidHex), 0.toShort()))
-
-    // Ensure that the funding transaction is then broadcasted.
-    nio_peer_handler?.check_events();
-    val events = channel_manager?.as_EventsProvider()?.get_and_clear_pending_events()
-    if (events?.size != 1) {
-      println("ReactNativeLDK: " + "events?.size = " + events?.size);
-      promise.resolve(false);
-      return;
-    }
-    if (events[0] !is Event.FundingBroadcastSafe) {
-      println("ReactNativeLDK: " + "events.get(0) = " + events[0]);
+    val funding_res = channel_manager?.funding_transaction_generated(temporary_channel_id, hexStringToByteArray(txhex), 0);
+    // funding_transaction_generated should only generate an error if the
+    // transaction didn't meet the required format (or the counterparty already
+    // closed the channel on us):
+    if (funding_res !is Result_NoneAPIErrorZ_OK) {
+      println("ReactNativeLDK: " + "funding_res !is Result_NoneAPIErrorZ_OK");
       promise.resolve(false);
       return;
     }
 
-    if ((events[0] as Event.FundingBroadcastSafe).user_channel_id != 42.toLong()) {
-      println("ReactNativeLDK: " + "user_channel_id = " + (events[0] as Event.FundingBroadcastSafe).user_channel_id);
-      promise.resolve(false);
-      return;
-    }
+    // Ensure we immediately send a `funding_created` message to the counterparty.
+    nio_peer_handler?.check_events()
+
+    // At this point LDK will exchange the remaining channel open messages with
+    // the counterparty and, when appropriate, broadcast the funding transaction
+    // provided.
+    // Once it confirms, the channel will be open and available for use (indicated
+    // by its presence in `channel_manager.list_usable_channels()`).
 
     promise.resolve(true);
+  }
+
+  @ReactMethod
+  fun listUsableChannels(promise: Promise) {
+    val channels = channel_manager?.list_usable_channels();
+
+    var jsonArray = "[";
+
+    var first = true;
+    channels?.iterator()?.forEach {
+      var channelObject = "{";
+      channelObject += "\"channel_id\":" + "\"" + byteArrayToHex(it._channel_id) + "\",";
+      channelObject += "\"channel_value_satoshis\":" + it._channel_value_satoshis + ",";
+      channelObject += "\"inbound_capacity_msat\":" + it._inbound_capacity_msat + ",";
+      channelObject += "\"outbound_capacity_msat\":" + it._outbound_capacity_msat + ",";
+      channelObject += "\"is_live\":" + it._is_live + ",";
+      channelObject += "\"remote_network_id\":" + "\"" + byteArrayToHex(it._remote_network_id) + "\",";
+      channelObject += "\"user_id\":" + it._user_id;
+      channelObject += "}";
+
+      if (!first) jsonArray += ",";
+      jsonArray += channelObject;
+    }
+
+    jsonArray += "]";
+
+
+    promise.resolve(jsonArray);
   }
 
 
   @ReactMethod
   fun fireAnEvent(promise: Promise) {
-    val params = Arguments.createMap()
-    params.putString("eventProperty", "someValue")
-    sendEvent("EventReminder", params);
+//    val params = Arguments.createMap()
+//    params.putString("eventProperty", "someValue")
+//    sendEvent("EventReminder", params);
+    println("ReactNativeLDK: " + "broadcaster sends an event asking to broadcast some txhex...")
+    val params = Arguments.createMap();
+    params.putString("txhex", "ffff");
+    this.sendEvent("broadcast", params);
+    promise.resolve(true);
   }
 
   private fun sendEvent(eventName: String, params: WritableMap) {

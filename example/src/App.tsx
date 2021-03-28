@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { TextInput, StyleSheet, View, Text, Button } from 'react-native';
 import RnLdk from 'rn-ldk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
+  const [text, onChangeText] = React.useState<string>('');
 
   React.useEffect(() => {
     RnLdk.multiply(3, 7).then(setResult);
@@ -51,7 +52,7 @@ export default function App() {
 
       <Button
         onPress={() => {
-          RnLdk.checkBlockchain();
+          RnLdk.checkBlockchain().then(console.warn);
         }}
         title="checkBlockchain (do this periodically)"
         color="#841584"
@@ -67,9 +68,9 @@ export default function App() {
 
       <Button
         onPress={() => {
-          RnLdk.fireAnEvent().then(console.warn);
+          RnLdk.fireAnEvent();
         }}
-        title="fireAnEvent"
+        title="debug: fireAnEvent"
         color="#841584"
       />
 
@@ -78,6 +79,35 @@ export default function App() {
           RnLdk.openChannelStep1('02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1', 100000).then(console.warn);
         }}
         title="openChannelStep1"
+        color="#841584"
+      />
+
+      <TextInput editable onChangeText={onChangeText} value={text} multiline maxLength={65535} />
+
+      <Button
+        onPress={() => {
+          if (!text) return;
+          RnLdk.openChannelStep2(text).then(console.warn);
+        }}
+        title="openChannelStep2"
+        color="#841584"
+      />
+
+      <Button
+        onPress={() => {
+          RnLdk.listUsableChannels().then(console.warn);
+        }}
+        title="listUsableChannels"
+        color="#841584"
+      />
+
+      <Button
+        onPress={async () => {
+          // console.warn(await AsyncStorage.getAllKeys());
+          // console.warn('key = ', await AsyncStorage.getItem('channel_monitor_3fddb9e8f087e390ca54e4247707377bdbdbdf2d60b084a3a2fd52ae22f6cf90'));
+          // await AsyncStorage.clear();
+        }}
+        title="nuke storage"
         color="#841584"
       />
     </View>
