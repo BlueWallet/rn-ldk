@@ -31,11 +31,9 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     return "RnLdk"
   }
 
-  // Example method
-  // See https://reactnative.dev/docs/native-modules-android
   @ReactMethod
-  fun multiply(a: Int, b: Int, promise: Promise) {
-    promise.resolve(777)
+  fun getVersion(promise: Promise) {
+    promise.resolve("0.0.8")
   }
 
   @ReactMethod
@@ -261,8 +259,11 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     }
     val peer_node_ids: Array<ByteArray> = peer_manager!!.get_peer_node_ids()
     var json: String = "[";
+    var first = true;
     peer_node_ids.iterator().forEach {
-      json += "'" + byteArrayToHex(it) + "',";
+      if (!first) json += ",";
+      first = false;
+      json += "\"" + byteArrayToHex(it) + "\"";
     }
     json += "]";
     promise.resolve(json);

@@ -8,12 +8,12 @@ export default function App() {
   const [text, onChangeText] = React.useState<string>('');
 
   React.useEffect(() => {
-    RnLdk.multiply(3, 7).then(setResult);
+    RnLdk.getVersion().then(setResult);
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>ver {result}</Text>
 
       <Button
         onPress={() => {
@@ -55,14 +55,6 @@ export default function App() {
           RnLdk.checkBlockchain().then(console.warn);
         }}
         title="checkBlockchain (do this periodically)"
-        color="#841584"
-      />
-
-      <Button
-        onPress={() => {
-          RnLdk.updateBestBlock();
-        }}
-        title="debug: updateBestBlock"
         color="#841584"
       />
 
