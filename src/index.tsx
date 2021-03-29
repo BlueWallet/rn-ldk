@@ -38,7 +38,7 @@ class RnLdkImplementation {
    *
    * @param event
    */
-  registerOutput(event: RegisterOutputMsg) {
+  _registerOutput(event: RegisterOutputMsg) {
     event.txid = this.reverseTxid(event.txid); // achtung, little-endian
     console.log('registerOutput', event);
     this.registeredOutputs.push(event);
@@ -51,7 +51,7 @@ class RnLdkImplementation {
    *
    * @param event
    */
-  registerTx(event: RegisterTxMsg) {
+  _registerTx(event: RegisterTxMsg) {
     event.txid = this.reverseTxid(event.txid); // achtung, little-endian
     console.log('registerTx', event);
     this.registeredTxs.push(event);
@@ -64,7 +64,7 @@ class RnLdkImplementation {
    *
    * @param event
    */
-  async persist(event: PersistMsg) {
+  async _persist(event: PersistMsg) {
     return this.setItem(RnLdkImplementation.CHANNEL_PREFIX + event.id, event.data);
   }
 
@@ -74,7 +74,7 @@ class RnLdkImplementation {
    *
    * @param event
    */
-  async broadcast(event: BroadcastMsg) {
+  async _broadcast(event: BroadcastMsg) {
     return fetch('https://blockstream.info/api/tx', {
       method: 'POST',
       body: event.txhex,
@@ -101,6 +101,7 @@ class RnLdkImplementation {
    * Should be called periodically.
    */
   async checkBlockchain() {
+    if (!this.started) throw new Error('LDK not yet started');
     await this.updateBestBlock();
 
     const confirmedBlocks: any = {};
@@ -201,6 +202,7 @@ class RnLdkImplementation {
    * @returns string|false Either address to deposit sats to or false if smth went wrong
    */
   async openChannelStep1(pubkey: string, sat: number): Promise<string | false> {
+    if (!this.started) throw new Error('LDK not yet started');
     const script = await RnLdkNative.openChannelStep1(pubkey, sat);
     if (script) {
       const response = await fetch('https://runkit.io/overtorment/output-script-to-address/branches/master/' + script);
@@ -220,6 +222,7 @@ class RnLdkImplementation {
    * @returns boolean Success or not
    */
   async openChannelStep2(txhex: string) {
+    if (!this.started) throw new Error('LDK not yet started');
     console.warn('submitting to ldk', { txhex });
     return RnLdkNative.openChannelStep2(txhex);
   }
@@ -228,6 +231,7 @@ class RnLdkImplementation {
    * @returns Array<{}>
    */
   async listUsableChannels() {
+    if (!this.started) throw new Error('LDK not yet started');
     const str = await RnLdkNative.listUsableChannels();
     console.log(str);
     return JSON.parse(str);
@@ -265,6 +269,8 @@ class RnLdkImplementation {
    * @returns boolean TRUE if all went well
    */
   async start(entropyHex: string): Promise<boolean> {
+    if (!this.storage) throw new Error('Storage is not yet set');
+    this.started = true;
     const keys4monitors = (await this.getAllKeys()).filter((key: string) => key.startsWith(RnLdkImplementation.CHANNEL_PREFIX));
     const monitorHexes = [];
     console.warn('keys4monitors=', keys4monitors);
@@ -293,6 +299,7 @@ class RnLdkImplementation {
    * @return boolean success or not
    */
   connectPeer(pubkeyHex: string, hostname: string, port: number): Promise<boolean> {
+    if (!this.started) throw new Error('LDK not yet started');
     return RnLdkNative.connectPeer(pubkeyHex, hostname, port);
   }
 
@@ -302,6 +309,7 @@ class RnLdkImplementation {
    * @returns array
    */
   async listPeers(): Promise<string[]> {
+    if (!this.started) throw new Error('LDK not yet started');
     const jsonString = await RnLdkNative.listPeers();
     try {
       return JSON.parse(jsonString);
@@ -333,6 +341,7 @@ class RnLdkImplementation {
    * Should be called periodically.
    */
   async storeChannelManager() {
+    if (!this.started) throw new Error('LDK not yet started');
     const hex = await RnLdkNative.getChannelManagerBytes();
     console.warn({ hex });
     if (hex && this.storage) {
@@ -367,6 +376,8 @@ class RnLdkImplementation {
 
   /**
    * Wrapper for provided storage
+   *
+   * @returns string[]
    */
   async getAllKeys() {
     if (!this.storage) throw new Error('No storage');
@@ -374,7 +385,8 @@ class RnLdkImplementation {
   }
 
   async sendPayment(destPubkeyHex: string, paymentHashHex: string, paymentSecretHex: string, shortChannelId: string, paymentValueMsat: number, finalCltvValue: number) {
-    return RnLdkNative.sendPayment(destPubkeyHex, paymentHashHex, paymentSecretHex, 'chan id', paymentValueMsat, finalCltvValue);
+    if (!this.started) throw new Error('LDK not yet started');
+    return RnLdkNative.sendPayment(destPubkeyHex, paymentHashHex, paymentSecretHex, shortChannelId, paymentValueMsat, finalCltvValue);
   }
 }
 
@@ -387,22 +399,22 @@ eventEmitter.addListener('log', (event) => {
 });
 
 eventEmitter.addListener('register_output', (event: RegisterOutputMsg) => {
-  RnLdk.registerOutput(event);
+  RnLdk._registerOutput(event);
 });
 
 eventEmitter.addListener('register_tx', (event: RegisterTxMsg) => {
-  RnLdk.registerTx(event);
+  RnLdk._registerTx(event);
 });
 
 eventEmitter.addListener('broadcast', (event: BroadcastMsg) => {
   console.warn('broadcast: ' + event.txhex);
-  RnLdk.broadcast(event);
+  RnLdk._broadcast(event);
 });
 
 eventEmitter.addListener('persist', (event: PersistMsg) => {
   console.warn('save:' + JSON.stringify(event));
   if (!event.id || !event.data) throw new Error('Unexpected data passed for persister: ' + JSON.stringify(event));
-  RnLdk.persist(event);
+  RnLdk._persist(event);
 });
 
 export default RnLdk as RnLdkImplementation;
