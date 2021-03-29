@@ -33,7 +33,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun getVersion(promise: Promise) {
-    promise.resolve("0.0.8")
+    promise.resolve("0.0.9")
   }
 
   @ReactMethod
