@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextInput, StyleSheet, View, Text, Button } from 'react-native';
+import { TextInput, Alert, StyleSheet, View, Text, Button } from 'react-native';
 import RnLdk from 'rn-ldk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -67,8 +67,9 @@ export default function App() {
       />
 
       <Button
-        onPress={() => {
-          RnLdk.openChannelStep1('02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1', 100000).then(console.warn);
+        onPress={async () => {
+          const address = await RnLdk.openChannelStep1('02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1', 100000);
+          onChangeText(address + '');
         }}
         title="openChannelStep1"
         color="#841584"
@@ -93,11 +94,25 @@ export default function App() {
         color="#841584"
       />
 
+      <Button
+        onPress={() => {
+          RnLdk.listChannels().then(console.warn);
+        }}
+        title="listChannels"
+        color="#841584"
+      />
+
+      <Button
+        onPress={() => {
+          RnLdk.handleEvents().then(console.warn);
+        }}
+        title="handleEvents"
+        color="#841584"
+      />
+
       {/*<Button
         onPress={async () => {
-          // console.warn(await AsyncStorage.getAllKeys());
-          // console.warn('key = ', await AsyncStorage.getItem('channel_monitor_3fddb9e8f087e390ca54e4247707377bdbdbdf2d60b084a3a2fd52ae22f6cf90'));
-          // await AsyncStorage.clear();
+          await AsyncStorage.clear();
         }}
         title="nuke storage"
         color="#841584"
@@ -105,14 +120,9 @@ export default function App() {
 
       <Button
         onPress={async () => {
-          RnLdk.sendPayment(
-            '02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1',
-            '046274286f4e75c2a78da711307de517daf835e1c4bdc16e68f585f219da2870' /*paym hash*/,
-            '266cb828fbf94bd0c75beb4e8336a11a15f3f9a225524c555ec94ff57ec3cad3' /*paym secret*/,
-            'chan_id',
-            1000 /*paymentValueMsat*/,
-            144 /*finalCltvValue*/
-          ).then(console.warn);
+          if (!text) return Alert.alert('no invoice provided');
+          const resultPayment = await RnLdk.sendPayment(text);
+          Alert.alert(resultPayment + '');
         }}
         title="send payment"
         color="#841584"

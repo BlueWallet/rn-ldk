@@ -1,24 +1,48 @@
 import { NativeEventEmitter, NativeModules } from 'react-native';
 const { RnLdk: RnLdkNative } = NativeModules;
 
+const MARKER_LOG = 'log';
+
+const MARKER_REGISTER_OUTPUT = 'marker_register_output';
 interface RegisterOutputMsg {
-  txid: string;
+  block_hash: string;
   index: string;
   script_pubkey: string;
 }
 
+const MARKER_REGISTER_TX = 'register_tx';
 interface RegisterTxMsg {
   txid: string;
   script_pubkey: string;
 }
 
+const MARKER_BROADCAST = 'broadcast';
 interface BroadcastMsg {
   txhex: string;
 }
 
+const MARKER_PERSIST = 'persist';
 interface PersistMsg {
   id: string;
   data: string;
+}
+
+const MARKER_PAYMENT_SENT = 'payment_sent';
+interface PaymentSentMsg {
+  payment_preimage: string;
+}
+
+const MARKER_PAYMENT_FAILED = 'payment_failed';
+interface PaymentFailedMsg {
+  rejected_by_dest: boolean;
+  payment_hash: string;
+}
+
+const MARKER_PAYMENT_RECEIVED = 'payment_received';
+interface PaymentReceivedMsg {
+  payment_hash: string;
+  payment_secret: string;
+  amt: string;
 }
 
 class RnLdkImplementation {
@@ -32,6 +56,39 @@ class RnLdkImplementation {
   private started = false;
 
   /**
+   * Called by native code when LDK successfully sent payment.
+   * Should not be called directly.
+   *
+   * @param event
+   */
+  _paymentSent(event: PaymentSentMsg) {
+    // TODO: figure out what to do with it
+    console.log('payment sent:', event);
+  }
+
+  /**
+   * Called by native code when LDK received payment
+   * Should not be called directly.
+   *
+   * @param event
+   */
+  _paymentReceived(event: PaymentReceivedMsg) {
+    // TODO: figure out what to do with it
+    console.log('payment received:', event);
+  }
+
+  /**
+   * Called by native code when LDK failed to send payment.
+   * Should not be called directly.
+   *
+   * @param event
+   */
+  _paymentFailed(event: PaymentFailedMsg) {
+    // TODO: figure out what to do with it
+    console.log('payment failed:', event);
+  }
+
+  /**
    * Called when native code sends us an output we should keep an eye on
    * and notify native code if there is some movement there.
    * Should not be called directly.
@@ -39,7 +96,6 @@ class RnLdkImplementation {
    * @param event
    */
   _registerOutput(event: RegisterOutputMsg) {
-    event.txid = this.reverseTxid(event.txid); // achtung, little-endian
     console.log('registerOutput', event);
     this.registeredOutputs.push(event);
   }
@@ -162,9 +218,9 @@ class RnLdkImplementation {
 
     console.log('confirmedBlocks=', confirmedBlocks);
 
-    for (const height of Object.keys(confirmedBlocks).sort((a, b) => parseInt(a) - parseInt(b))) {
-      for (const pos of Object.keys(confirmedBlocks[height]).sort((a, b) => parseInt(a) - parseInt(b))) {
-        await RnLdkNative.transactionConfirmed(await this.getHeaderHexByHeight(parseInt(height)), parseInt(height), parseInt(pos), confirmedBlocks[height][pos]);
+    for (const height of Object.keys(confirmedBlocks).sort((a, b) => parseInt(a, 10) - parseInt(b, 10))) {
+      for (const pos of Object.keys(confirmedBlocks[height]).sort((a, b) => parseInt(a, 10) - parseInt(b, 10))) {
+        await RnLdkNative.transactionConfirmed(await this.getHeaderHexByHeight(parseInt(height, 10)), parseInt(height, 10), parseInt(pos, 10), confirmedBlocks[height][pos]);
       }
     }
 
@@ -237,6 +293,16 @@ class RnLdkImplementation {
     return JSON.parse(str);
   }
 
+  /**
+   * @returns Array<{}>
+   */
+  async listChannels() {
+    if (!this.started) throw new Error('LDK not yet started');
+    const str = await RnLdkNative.listChannels();
+    console.log(str);
+    return JSON.parse(str);
+  }
+
   private async getHeaderHexByHeight(height: number) {
     const response2 = await fetch('https://blockstream.info/api/block-height/' + height);
     const hash = await response2.text();
@@ -246,7 +312,7 @@ class RnLdkImplementation {
 
   private async updateBestBlock() {
     const response = await fetch('https://blockstream.info/api/blocks/tip/height');
-    const height = parseInt(await response.text());
+    const height = parseInt(await response.text(), 10);
     const response2 = await fetch('https://blockstream.info/api/block-height/' + height);
     const hash = await response2.text();
     const response3 = await fetch('https://blockstream.info/api/block/' + hash + '/header');
@@ -280,7 +346,7 @@ class RnLdkImplementation {
     }
 
     const response = await fetch('https://blockstream.info/api/blocks/tip/height');
-    const blockchainTipHeight = parseInt(await response.text());
+    const blockchainTipHeight = parseInt(await response.text(), 10);
     const response2 = await fetch('https://blockstream.info/api/block-height/' + blockchainTipHeight);
     const blockchainTipHashHex = await response2.text();
 
@@ -349,6 +415,10 @@ class RnLdkImplementation {
     }
   }
 
+  async handleEvents() {
+    return RnLdkNative.handleEvents();
+  }
+
   /**
    * Wrapper for provided storage
    *
@@ -384,9 +454,38 @@ class RnLdkImplementation {
     return this.storage.getAllKeys();
   }
 
-  async sendPayment(destPubkeyHex: string, paymentHashHex: string, paymentSecretHex: string, shortChannelId: string, paymentValueMsat: number, finalCltvValue: number) {
+  async sendPayment(bolt11: string): Promise<boolean> {
     if (!this.started) throw new Error('LDK not yet started');
-    return RnLdkNative.sendPayment(destPubkeyHex, paymentHashHex, paymentSecretHex, shortChannelId, paymentValueMsat, finalCltvValue);
+    const usableChannels = await this.listUsableChannels();
+    if (usableChannels.length === 0) throw new Error('No usable channels');
+
+    const response = await fetch('https://lambda-decode-bolt11.herokuapp.com/decode/' + bolt11);
+    const decoded = await response.json();
+    let payment_hash = '';
+    let min_final_cltv_expiry = 144;
+    let payment_secret = '';
+    let shortChannelId = '';
+    for (const tag of decoded.tags) {
+      if (tag.tagName === 'payment_hash') payment_hash = tag.data;
+      if (tag.tagName === 'min_final_cltv_expiry') min_final_cltv_expiry = parseInt(tag.data, 10);
+      if (tag.tagName === 'payment_secret') payment_secret = tag.data;
+    }
+
+    for (const channel of usableChannels) {
+      if (parseInt(channel.outbound_capacity_msat, 10) >= parseInt(decoded.millisatoshis, 10)) {
+        shortChannelId = channel.short_channel_id;
+        break;
+      }
+    }
+
+    if (shortChannelId === '') throw new Error('No usable channel with enough outbound capacity');
+
+    console.warn(decoded);
+
+    if (!payment_hash) throw new Error('No payment_hash');
+    if (!payment_secret) throw new Error('No payment_secret');
+
+    return RnLdkNative.sendPayment(decoded.payeeNodeKey, payment_hash, payment_secret, shortChannelId, parseInt(decoded.millisatoshis, 10), min_final_cltv_expiry);
   }
 }
 
@@ -394,27 +493,38 @@ const RnLdk = new RnLdkImplementation();
 
 const eventEmitter = new NativeEventEmitter();
 
-eventEmitter.addListener('log', (event) => {
+eventEmitter.addListener(MARKER_LOG, (event) => {
   console.log('log: ' + JSON.stringify(event));
 });
 
-eventEmitter.addListener('register_output', (event: RegisterOutputMsg) => {
+eventEmitter.addListener(MARKER_REGISTER_OUTPUT, (event: RegisterOutputMsg) => {
   RnLdk._registerOutput(event);
 });
 
-eventEmitter.addListener('register_tx', (event: RegisterTxMsg) => {
+eventEmitter.addListener(MARKER_REGISTER_TX, (event: RegisterTxMsg) => {
   RnLdk._registerTx(event);
 });
 
-eventEmitter.addListener('broadcast', (event: BroadcastMsg) => {
+eventEmitter.addListener(MARKER_BROADCAST, (event: BroadcastMsg) => {
   console.warn('broadcast: ' + event.txhex);
   RnLdk._broadcast(event);
 });
 
-eventEmitter.addListener('persist', (event: PersistMsg) => {
-  console.warn('save:' + JSON.stringify(event));
+eventEmitter.addListener(MARKER_PERSIST, (event: PersistMsg) => {
   if (!event.id || !event.data) throw new Error('Unexpected data passed for persister: ' + JSON.stringify(event));
   RnLdk._persist(event);
+});
+
+eventEmitter.addListener(MARKER_PAYMENT_FAILED, (event: PaymentFailedMsg) => {
+  RnLdk._paymentFailed(event);
+});
+
+eventEmitter.addListener(MARKER_PAYMENT_RECEIVED, (event: PaymentReceivedMsg) => {
+  RnLdk._paymentReceived(event);
+});
+
+eventEmitter.addListener(MARKER_PAYMENT_SENT, (event: PaymentSentMsg) => {
+  RnLdk._paymentSent(event);
 });
 
 export default RnLdk as RnLdkImplementation;
