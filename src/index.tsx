@@ -45,6 +45,11 @@ interface PaymentReceivedMsg {
   amt: string;
 }
 
+const MARKER_PERSIST_MANAGER = 'persist_manager';
+interface PersistManagerMsg {
+  channel_manager_bytes: string;
+}
+
 class RnLdkImplementation {
   static CHANNEL_MANAGER_PREFIX = 'channel_manager';
   static CHANNEL_PREFIX = 'channel_monitor_';
@@ -122,6 +127,10 @@ class RnLdkImplementation {
    */
   async _persist(event: PersistMsg) {
     return this.setItem(RnLdkImplementation.CHANNEL_PREFIX + event.id, event.data);
+  }
+
+  _persistManager(event: PersistManagerMsg) {
+    return this.setItem(RnLdkImplementation.CHANNEL_MANAGER_PREFIX, event.channel_manager_bytes);
   }
 
   /**
@@ -284,6 +293,14 @@ class RnLdkImplementation {
   }
 
   /**
+   * @returns node pubkey
+   */
+  async getNodeId(): Promise<string> {
+    if (!this.started) throw new Error('LDK not yet started');
+    return RnLdkNative.getNodeId();
+  }
+
+  /**
    * @returns Array<{}>
    */
   async listUsableChannels() {
@@ -402,24 +419,6 @@ class RnLdkImplementation {
   }
 
   /**
-   * Extracts from native code bytes backup of channel manager (basically represents
-   * main node backup) and saves it to provided storage.
-   * Should be called periodically.
-   */
-  async storeChannelManager() {
-    if (!this.started) throw new Error('LDK not yet started');
-    const hex = await RnLdkNative.getChannelManagerBytes();
-    console.warn({ hex });
-    if (hex && this.storage) {
-      await this.setItem(RnLdkImplementation.CHANNEL_MANAGER_PREFIX, hex);
-    }
-  }
-
-  async handleEvents() {
-    return RnLdkNative.handleEvents();
-  }
-
-  /**
    * Wrapper for provided storage
    *
    * @param key
@@ -456,7 +455,8 @@ class RnLdkImplementation {
 
   async sendPayment(bolt11: string): Promise<boolean> {
     if (!this.started) throw new Error('LDK not yet started');
-    const usableChannels = await this.listUsableChannels();
+    // const usableChannels = await this.listUsableChannels();
+    const usableChannels = await this.listChannels(); // FIXME debug only
     if (usableChannels.length === 0) throw new Error('No usable channels');
 
     const response = await fetch('https://lambda-decode-bolt11.herokuapp.com/decode/' + bolt11);
@@ -465,25 +465,54 @@ class RnLdkImplementation {
     let min_final_cltv_expiry = 144;
     let payment_secret = '';
     let shortChannelId = '';
+    let weAreGonaRouteThrough = '';
+
     for (const tag of decoded.tags) {
       if (tag.tagName === 'payment_hash') payment_hash = tag.data;
       if (tag.tagName === 'min_final_cltv_expiry') min_final_cltv_expiry = parseInt(tag.data, 10);
       if (tag.tagName === 'payment_secret') payment_secret = tag.data;
     }
 
+    if (!payment_hash) throw new Error('No payment_hash');
+    if (!payment_secret) throw new Error('No payment_secret');
+
     for (const channel of usableChannels) {
       if (parseInt(channel.outbound_capacity_msat, 10) >= parseInt(decoded.millisatoshis, 10)) {
+        if (channel.remote_network_id === decoded.payeeNodeKey) {
+          // we are paying to our direct neighbor
+          return RnLdkNative.sendPayment(decoded.payeeNodeKey, payment_hash, payment_secret, shortChannelId, parseInt(decoded.millisatoshis, 10), min_final_cltv_expiry);
+        }
+
         shortChannelId = channel.short_channel_id;
+        weAreGonaRouteThrough = channel.remote_network_id;
         break;
       }
     }
 
     if (shortChannelId === '') throw new Error('No usable channel with enough outbound capacity');
 
-    console.warn(decoded);
+    // otherwise lets plot a route from our neighbor we are going to pay through to destination
+    // using public queryroute api
 
-    if (!payment_hash) throw new Error('No payment_hash');
-    if (!payment_secret) throw new Error('No payment_secret');
+    const from = weAreGonaRouteThrough;
+    const to = decoded.payeeNodeKey;
+    const amtSat = Math.round(parseInt(decoded.millisatoshis, 10) / 1000);
+
+    let json;
+    let url = '';
+    try {
+      url = `http://lndhub-staging.herokuapp.com/queryroutes/${from}/${to}/${amtSat}`;
+      console.warn('querying route via', url);
+      let responseRoute = await fetch(url);
+      json = await responseRoute.json();
+    } catch (_) {
+      throw new Error('Could not find route');
+    }
+
+    console.log('got route:', JSON.stringify(json, null, 2));
+
+    return false;
+    // TODO: pass route
 
     return RnLdkNative.sendPayment(decoded.payeeNodeKey, payment_hash, payment_secret, shortChannelId, parseInt(decoded.millisatoshis, 10), min_final_cltv_expiry);
   }
@@ -513,6 +542,10 @@ eventEmitter.addListener(MARKER_BROADCAST, (event: BroadcastMsg) => {
 eventEmitter.addListener(MARKER_PERSIST, (event: PersistMsg) => {
   if (!event.id || !event.data) throw new Error('Unexpected data passed for persister: ' + JSON.stringify(event));
   RnLdk._persist(event);
+});
+
+eventEmitter.addListener(MARKER_PERSIST_MANAGER, (event: PersistManagerMsg) => {
+  RnLdk._persistManager(event);
 });
 
 eventEmitter.addListener(MARKER_PAYMENT_FAILED, (event: PaymentFailedMsg) => {

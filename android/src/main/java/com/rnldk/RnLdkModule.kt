@@ -3,6 +3,7 @@ package com.rnldk
 import com.facebook.react.bridge.*
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import org.ldk.batteries.ChannelManagerConstructor
+import org.ldk.batteries.ChannelManagerConstructor.ChannelManagerPersister
 import org.ldk.batteries.NioPeerHandler
 import org.ldk.enums.LDKConfirmationTarget
 import org.ldk.enums.LDKNetwork
@@ -15,9 +16,6 @@ import org.ldk.structs.Result_NoneAPIErrorZ.Result_NoneAPIErrorZ_OK
 import org.ldk.util.TwoTuple
 import java.io.IOException
 import java.net.InetSocketAddress
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.reflect.typeOf
 
 
 // borrowed from JS:
@@ -31,7 +29,7 @@ val MARKER_PAYMENT_FAILED = "payment_failed";
 val MARKER_PAYMENT_RECEIVED = "payment_received";
 //
 
-val feerate = 7500; // estimate fee rate in BTC/kB
+var feerate = 7500; // estimate fee rate in BTC/kB
 
 var nio_peer_handler: NioPeerHandler? = null;
 var channel_manager: ChannelManager? = null;
@@ -48,7 +46,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun getVersion(promise: Promise) {
-    promise.resolve("0.0.10")
+    promise.resolve("0.0.11");
   }
 
   @ReactMethod
@@ -101,6 +99,27 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         return Result_NoneChannelMonitorUpdateErrZ.constructor_ok();
       }
     })
+
+    // now, initializing channel manager persister that is responsoble for backing up channel_manager bytes
+
+    val channel_manager_persister = object : ChannelManagerPersister {
+      override fun handle_events(events: Array<Event?>?) {
+        events?.iterator()?.forEach {
+          if (it != null) that.handleEvent(it);
+        }
+
+      }
+
+      override fun persist_manager(channel_manager_bytes: ByteArray?) {
+        if (channel_manager_bytes != null) {
+          val params = Arguments.createMap()
+          params.putString("channel_manager_bytes", byteArrayToHex(channel_manager_bytes))
+          that.sendEvent("persist_manager", params);
+        }
+      }
+
+
+    }
 
     // INITIALIZE THE CHAINMONITOR #################################################################
     // What it's used for: monitoring the chain for lighting transactions that are relevant to our
@@ -158,14 +177,14 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     if (serializedChannelManagerHex != "") {
       // loading from disk
-      val channel_manager_constructor = ChannelManagerConstructor(hexStringToByteArray(serializedChannelManagerHex), channelMonitors, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor?.as_Watch(), tx_filter, tx_broadcaster, logger);
+      val channel_manager_constructor = ChannelManagerConstructor(hexStringToByteArray(serializedChannelManagerHex), channelMonitors, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor, tx_filter, tx_broadcaster, logger);
       channel_manager = channel_manager_constructor.channel_manager;
-      channel_manager_constructor.chain_sync_completed();
+      channel_manager_constructor.chain_sync_completed(channel_manager_persister);
     } else {
       // fresh start
-      val channel_manager_constructor = ChannelManagerConstructor(LDKNetwork.LDKNetwork_Bitcoin, UserConfig.constructor_default(), hexStringToByteArray(blockchainTipHashHex), blockchainTipHeight, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor?.as_Watch(), tx_broadcaster, logger);
+      val channel_manager_constructor = ChannelManagerConstructor(LDKNetwork.LDKNetwork_Bitcoin, UserConfig.constructor_default(), hexStringToByteArray(blockchainTipHashHex), blockchainTipHeight, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor, tx_broadcaster, logger);
       channel_manager = channel_manager_constructor.channel_manager;
-      channel_manager_constructor.chain_sync_completed();
+      channel_manager_constructor.chain_sync_completed(channel_manager_persister);
     }
 
 
@@ -196,6 +215,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     val tx = TwoTuple(txPos.toLong(), hexStringToByteArray(transactionHex));
     val txarray = arrayOf(tx);
     channel_manager?.transactions_confirmed(hexStringToByteArray(headerHex), height, txarray);
+    // TODO: feed it to channel monitor / chain monitor as well
     promise.resolve(true);
   }
 
@@ -299,7 +319,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         // success building the transaction, passing it to outer code to broadcast
         val params = Arguments.createMap();
         params.putString("txhex", byteArrayToHex(txResult.res))
-        this.sendEvent("broadcast", params)
+        this.sendEvent(MARKER_BROADCAST, params)
       }
     }
 
@@ -307,7 +327,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       println("ReactNativeLDK: " + "payment sent, preimage: " + byteArrayToHex((event as Event.PaymentSent).payment_preimage));
       val params = Arguments.createMap();
       params.putString("payment_preimage", byteArrayToHex((event as Event.PaymentSent).payment_preimage));
-      this.sendEvent("payment_sent", params);
+      this.sendEvent(MARKER_PAYMENT_SENT, params);
     }
 
     if (event is Event.PaymentFailed) {
@@ -315,7 +335,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       val params = Arguments.createMap();
       params.putString("payment_hash", byteArrayToHex(event.payment_hash));
       params.putString("rejected_by_dest", event.rejected_by_dest.toString());
-      this.sendEvent("payment_failed", params);
+      this.sendEvent(MARKER_PAYMENT_FAILED, params);
     }
 
     if (event is Event.PaymentReceived) {
@@ -325,27 +345,12 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       params.putString("payment_hash", byteArrayToHex(event.payment_hash));
       params.putString("payment_secret", byteArrayToHex(event.payment_secret));
       params.putString("amt", event.amt.toString());
-      this.sendEvent("payment_received", params);
+      this.sendEvent(MARKER_PAYMENT_RECEIVED, params);
     }
 
-  }
-
-  @ReactMethod
-  fun handleEvents(promise: Promise) {
-    val channel_manager_events = channel_manager?.as_EventsProvider()?.get_and_clear_pending_events();
-    val chain_monitor_events = chain_monitor?.as_EventsProvider()?.get_and_clear_pending_events();
-
-    channel_manager_events?.iterator()?.forEach {
-      println("ReactNativeLDK: channel_manager_event");
-      this.handleEvent(it);
+    if (event is Event.PendingHTLCsForwardable) {
+      // nop
     }
-
-    chain_monitor_events?.iterator()?.forEach {
-      println("ReactNativeLDK: chain_monitor_event");
-      this.handleEvent(it);
-    }
-
-    promise.resolve(true);
   }
 
   @ReactMethod
@@ -355,13 +360,25 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
+  fun getNodeId(promise: Promise) {
+    val byteArr = channel_manager?._our_node_id;
+    if (byteArr != null) {
+      promise.resolve(byteArrayToHex(byteArr));
+    } else {
+      promise.resolve("");
+    }
+  }
+
+  @ReactMethod
   fun getChannelManagerBytes(promise: Promise) {
-    val channel_manager_bytes_to_write = channel_manager?.write()
+    promise.resolve("");
+
+    /*val channel_manager_bytes_to_write = channel_manager?.write()
     if (channel_manager_bytes_to_write !== null) {
       promise.resolve(byteArrayToHex(channel_manager_bytes_to_write));
     } else {
       promise.resolve("");
-    }
+    }*/
   }
 
   @ReactMethod
@@ -515,6 +532,13 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     promise.resolve(jsonArray);
   }
 
+  @ReactMethod
+  fun setFeerate(newFeerate: Int, promise: Promise) {
+    if (newFeerate < 300) return promise.resolve(false);
+    feerate = newFeerate;
+    promise.resolve(true);
+  }
+
 
   @ReactMethod
   fun fireAnEvent(promise: Promise) {
@@ -524,7 +548,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     println("ReactNativeLDK: " + "broadcaster sends an event asking to broadcast some txhex...")
     val params = Arguments.createMap();
     params.putString("txhex", "ffff");
-    this.sendEvent("broadcast", params);
+    this.sendEvent(MARKER_BROADCAST, params);
     promise.resolve(true);
   }
 

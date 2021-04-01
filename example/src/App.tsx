@@ -44,14 +44,6 @@ export default function App() {
 
       <Button
         onPress={() => {
-          RnLdk.storeChannelManager();
-        }}
-        title="storeChannelManager (do this periodically)"
-        color="#841584"
-      />
-
-      <Button
-        onPress={() => {
           RnLdk.checkBlockchain().then(console.warn);
         }}
         title="checkBlockchain (do this periodically)"
@@ -102,14 +94,6 @@ export default function App() {
         color="#841584"
       />
 
-      <Button
-        onPress={() => {
-          RnLdk.handleEvents().then(console.warn);
-        }}
-        title="handleEvents"
-        color="#841584"
-      />
-
       {/*<Button
         onPress={async () => {
           await AsyncStorage.clear();
@@ -125,6 +109,15 @@ export default function App() {
           Alert.alert(resultPayment + '');
         }}
         title="send payment"
+        color="#841584"
+      />
+
+      <Button
+        onPress={async () => {
+          const nodeId = await RnLdk.getNodeId();
+          Alert.alert(nodeId);
+        }}
+        title="get node id"
         color="#841584"
       />
     </View>
