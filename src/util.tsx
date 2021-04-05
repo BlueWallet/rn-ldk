@@ -5,7 +5,7 @@ function sum(arr: number[]) {
 }
 
 class Util {
-  static lndRoutetoLdkRoute(lndRoute: any, hopFees: any, firstChanId: string, currentblockHeight: number) {
+  static lndRoutetoLdkRoute(lndRoute: any, hopFees: any, firstChanId: string, minFinalCLTVExpiryFromTheInvoice: number) {
     const ret = [];
     let firstIteration = true;
     let fees: number[] = []; // aggregating fees of LND hops
@@ -17,15 +17,19 @@ class Util {
 
       if (firstIteration) {
         // last hop is a bit special
-        hop.cltv_expiry_delta = lndRoute.routes[0].total_time_lock - currentblockHeight;
+        hop.cltv_expiry_delta = minFinalCLTVExpiryFromTheInvoice; //lndRoute.routes[0].total_time_lock - currentblockHeight;
         hop.fee_msat = parseInt(lndRoute.routes[0].hops[c].amt_to_forward_msat, 10);
       } else {
         hop.fee_msat = parseInt(lndRoute.routes[0].hops[c].fee_msat, 10);
-        if (c >= 0 && c < lndRoute.routes[0].hops.length - 2) {
+        if (c > 0 && c < lndRoute.routes[0].hops.length - 1) {
           // intermediate hops have expiry as a difference between neighbor hops
-          hop.cltv_expiry_delta = lndRoute.routes[0].hops[c + 1].expiry - lndRoute.routes[0].hops[c].expiry;
+          hop.cltv_expiry_delta = lndRoute.routes[0].hops[c - 1].expiry - lndRoute.routes[0].hops[c].expiry;
         } else {
-          hop.cltv_expiry_delta = lndRoute.routes[0].total_time_lock - lndHop.expiry;
+          hop.cltv_expiry_delta = 666; // lndRoute.routes[0].total_time_lock - lndHop.expiry;
+        }
+
+        if (c === 0) {
+          hop.cltv_expiry_delta = lndRoute.routes[0].total_time_lock - lndRoute.routes[0].hops[0].expiry;
         }
       }
 

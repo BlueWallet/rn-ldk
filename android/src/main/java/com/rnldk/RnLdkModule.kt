@@ -271,15 +271,12 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     println("ReactNativeLDK: shortChannelId LONG " + (shortChannelId.toLong().toString()));
     println("ReactNativeLDK: paymentValueMsat " + paymentValueMsat);
     println("ReactNativeLDK: finalCltvValue " + finalCltvValue);
-    println("ReactNativeLDK: finalCltvValue " + finalCltvValue);
-
-    val counterparty_pubkey = hexStringToByteArray(destPubkeyHex);
 
     // first hop:
     // (also the last one of no route provided - assuming paying to neighbor node)
     var path = arrayOf(
       RouteHop.constructor_new(
-        counterparty_pubkey,
+        hexStringToByteArray(destPubkeyHex),
         NodeFeatures.constructor_known(),
         shortChannelId.toLong(),
         ChannelFeatures.constructor_known(),

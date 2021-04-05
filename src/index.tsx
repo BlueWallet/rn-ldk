@@ -182,11 +182,13 @@ class RnLdkImplementation {
    */
   async checkBlockchain() {
     if (!this.started) throw new Error('LDK not yet started');
+    console.log('checkBlockchain() 1/x');
     await this.updateBestBlock();
 
     const confirmedBlocks: any = {};
 
     // iterating all subscriptions for confirmed txid
+    console.log('checkBlockchain() 2/x');
     for (const regTx of this.registeredTxs) {
       let json;
       try {
@@ -211,6 +213,7 @@ class RnLdkImplementation {
     }
 
     // iterating all scripts for spends
+    console.log('checkBlockchain() 3/x');
     for (const regOut of this.registeredOutputs) {
       let txs: any[] = [];
       try {
@@ -242,12 +245,14 @@ class RnLdkImplementation {
 
     console.log('confirmedBlocks=', confirmedBlocks);
 
+    console.log('checkBlockchain() 4/x');
     for (const height of Object.keys(confirmedBlocks).sort((a, b) => parseInt(a, 10) - parseInt(b, 10))) {
       for (const pos of Object.keys(confirmedBlocks[height]).sort((a, b) => parseInt(a, 10) - parseInt(b, 10))) {
         await RnLdkNative.transactionConfirmed(await this.getHeaderHexByHeight(parseInt(height, 10)), parseInt(height, 10), parseInt(pos, 10), confirmedBlocks[height][pos]);
       }
     }
 
+    console.log('checkBlockchain() 5/x');
     let txidArr = [];
     try {
       const jsonString = await RnLdkNative.getRelevantTxids();
@@ -258,6 +263,7 @@ class RnLdkImplementation {
     }
 
     // we need to check if any of txidArr got unconfirmed, and then feed it back to LDK if they are unconf
+    console.log('checkBlockchain() 6/x');
     for (const txid of txidArr) {
       let confirmed = false;
       try {
@@ -270,6 +276,8 @@ class RnLdkImplementation {
 
       if (!confirmed) await RnLdkNative.transactionUnconfirmed(txid);
     }
+
+    console.log('checkBlockchain() done');
 
     return true;
   }
@@ -492,6 +500,7 @@ class RnLdkImplementation {
 
   async sendPayment(bolt11: string, numSatoshis: number = 666): Promise<boolean> {
     if (!this.started) throw new Error('LDK not yet started');
+    await this.updateBestBlock();
     const usableChannels = await this.listUsableChannels();
     // const usableChannels = await this.listChannels(); // FIXME debug only
     if (usableChannels.length === 0) throw new Error('No usable channels');
@@ -499,18 +508,20 @@ class RnLdkImplementation {
     const response = await fetch('https://lambda-decode-bolt11.herokuapp.com/decode/' + bolt11);
     const decoded = await response.json();
     if (isNaN(parseInt(decoded.millisatoshis, 10))) {
-      decoded.millisatoshis = numSatoshis;
+      decoded.millisatoshis = numSatoshis * 1000; // free amount invoice
     }
     let payment_hash = '';
     let min_final_cltv_expiry = 144;
     let payment_secret = '';
     let shortChannelId = '';
     let weAreGonaRouteThrough = '';
+    // console.log(decoded) ; return true;
 
     for (const tag of decoded.tags) {
       if (tag.tagName === 'payment_hash') payment_hash = tag.data;
       if (tag.tagName === 'min_final_cltv_expiry') min_final_cltv_expiry = parseInt(tag.data, 10);
       if (tag.tagName === 'payment_secret') payment_secret = tag.data;
+      if (tag.tagName === 'min_final_cltv_expiry') min_final_cltv_expiry = parseInt(tag.data, 10);
     }
 
     if (!payment_hash) throw new Error('No payment_hash');
@@ -543,22 +554,15 @@ class RnLdkImplementation {
     let url = '';
     try {
       const amtSat = Math.round(parseInt(decoded.millisatoshis, 10) / 1000);
-      url = `http://lndhub-staging.herokuapp.com/queryroutes/${from}/${to}/${amtSat}`;
+      url = `http://lndhub.herokuapp.com/queryroutes/${from}/${to}/${amtSat}`;
       console.warn('querying route via', url);
       let responseRoute = await fetch(url);
       jsonRoutes = await responseRoute.json();
       if (jsonRoutes && jsonRoutes.routes && jsonRoutes.routes[0] && jsonRoutes.routes[0].hops) {
         for (let hop of jsonRoutes.routes[0].hops) {
           const url2 = `https://lndhub.herokuapp.com/getchaninfo/${hop.chan_id}`;
-          const responseChaninfo = await (await fetch(url2)).json();
-          console.log('responseChan=', responseChaninfo, { url2 });
-          hopFees = responseChaninfo;
-          // hop.feeschaninfo = responseChaninfo;
-          /*if (hop.pub_key === responseChaninfo.node2_pub) {
-            hopFees = hop.chanfees = responseChaninfo.node2_policy;
-          } else {
-            hopFees = hop.chanfees = responseChaninfo.node1_policy;
-          }*/
+          hopFees = await (await fetch(url2)).json();
+          console.log('hopFees=', hopFees, { url2 });
           break;
           // breaking because we assume that outgoing chan for our routing node gona have the same fee policy
           // as our own channel with this routing node
@@ -568,7 +572,7 @@ class RnLdkImplementation {
       throw new Error('Could not find route');
     }
 
-    const ldkRoute = utils.lndRoutetoLdkRoute(jsonRoutes, hopFees, shortChannelId, await this.getCurrentHeight());
+    const ldkRoute = utils.lndRoutetoLdkRoute(jsonRoutes, hopFees, shortChannelId, min_final_cltv_expiry);
 
     console.log('got route:', JSON.stringify(jsonRoutes, null, 2));
     console.log('got LDK route:', JSON.stringify(ldkRoute, null, 2));
@@ -576,7 +580,15 @@ class RnLdkImplementation {
     // return false;
     // TODO: pass route
 
-    return RnLdkNative.sendPayment(decoded.payeeNodeKey, payment_hash, payment_secret, shortChannelId, parseInt(decoded.millisatoshis, 10), min_final_cltv_expiry, JSON.stringify(ldkRoute, null, 2));
+    return RnLdkNative.sendPayment(
+      decoded.payeeNodeKey /* not really needed in this scenario */,
+      payment_hash,
+      payment_secret,
+      shortChannelId /* not really needed in this scenario */,
+      parseInt(decoded.millisatoshis, 10),
+      min_final_cltv_expiry /* not really needed in this scenario */,
+      JSON.stringify(ldkRoute, null, 2)
+    );
   }
 }
 
