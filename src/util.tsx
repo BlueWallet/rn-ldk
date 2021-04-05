@@ -16,11 +16,17 @@ class Util {
       const lndHop = lndRoute.routes[0].hops[c];
 
       if (firstIteration) {
+        // last hop is a bit special
         hop.cltv_expiry_delta = lndRoute.routes[0].total_time_lock - currentblockHeight;
         hop.fee_msat = parseInt(lndRoute.routes[0].hops[c].amt_to_forward_msat, 10);
       } else {
-        hop.cltv_expiry_delta = lndRoute.routes[0].total_time_lock - lndHop.expiry;
         hop.fee_msat = parseInt(lndRoute.routes[0].hops[c].fee_msat, 10);
+        if (c >= 0 && c < lndRoute.routes[0].hops.length - 2) {
+          // intermediate hops have expiry as a difference between neighbor hops
+          hop.cltv_expiry_delta = lndRoute.routes[0].hops[c + 1].expiry - lndRoute.routes[0].hops[c].expiry;
+        } else {
+          hop.cltv_expiry_delta = lndRoute.routes[0].total_time_lock - lndHop.expiry;
+        }
       }
 
       hop.short_channel_id = lndHop.chan_id;
