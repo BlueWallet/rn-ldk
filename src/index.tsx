@@ -1,4 +1,5 @@
 import { NativeEventEmitter, NativeModules } from 'react-native';
+import utils from './util';
 const { RnLdk: RnLdkNative } = NativeModules;
 
 const MARKER_LOG = 'log';
@@ -50,6 +51,14 @@ interface PersistManagerMsg {
   channel_manager_bytes: string;
 }
 
+const MARKER_FUNDING_GENERATION_READY = 'funding_generation_ready';
+interface FundingGenerationReadyMsg {
+  channel_value_satoshis: string;
+  output_script: string;
+  temporary_channel_id: string;
+  user_channel_id: string;
+}
+
 class RnLdkImplementation {
   static CHANNEL_MANAGER_PREFIX = 'channel_manager';
   static CHANNEL_PREFIX = 'channel_monitor_';
@@ -57,6 +66,7 @@ class RnLdkImplementation {
   private storage: any = false;
   private registeredOutputs: RegisterOutputMsg[] = [];
   private registeredTxs: RegisterTxMsg[] = [];
+  private fundingsReady: FundingGenerationReadyMsg[] = [];
 
   private started = false;
 
@@ -116,6 +126,11 @@ class RnLdkImplementation {
     event.txid = this.reverseTxid(event.txid); // achtung, little-endian
     console.log('registerTx', event);
     this.registeredTxs.push(event);
+  }
+
+  _fundingGenerationReady(event: FundingGenerationReadyMsg) {
+    console.log('funding ready:', event);
+    this.fundingsReady.push(event);
   }
 
   /**
@@ -268,10 +283,20 @@ class RnLdkImplementation {
    */
   async openChannelStep1(pubkey: string, sat: number): Promise<string | false> {
     if (!this.started) throw new Error('LDK not yet started');
-    const script = await RnLdkNative.openChannelStep1(pubkey, sat);
-    if (script) {
-      const response = await fetch('https://runkit.io/overtorment/output-script-to-address/branches/master/' + script);
-      return response.text();
+    this.fundingsReady = []; // reset it
+    const result = await RnLdkNative.openChannelStep1(pubkey, sat);
+    if (!result) return false;
+    let timer = 30;
+    while (timer-- > 0) {
+      await new Promise((resolve) => setTimeout(resolve, 500)); // sleep
+      if (this.fundingsReady.length > 0) {
+        const funding = this.fundingsReady.pop();
+        if (funding) {
+          const response = await fetch('https://runkit.io/overtorment/output-script-to-address/branches/master/' + funding.output_script);
+          return response.text();
+        }
+        break;
+      }
     }
 
     return false;
@@ -316,7 +341,6 @@ class RnLdkImplementation {
   async listChannels() {
     if (!this.started) throw new Error('LDK not yet started');
     const str = await RnLdkNative.listChannels();
-    console.log(str);
     return JSON.parse(str);
   }
 
@@ -327,9 +351,13 @@ class RnLdkImplementation {
     return response3.text();
   }
 
-  private async updateBestBlock() {
+  private async getCurrentHeight() {
     const response = await fetch('https://blockstream.info/api/blocks/tip/height');
-    const height = parseInt(await response.text(), 10);
+    return parseInt(await response.text(), 10);
+  }
+
+  private async updateBestBlock() {
+    const height = await this.getCurrentHeight();
     const response2 = await fetch('https://blockstream.info/api/block-height/' + height);
     const hash = await response2.text();
     const response3 = await fetch('https://blockstream.info/api/block/' + hash + '/header');
@@ -408,6 +436,15 @@ class RnLdkImplementation {
   }
 
   /**
+   * Prodives LKD current feerate to use with all onchain transactions.
+   *
+   * @param satByte
+   */
+  setFeerate(satByte: number): Promise<boolean> {
+    return RnLdkNative.setFeerate(satByte * 250);
+  }
+
+  /**
    * Method to set storage that will handle persistance. Should conform to the spec
    * (have methods setItem, getItem & getAllKeys)
    *
@@ -453,14 +490,17 @@ class RnLdkImplementation {
     return this.storage.getAllKeys();
   }
 
-  async sendPayment(bolt11: string): Promise<boolean> {
+  async sendPayment(bolt11: string, numSatoshis: number = 666): Promise<boolean> {
     if (!this.started) throw new Error('LDK not yet started');
-    // const usableChannels = await this.listUsableChannels();
-    const usableChannels = await this.listChannels(); // FIXME debug only
+    const usableChannels = await this.listUsableChannels();
+    // const usableChannels = await this.listChannels(); // FIXME debug only
     if (usableChannels.length === 0) throw new Error('No usable channels');
 
     const response = await fetch('https://lambda-decode-bolt11.herokuapp.com/decode/' + bolt11);
     const decoded = await response.json();
+    if (isNaN(parseInt(decoded.millisatoshis, 10))) {
+      decoded.millisatoshis = numSatoshis;
+    }
     let payment_hash = '';
     let min_final_cltv_expiry = 144;
     let payment_secret = '';
@@ -477,10 +517,11 @@ class RnLdkImplementation {
     if (!payment_secret) throw new Error('No payment_secret');
 
     for (const channel of usableChannels) {
+      console.log('parseInt(decoded.millisatoshis, 10) = ', parseInt(decoded.millisatoshis, 10));
       if (parseInt(channel.outbound_capacity_msat, 10) >= parseInt(decoded.millisatoshis, 10)) {
         if (channel.remote_network_id === decoded.payeeNodeKey) {
           // we are paying to our direct neighbor
-          return RnLdkNative.sendPayment(decoded.payeeNodeKey, payment_hash, payment_secret, shortChannelId, parseInt(decoded.millisatoshis, 10), min_final_cltv_expiry);
+          return RnLdkNative.sendPayment(decoded.payeeNodeKey, payment_hash, payment_secret, channel.short_channel_id, parseInt(decoded.millisatoshis, 10), min_final_cltv_expiry, '');
         }
 
         shortChannelId = channel.short_channel_id;
@@ -496,25 +537,46 @@ class RnLdkImplementation {
 
     const from = weAreGonaRouteThrough;
     const to = decoded.payeeNodeKey;
-    const amtSat = Math.round(parseInt(decoded.millisatoshis, 10) / 1000);
 
-    let json;
+    let jsonRoutes;
+    let hopFees;
     let url = '';
     try {
+      const amtSat = Math.round(parseInt(decoded.millisatoshis, 10) / 1000);
       url = `http://lndhub-staging.herokuapp.com/queryroutes/${from}/${to}/${amtSat}`;
       console.warn('querying route via', url);
       let responseRoute = await fetch(url);
-      json = await responseRoute.json();
+      jsonRoutes = await responseRoute.json();
+      if (jsonRoutes && jsonRoutes.routes && jsonRoutes.routes[0] && jsonRoutes.routes[0].hops) {
+        for (let hop of jsonRoutes.routes[0].hops) {
+          const url2 = `https://lndhub.herokuapp.com/getchaninfo/${hop.chan_id}`;
+          const responseChaninfo = await (await fetch(url2)).json();
+          console.log('responseChan=', responseChaninfo, { url2 });
+          hopFees = responseChaninfo;
+          // hop.feeschaninfo = responseChaninfo;
+          /*if (hop.pub_key === responseChaninfo.node2_pub) {
+            hopFees = hop.chanfees = responseChaninfo.node2_policy;
+          } else {
+            hopFees = hop.chanfees = responseChaninfo.node1_policy;
+          }*/
+          break;
+          // breaking because we assume that outgoing chan for our routing node gona have the same fee policy
+          // as our own channel with this routing node
+        }
+      } else throw new Error('Could not find route');
     } catch (_) {
       throw new Error('Could not find route');
     }
 
-    console.log('got route:', JSON.stringify(json, null, 2));
+    const ldkRoute = utils.lndRoutetoLdkRoute(jsonRoutes, hopFees, shortChannelId, await this.getCurrentHeight());
 
-    return false;
+    console.log('got route:', JSON.stringify(jsonRoutes, null, 2));
+    console.log('got LDK route:', JSON.stringify(ldkRoute, null, 2));
+
+    // return false;
     // TODO: pass route
 
-    return RnLdkNative.sendPayment(decoded.payeeNodeKey, payment_hash, payment_secret, shortChannelId, parseInt(decoded.millisatoshis, 10), min_final_cltv_expiry);
+    return RnLdkNative.sendPayment(decoded.payeeNodeKey, payment_hash, payment_secret, shortChannelId, parseInt(decoded.millisatoshis, 10), min_final_cltv_expiry, JSON.stringify(ldkRoute, null, 2));
   }
 }
 
@@ -558,6 +620,10 @@ eventEmitter.addListener(MARKER_PAYMENT_RECEIVED, (event: PaymentReceivedMsg) =>
 
 eventEmitter.addListener(MARKER_PAYMENT_SENT, (event: PaymentSentMsg) => {
   RnLdk._paymentSent(event);
+});
+
+eventEmitter.addListener(MARKER_FUNDING_GENERATION_READY, (event: FundingGenerationReadyMsg) => {
+  RnLdk._fundingGenerationReady(event);
 });
 
 export default RnLdk as RnLdkImplementation;

@@ -2,6 +2,8 @@ package com.rnldk
 
 import com.facebook.react.bridge.*
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
+import org.json.JSONArray
+import org.json.JSONObject
 import org.ldk.batteries.ChannelManagerConstructor
 import org.ldk.batteries.ChannelManagerConstructor.ChannelManagerPersister
 import org.ldk.batteries.NioPeerHandler
@@ -19,14 +21,15 @@ import java.net.InetSocketAddress
 
 
 // borrowed from JS:
-val MARKER_LOG = "log";
-val MARKER_REGISTER_OUTPUT = "marker_register_output";
-val MARKER_REGISTER_TX = "register_tx";
-val MARKER_BROADCAST = "broadcast";
-val MARKER_PERSIST = "persist";
-val MARKER_PAYMENT_SENT = "payment_sent";
-val MARKER_PAYMENT_FAILED = "payment_failed";
-val MARKER_PAYMENT_RECEIVED = "payment_received";
+const val MARKER_LOG = "log";
+const val MARKER_REGISTER_OUTPUT = "marker_register_output";
+const val MARKER_REGISTER_TX = "register_tx";
+const val MARKER_BROADCAST = "broadcast";
+const val MARKER_PERSIST = "persist";
+const val MARKER_PAYMENT_SENT = "payment_sent";
+const val MARKER_PAYMENT_FAILED = "payment_failed";
+const val MARKER_PAYMENT_RECEIVED = "payment_received";
+const val MARKER_FUNDING_GENERATION_READY = "funding_generation_ready";
 //
 
 var feerate = 7500; // estimate fee rate in BTC/kB
@@ -260,26 +263,59 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
-  fun sendPayment(destPubkeyHex: String, paymentHashHex: String, paymentSecretHex: String, shortChannelId: String, paymentValueMsat: Int, finalCltvValue: Int, promise: Promise) {
+  fun sendPayment(destPubkeyHex: String, paymentHashHex: String, paymentSecretHex: String, shortChannelId: String, paymentValueMsat: Int, finalCltvValue: Int, LdkRoutesJsonArrayString: String, promise: Promise) {
+    println("ReactNativeLDK: destPubkeyHex " + destPubkeyHex);
+    println("ReactNativeLDK: paymentHashHex " + paymentHashHex);
+    println("ReactNativeLDK: paymentSecretHex " + paymentSecretHex);
+    println("ReactNativeLDK: shortChannelId " + shortChannelId);
+    println("ReactNativeLDK: shortChannelId LONG " + (shortChannelId.toLong().toString()));
+    println("ReactNativeLDK: paymentValueMsat " + paymentValueMsat);
+    println("ReactNativeLDK: finalCltvValue " + finalCltvValue);
+    println("ReactNativeLDK: finalCltvValue " + finalCltvValue);
+
     val counterparty_pubkey = hexStringToByteArray(destPubkeyHex);
-    val r = Route.constructor_new(
+
+    // first hop:
+    // (also the last one of no route provided - assuming paying to neighbor node)
+    var path = arrayOf(
+      RouteHop.constructor_new(
+        counterparty_pubkey,
+        NodeFeatures.constructor_known(),
+        shortChannelId.toLong(),
+        ChannelFeatures.constructor_known(),
+        paymentValueMsat.toLong(),
+        finalCltvValue
+      )
+    );
+
+    if (LdkRoutesJsonArrayString != "") {
+      // full route was provided
+      path = arrayOf<RouteHop>(); // reset path and start from scratch
+      val hopsJson = JSONArray(LdkRoutesJsonArrayString);
+      for (c in 1..hopsJson.length()) {
+        val hopJson = hopsJson.getJSONObject(c - 1);
+
+        path = path.plusElement(RouteHop.constructor_new(
+          hexStringToByteArray(hopJson.getString("pubkey")),
+          NodeFeatures.constructor_known(),
+          hopJson.getString("short_channel_id").toLong(),
+          ChannelFeatures.constructor_known(),
+          hopJson.getString("fee_msat").toLong(),
+          hopJson.getString("cltv_expiry_delta").toInt()
+        ));
+      }
+    }
+
+
+    val route = Route.constructor_new(
       arrayOf(
-        arrayOf(
-          RouteHop.constructor_new(
-            counterparty_pubkey,
-            NodeFeatures.constructor_known(),
-            shortChannelId.toLong(),
-            ChannelFeatures.constructor_known(),
-            paymentValueMsat.toLong(),
-            finalCltvValue
-          )
-        )
+        path
       )
     );
 
     val payment_hash = hexStringToByteArray(paymentHashHex);
     val payment_secret = hexStringToByteArray(paymentSecretHex);
-    val payment_res = channel_manager?.send_payment(r, payment_hash, payment_secret);
+    val payment_res = channel_manager?.send_payment(route, payment_hash, payment_secret);
     if (payment_res is Result_NonePaymentSendFailureZ.Result_NonePaymentSendFailureZ_OK) {
       promise.resolve(true);
     } else {
@@ -341,7 +377,6 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     if (event is Event.PaymentReceived) {
       println("ReactNativeLDK: " + "payment received, payment_hash: " + byteArrayToHex(event.payment_hash));
       val params = Arguments.createMap();
-      event.payment_secret
       params.putString("payment_hash", byteArrayToHex(event.payment_hash));
       params.putString("payment_secret", byteArrayToHex(event.payment_secret));
       params.putString("amt", event.amt.toString());
@@ -350,6 +385,20 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     if (event is Event.PendingHTLCsForwardable) {
       // nop
+    }
+
+    if (event is Event.FundingGenerationReady) {
+      println("ReactNativeLDK: " + "FundingGenerationReady");
+      val funding_spk = event.output_script;
+      if (funding_spk.size == 34 && funding_spk[0].toInt() == 0 && funding_spk[1].toInt() == 32) {
+        val params = Arguments.createMap();
+        params.putString("channel_value_satoshis", event.channel_value_satoshis.toString());
+        params.putString("output_script", byteArrayToHex(event.output_script));
+        params.putString("temporary_channel_id", byteArrayToHex(event.temporary_channel_id));
+        params.putString("user_channel_id", event.user_channel_id.toString());
+        temporary_channel_id = event.temporary_channel_id;
+        this.sendEvent(MARKER_FUNDING_GENERATION_READY, params);
+      }
     }
   }
 
@@ -395,49 +444,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       return;
     }
 
-    var events: Array<Event>?;
-    var counter = 0;
-    do {
-      Thread.sleep(500L);
-      nio_peer_handler?.check_events();
-      events = channel_manager?.as_EventsProvider()?.get_and_clear_pending_events()
-      if (events?.size != 1) {
-        println("ReactNativeLDK: " + "event 33 not yet arrived = " + events?.size);
-      }
-      if (counter++ >= 30) {
-        println("ReactNativeLDK: " + "waiting for event 33 timeout");
-        promise.resolve(false);
-        return;
-      }
-    } while (events?.size != 1);
-
-    if (events[0] !is Event.FundingGenerationReady) {
-      println("ReactNativeLDK: " + "events[0] !is Event.FundingGenerationReady, = " + events[0]);
-      promise.resolve(false);
-      return;
-    }
-    if ((events[0] as Event.FundingGenerationReady).channel_value_satoshis != channelValue.toLong()) {
-      println("ReactNativeLDK: " + "channel value = " + (events[0] as Event.FundingGenerationReady).channel_value_satoshis);
-      promise.resolve(false);
-      return;
-    }
-    if ((events[0] as Event.FundingGenerationReady).user_channel_id.toInt() != 42) {
-      println("ReactNativeLDK: " + "user_id = " + (events[0] as Event.FundingGenerationReady).user_channel_id.toInt());
-      promise.resolve(false);
-      return;
-    }
-    val funding_spk = (events[0] as Event.FundingGenerationReady).output_script
-    if (!(funding_spk.size == 34 && funding_spk[0].toInt() == 0 && funding_spk[1].toInt() == 32)) {
-      println("ReactNativeLDK: " + "funding_spk = " + byteArrayToHex(funding_spk));
-      promise.resolve(false);
-      return;
-    }
-
-    temporary_channel_id = (events[0] as Event.FundingGenerationReady).temporary_channel_id
-    println("ReactNativeLDK: " + "temporary_channel_id = " + byteArrayToHex(temporary_channel_id!!));
-    println("ReactNativeLDK: " + "funding script = " + byteArrayToHex(funding_spk!!));
-
-    promise.resolve(byteArrayToHex(funding_spk));
+    promise.resolve(true);
   }
 
   @ReactMethod
