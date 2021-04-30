@@ -3,17 +3,18 @@ package com.rnldk
 import com.facebook.react.bridge.*
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import org.json.JSONArray
-import org.json.JSONObject
 import org.ldk.batteries.ChannelManagerConstructor
 import org.ldk.batteries.ChannelManagerConstructor.ChannelManagerPersister
 import org.ldk.batteries.NioPeerHandler
 import org.ldk.enums.LDKConfirmationTarget
+import org.ldk.enums.LDKCurrency
 import org.ldk.enums.LDKNetwork
 import org.ldk.structs.*
 import org.ldk.structs.FeeEstimator
 import org.ldk.structs.Filter.FilterInterface
 import org.ldk.structs.Persist
 import org.ldk.structs.Persist.PersistInterface
+import org.ldk.structs.Result_InvoiceNoneZ.Result_InvoiceNoneZ_OK
 import org.ldk.structs.Result_NoneAPIErrorZ.Result_NoneAPIErrorZ_OK
 import org.ldk.util.TwoTuple
 import java.io.IOException
@@ -32,7 +33,9 @@ const val MARKER_PAYMENT_RECEIVED = "payment_received";
 const val MARKER_FUNDING_GENERATION_READY = "funding_generation_ready";
 //
 
-var feerate = 7500; // estimate fee rate in BTC/kB
+var feerate_fast = 7500; // estimate fee rate in BTC/kB
+var feerate_medium = 7500; // estimate fee rate in BTC/kB
+var feerate_slow = 7500; // estimate fee rate in BTC/kB
 
 var nio_peer_handler: NioPeerHandler? = null;
 var channel_manager: ChannelManager? = null;
@@ -49,7 +52,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun getVersion(promise: Promise) {
-    promise.resolve("0.0.11");
+    promise.resolve("0.0.14");
   }
 
   @ReactMethod
@@ -59,7 +62,15 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     // INITIALIZE THE FEEESTIMATOR #################################################################
     // What it's used for: estimating fees for on-chain transactions that LDK wants broadcasted.
-    val fee_estimator = FeeEstimator.new_impl { confirmation_target: LDKConfirmationTarget? -> feerate }
+    val fee_estimator = FeeEstimator.new_impl { confirmation_target: LDKConfirmationTarget? ->
+      var ret = feerate_fast;
+      if (confirmation_target != null) {
+        if (confirmation_target.equals(LDKConfirmationTarget.LDKConfirmationTarget_HighPriority)) ret = feerate_fast;
+        if (confirmation_target.equals(LDKConfirmationTarget.LDKConfirmationTarget_Normal)) ret = feerate_medium;
+        if (confirmation_target.equals(LDKConfirmationTarget.LDKConfirmationTarget_Background)) ret = feerate_slow;
+      }
+      return@new_impl ret;
+    }
 
     // INITIALIZE THE LOGGER #######################################################################
     // What it's used for: LDK logging
@@ -217,14 +228,16 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   fun transactionConfirmed(headerHex: String, height: Int, txPos: Int, transactionHex: String, promise: Promise) {
     val tx = TwoTuple(txPos.toLong(), hexStringToByteArray(transactionHex));
     val txarray = arrayOf(tx);
-    channel_manager?.transactions_confirmed(hexStringToByteArray(headerHex), height, txarray);
+    channel_manager?.as_Confirm()?.transactions_confirmed(hexStringToByteArray(headerHex), txarray, height);
+    chain_monitor?.as_Confirm()?.transactions_confirmed(hexStringToByteArray(headerHex), txarray, height);
     // TODO: feed it to channel monitor / chain monitor as well
     promise.resolve(true);
   }
 
   @ReactMethod
   fun transactionUnconfirmed(txidHex: String, promise: Promise) {
-    channel_manager?.transaction_unconfirmed(hexStringToByteArray(txidHex));
+    channel_manager?.as_Confirm()?.transaction_unconfirmed(hexStringToByteArray(txidHex));
+    chain_monitor?.as_Confirm()?.transaction_unconfirmed(hexStringToByteArray(txidHex));
     promise.resolve(true);
   }
 
@@ -236,7 +249,12 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     }
     var first = true;
     var json: String = "[";
-    channel_manager?._relevant_txids?.iterator()?.forEach {
+    channel_manager?.as_Confirm()?._relevant_txids?.iterator()?.forEach {
+      if (!first) json += ",";
+      first = false;
+      json += "\"" + byteArrayToHex(it.reversedArray()) + "\"";
+    }
+    chain_monitor?.as_Confirm()?._relevant_txids?.iterator()?.forEach {
       if (!first) json += ",";
       first = false;
       json += "\"" + byteArrayToHex(it.reversedArray()) + "\"";
@@ -247,7 +265,8 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun updateBestBlock(headerHex: String, height: Int, promise: Promise) {
-    channel_manager?.update_best_block(hexStringToByteArray(headerHex), height);
+    channel_manager?.as_Confirm()?.best_block_updated(hexStringToByteArray(headerHex), height);
+    chain_monitor?.as_Confirm()?.best_block_updated(hexStringToByteArray(headerHex), height);
     promise.resolve(true);
   }
 
@@ -321,6 +340,26 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
+  fun addInvoice(amtMsat: Int, promise: Promise) {
+    var amountStruct = Option_u64Z.constructor_none();
+    if (amtMsat != 0) {
+      amountStruct = Option_u64Z.constructor_some(amtMsat.toLong());
+    }
+
+    val invoice = UtilMethods.constructor_invoice_from_channelmanager(
+      channel_manager,
+      keys_manager?.as_KeysInterface(),
+      LDKCurrency.LDKCurrency_Bitcoin, amountStruct, ByteArray(0)
+    );
+    if (invoice is Result_InvoiceNoneZ_OK) {
+      println("Got invoice: " + (invoice as Result_InvoiceNoneZ_OK).res.to_str())
+      promise.resolve((invoice as Result_InvoiceNoneZ_OK).res.to_str());
+    } else {
+      promise.resolve(false);
+    }
+  }
+
+  @ReactMethod
   fun listPeers(promise: Promise) {
     if (peer_manager === null) {
       promise.resolve("[]");
@@ -345,7 +384,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         event.outputs,
         emptyArray<TxOut>(),
         hexStringToByteArray("76a91419129d53e6319baf19dba059bead166df90ab8f588ac"), // TODO: unhardcode me (13HaCAB4jf7FYSZexJxoczyDDnutzZigjS)
-        feerate
+        feerate_fast
       );
 
       if (txResult is Result_TransactionNoneZ.Result_TransactionNoneZ_OK) {
@@ -373,6 +412,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     if (event is Event.PaymentReceived) {
       println("ReactNativeLDK: " + "payment received, payment_hash: " + byteArrayToHex(event.payment_hash));
+      channel_manager?.claim_funds(event.payment_preimage);
       val params = Arguments.createMap();
       params.putString("payment_hash", byteArrayToHex(event.payment_hash));
       params.putString("payment_secret", byteArrayToHex(event.payment_secret));
@@ -381,7 +421,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     }
 
     if (event is Event.PendingHTLCsForwardable) {
-      // nop
+      channel_manager?.process_pending_htlc_forwards();
     }
 
     if (event is Event.FundingGenerationReady) {
@@ -397,12 +437,6 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         this.sendEvent(MARKER_FUNDING_GENERATION_READY, params);
       }
     }
-  }
-
-  @ReactMethod
-  fun timerChanFreshness(promise: Promise) {
-    channel_manager?.timer_chan_freshness_every_min();
-    promise.resolve(true);
   }
 
   @ReactMethod
@@ -428,6 +462,32 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
+  fun closeChannelCooperatively(channelIdHex: String, promise: Promise) {
+    val close_result = channel_manager?.close_channel(hexStringToByteArray(channelIdHex))
+    if (close_result is Result_NoneAPIErrorZ_OK) {
+      promise.resolve(true);
+    } else {
+      promise.resolve(false);
+    }
+
+    // Make sure the peer manager processes this new event.
+    nio_peer_handler?.check_events()
+  }
+
+  @ReactMethod
+  fun closeChannelForce(channelIdHex: String, promise: Promise) {
+    val close_result = channel_manager?.force_close_channel(hexStringToByteArray(channelIdHex));
+    if (close_result is Result_NoneAPIErrorZ_OK) {
+      promise.resolve(true);
+    } else {
+      promise.resolve(false);
+    }
+
+    // Make sure the peer manager processes this new event.
+    nio_peer_handler?.check_events();
+  }
+
+  @ReactMethod
   fun openChannelStep1(pubkey: String, channelValue: Int, promise: Promise) {
     temporary_channel_id = null;
     val peer_node_pubkey = hexStringToByteArray(pubkey);
@@ -448,7 +508,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   fun openChannelStep2(txhex: String, promise: Promise) {
     if (temporary_channel_id == null) return promise.resolve(false);
 
-    val funding_res = channel_manager?.funding_transaction_generated(temporary_channel_id, hexStringToByteArray(txhex), 0);
+    val funding_res = channel_manager?.funding_transaction_generated(temporary_channel_id, hexStringToByteArray(txhex));
     // funding_transaction_generated should only generate an error if the
     // transaction didn't meet the required format (or the counterparty already
     // closed the channel on us):
@@ -537,9 +597,13 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
-  fun setFeerate(newFeerate: Int, promise: Promise) {
-    if (newFeerate < 300) return promise.resolve(false);
-    feerate = newFeerate;
+  fun setFeerate(newFeerateFast: Int, newFeerateMedium: Int, newFeerateSlow: Int, promise: Promise) {
+    if (newFeerateFast < 300) return promise.resolve(false);
+    if (newFeerateMedium < 300) return promise.resolve(false);
+    if (newFeerateSlow < 300) return promise.resolve(false);
+    feerate_fast = newFeerateFast;
+    feerate_medium = newFeerateMedium;
+    feerate_slow = newFeerateSlow;
     promise.resolve(true);
   }
 

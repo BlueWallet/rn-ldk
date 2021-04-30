@@ -119,6 +119,15 @@ export default function App() {
         title="get node id"
         color="#841584"
       />
+
+      <Button
+        onPress={async () => {
+          const bolt11 = await RnLdk.addInvoice(2000);
+          console.warn(bolt11);
+        }}
+        title="add invoice"
+        color="#841584"
+      />
     </View>
   );
 }

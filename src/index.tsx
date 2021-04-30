@@ -68,6 +68,10 @@ class RnLdkImplementation {
   private registeredTxs: RegisterTxMsg[] = [];
   private fundingsReady: FundingGenerationReadyMsg[] = [];
 
+  private sentPayments: PaymentSentMsg[] = [];
+  private receivedPayments: PaymentReceivedMsg[] = [];
+  private failedPayments: PaymentFailedMsg[] = [];
+
   private started = false;
 
   /**
@@ -78,7 +82,8 @@ class RnLdkImplementation {
    */
   _paymentSent(event: PaymentSentMsg) {
     // TODO: figure out what to do with it
-    console.log('payment sent:', event);
+    console.warn('payment sent:', event);
+    this.sentPayments.push(event);
   }
 
   /**
@@ -89,7 +94,8 @@ class RnLdkImplementation {
    */
   _paymentReceived(event: PaymentReceivedMsg) {
     // TODO: figure out what to do with it
-    console.log('payment received:', event);
+    console.warn('payment received:', event);
+    this.receivedPayments.push(event);
   }
 
   /**
@@ -100,7 +106,8 @@ class RnLdkImplementation {
    */
   _paymentFailed(event: PaymentFailedMsg) {
     // TODO: figure out what to do with it
-    console.log('payment failed:', event);
+    console.warn('payment failed:', event);
+    this.failedPayments.push(event);
   }
 
   /**
@@ -404,7 +411,7 @@ class RnLdkImplementation {
     const blockchainTipHashHex = await response2.text();
 
     const serializedChannelManagerHex = (await this.getItem(RnLdkImplementation.CHANNEL_MANAGER_PREFIX)) || '';
-    console.warn('starting with', { blockchainTipHeight, blockchainTipHashHex, serializedChannelManagerHex });
+    console.warn('starting with', { blockchainTipHeight, blockchainTipHashHex, serializedChannelManagerHex, monitorHexes: monitorHexes.join(',') });
     return RnLdkNative.start(entropyHex, blockchainTipHeight, blockchainTipHashHex, serializedChannelManagerHex, monitorHexes.join(','));
   }
 
@@ -496,6 +503,10 @@ class RnLdkImplementation {
   async getAllKeys() {
     if (!this.storage) throw new Error('No storage');
     return this.storage.getAllKeys();
+  }
+
+  async addInvoice(amtMsat: number) {
+    return RnLdkNative.addInvoice(amtMsat);
   }
 
   async sendPayment(bolt11: string, numSatoshis: number = 666): Promise<boolean> {
