@@ -122,7 +122,7 @@ export default function App() {
 
       <Button
         onPress={async () => {
-          const bolt11 = await RnLdk.addInvoice(2000);
+          const bolt11 = await RnLdk.addInvoice(2000, 'Hello LDK');
           console.warn(bolt11);
         }}
         title="add invoice"

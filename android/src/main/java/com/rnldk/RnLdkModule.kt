@@ -340,7 +340,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
-  fun addInvoice(amtMsat: Int, promise: Promise) {
+  fun addInvoice(amtMsat: Int, description: String, promise: Promise) {
     var amountStruct = Option_u64Z.constructor_none();
     if (amtMsat != 0) {
       amountStruct = Option_u64Z.constructor_some(amtMsat.toLong());
@@ -349,14 +349,13 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     val invoice = UtilMethods.constructor_invoice_from_channelmanager(
       channel_manager,
       keys_manager?.as_KeysInterface(),
-      LDKCurrency.LDKCurrency_Bitcoin, amountStruct, ByteArray(0)
+      LDKCurrency.LDKCurrency_Bitcoin,
+      amountStruct,
+      description
     );
-    if (invoice is Result_InvoiceNoneZ_OK) {
-      println("Got invoice: " + (invoice as Result_InvoiceNoneZ_OK).res.to_str())
-      promise.resolve((invoice as Result_InvoiceNoneZ_OK).res.to_str());
-    } else {
-      promise.resolve(false);
-    }
+
+    println("Got invoice: " + invoice.toString())
+    promise.resolve(invoice.toString());
   }
 
   @ReactMethod

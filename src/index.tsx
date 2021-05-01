@@ -505,8 +505,8 @@ class RnLdkImplementation {
     return this.storage.getAllKeys();
   }
 
-  async addInvoice(amtMsat: number) {
-    return RnLdkNative.addInvoice(amtMsat);
+  async addInvoice(amtMsat: number, description: string = '') {
+    return RnLdkNative.addInvoice(amtMsat, description);
   }
 
   async sendPayment(bolt11: string, numSatoshis: number = 666): Promise<boolean> {
