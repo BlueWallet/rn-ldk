@@ -52,7 +52,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun getVersion(promise: Promise) {
-    promise.resolve("0.0.16");
+    promise.resolve("0.0.17");
   }
 
   @ReactMethod
@@ -354,8 +354,12 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       description
     );
 
-    println("Got invoice: " + invoice.toString())
-    promise.resolve(invoice.toString());
+    if (invoice is Result_InvoiceSignOrCreationErrorZ.Result_InvoiceSignOrCreationErrorZ_OK) {
+      println("Got invoice: " + invoice.res.to_str())
+      promise.resolve(invoice.res.to_str());
+    } else {
+      promise.resolve(false);
+    }
   }
 
   @ReactMethod
