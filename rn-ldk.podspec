@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.license      = package["license"]
   s.authors      = package["author"]
 
-  s.platforms    = { :ios => "10.0" }
+  s.platforms    = { :ios => "11.1" }
   s.source       = { :git => "https://github.com/Overtorment/rn-ldk.git", :tag => "#{s.version}" }
 
   
@@ -18,4 +18,6 @@ Pod::Spec.new do |s|
   
 
   s.dependency "React-Core"
+ s.vendored_framework = "ios/LDKFramework.xcframework"
+
 end
