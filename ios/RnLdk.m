@@ -9,5 +9,8 @@ RCT_EXTERN_METHOD(start:(NSString *)entropyHex
                   monitorHexes:(NSString *)monitorHexes
                   resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(getVersion:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
+
 
 @end
