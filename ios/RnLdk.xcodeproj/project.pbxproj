@@ -7,10 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-
-		5E555C0D2413F4C50049A1A2 /* RnLdk.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RnLdk.m */; };
-		F4FF95D7245B92E800C19C63 /*  RnLdk.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /*  RnLdk.swift */; };
-
+		6D13AC53264EC461002CC78F /* EventEmitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D13AC52264EC461002CC78F /* EventEmitter.m */; };
+		F4FF95D7245B92E800C19C63 /* RnLdk.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* RnLdk.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,11 +25,11 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRnLdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRnLdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
-
+		6D13AC51264EC461002CC78F /* EventEmitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventEmitter.h; sourceTree = "<group>"; };
+		6D13AC52264EC461002CC78F /* EventEmitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventEmitter.m; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RnLdk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RnLdk.m; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* RnLdk-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RnLdk-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4FF95D6245B92E800C19C63 /* RnLdk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RnLdk.swift; sourceTree = "<group>"; };
-
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,11 +54,11 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-
+				6D13AC51264EC461002CC78F /* EventEmitter.h */,
+				6D13AC52264EC461002CC78F /* EventEmitter.m */,
 				F4FF95D6245B92E800C19C63 /* RnLdk.swift */,
 				B3E7B5891CC2AC0600A0062D /* RnLdk.m */,
 				F4FF95D5245B92E700C19C63 /* RnLdk-Bridging-Header.h */,
-
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -122,10 +120,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-
 				F4FF95D7245B92E800C19C63 /* RnLdk.swift in Sources */,
-				B3E7B58A1CC2AC0600A0062D /* RnLdk.m in Sources */,
-
+				6D13AC53264EC461002CC78F /* EventEmitter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,11 +234,9 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = RnLdk;
 				SKIP_INSTALL = YES;
-
 				SWIFT_OBJC_BRIDGING_HEADER = "RnLdk-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-
 			};
 			name = Debug;
 		};
@@ -259,10 +253,8 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = RnLdk;
 				SKIP_INSTALL = YES;
-
 				SWIFT_OBJC_BRIDGING_HEADER = "RnLdk-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-
 			};
 			name = Release;
 		};
