@@ -4,31 +4,38 @@
 import Foundation
 @_exported import LDKFramework
 import Swift
-@_hasMissingDesignatedInitializers public class C2Tuple_SignatureCVec_SignatureZZ {
+public class C2Tuple_SignatureCVec_SignatureZZ {
+  public init(pointer: LDKFramework.LDKC2Tuple_SignatureCVec_SignatureZZ)
   public func clone(orig: LDKFramework.C2Tuple_SignatureCVec_SignatureZZ) -> LDKFramework.C2Tuple_SignatureCVec_SignatureZZ
   public func new(a: [Swift.UInt8], b: [[Swift.UInt8]]) -> LDKFramework.C2Tuple_SignatureCVec_SignatureZZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Watch {
-  public func watch_channel(funding_txo: LDKFramework.LDKOutPoint, monitor: LDKFramework.LDKChannelMonitor) -> LDKFramework.Result_NoneChannelMonitorUpdateErrZ
-  public func update_channel(funding_txo: LDKFramework.LDKOutPoint, update: LDKFramework.LDKChannelMonitorUpdate) -> LDKFramework.Result_NoneChannelMonitorUpdateErrZ
-  public func release_pending_monitor_events() -> [LDKFramework.LDKMonitorEvent]
-  public func free()
+open class Watch {
+  public var cOpaqueStruct: LDKFramework.LDKWatch?
+  public init()
+  public init(pointer: LDKFramework.LDKWatch)
+  open func watch_channel(funding_txo: LDKFramework.OutPoint, monitor: LDKFramework.ChannelMonitor) -> LDKFramework.Result_NoneChannelMonitorUpdateErrZ
+  open func update_channel(funding_txo: LDKFramework.OutPoint, update: LDKFramework.ChannelMonitorUpdate) -> LDKFramework.Result_NoneChannelMonitorUpdateErrZ
+  open func release_pending_monitor_events() -> [LDKFramework.LDKMonitorEvent]
+  open func free()
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_ChannelConfigDecodeErrorZ {
+public class Result_ChannelConfigDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_ChannelConfigDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_ChannelInfoDecodeErrorZ {
+public class Result_ChannelInfoDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_ChannelInfoDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_UpdateFeeDecodeErrorZ {
+public class Result_UpdateFeeDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_UpdateFeeDecodeErrorZ)
   @objc deinit
 }
 public class FundingSigned {
   public init(channel_id_arg: [Swift.UInt8], signature_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKFundingSigned)
-  public func get_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_id() -> [Swift.UInt8]
   public func set_channel_id(val: [Swift.UInt8])
   public func get_signature() -> [Swift.UInt8]
   public func set_signature(val: [Swift.UInt8])
@@ -37,22 +44,40 @@ public class FundingSigned {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_FundingSignedDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Listen {
-  public func block_connected(block: LDKFramework.LDKu8slice, height: Swift.UInt32)
-  public func block_disconnected(header: Swift.UnsafePointer<(Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)>?, height: Swift.UInt32)
-  public func free()
+public class ChannelManagerConstructor {
+  final public let channelManager: LDKFramework.ChannelManager
+  final public let channel_manager_latest_block_hash: [Swift.UInt8]?
+  public var channel_monitors: [(LDKFramework.ChannelMonitor, [Swift.UInt8])] {
+    get
+  }
+  public init(channel_manager_serialized: [Swift.UInt8], channel_monitors_serialized: [[Swift.UInt8]], keys_interface: LDKFramework.KeysInterface, fee_estimator: LDKFramework.FeeEstimator, chain_monitor: LDKFramework.ChainMonitor, filter: LDKFramework.Filter?, tx_broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger) throws
+  public init(network: LDKFramework.LDKNetwork, config: LDKFramework.UserConfig, current_blockchain_tip_hash: [Swift.UInt8], current_blockchain_tip_height: Swift.UInt32, keys_interface: LDKFramework.KeysInterface, fee_estimator: LDKFramework.FeeEstimator, chain_monitor: LDKFramework.ChainMonitor, tx_broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger)
+  @objc deinit
+}
+open class Listen {
+  public var cOpaqueStruct: LDKFramework.LDKListen?
+  public init()
+  public init(pointer: LDKFramework.LDKListen)
+  open func block_connected(block: [Swift.UInt8], height: Swift.UInt32)
+  open func block_disconnected(header: [Swift.UInt8]?, height: Swift.UInt32)
+  open func free()
   @objc deinit
 }
 public class ErroringMessageHandler {
   public init()
   public init(pointer: LDKFramework.LDKErroringMessageHandler)
-  public func as_MessageSendEventsProvider(this_arg: LDKFramework.ErroringMessageHandler) -> LDKFramework.MessageSendEventsProvider
-  public func as_ChannelMessageHandler(this_arg: LDKFramework.ErroringMessageHandler) -> LDKFramework.ChannelMessageHandler
+  public func as_MessageSendEventsProvider() -> LDKFramework.MessageSendEventsProvider
+  public func as_ChannelMessageHandler() -> LDKFramework.ChannelMessageHandler
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class UtilMethods {
+  public class func constructor_BlockHashChannelMonitorZ_read(ser: [Swift.UInt8], arg: LDKFramework.KeysInterface) -> LDKFramework.Result_C2Tuple_BlockHashChannelMonitorZDecodeErrorZ
+  public class func constructor_BlockHashChannelManagerZ_read(ser: [Swift.UInt8], arg_keys_manager: LDKFramework.KeysInterface, arg_fee_estimator: LDKFramework.FeeEstimator, arg_chain_monitor: LDKFramework.Watch, arg_tx_broadcaster: LDKFramework.BroadcasterInterface, arg_logger: LDKFramework.Logger, arg_default_config: LDKFramework.UserConfig, arg_channel_monitors: [LDKFramework.LDKChannelMonitor]) -> LDKFramework.Result_C2Tuple_BlockHashChannelManagerZDecodeErrorZ
   @objc deinit
 }
 public class ChannelReestablish {
   public init(pointer: LDKFramework.LDKChannelReestablish)
-  public func get_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_id() -> [Swift.UInt8]
   public func set_channel_id(val: [Swift.UInt8])
   public func get_next_local_commitment_number() -> Swift.UInt64
   public func set_next_local_commitment_number(val: Swift.UInt64)
@@ -66,31 +91,38 @@ public class ChannelReestablish {
 public class OutPoint {
   public init(txid_arg: [Swift.UInt8], index_arg: Swift.UInt16)
   public init(pointer: LDKFramework.LDKOutPoint)
-  public func get_txid() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_txid() -> [Swift.UInt8]
   public func set_txid(val: [Swift.UInt8])
   public func get_index() -> Swift.UInt16
   public func set_index(val: Swift.UInt16)
   public func clone(orig: LDKFramework.OutPoint) -> LDKFramework.OutPoint
-  public func to_channel_id(this_arg: LDKFramework.OutPoint) -> [Swift.UInt8]
+  public func to_channel_id() -> [Swift.UInt8]
   public func write(obj: LDKFramework.OutPoint) -> [Swift.UInt8]
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_OutPointDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_ShutdownDecodeErrorZ {
+public class Result_ShutdownDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_ShutdownDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_TransactionNoneZ {
+public class Result_TransactionNoneZ {
+  public init(pointer: LDKFramework.LDKCResult_TransactionNoneZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_ErrorMessageDecodeErrorZ {
+public class Result_ErrorMessageDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_ErrorMessageDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_SiPrefixNoneZ {
+public class Result_SiPrefixNoneZ {
+  public init(pointer: LDKFramework.LDKCResult_SiPrefixNoneZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Access {
-  public func get_utxo(genesis_hash: Swift.UnsafePointer<(Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)>?, short_channel_id: Swift.UInt64) -> LDKFramework.Result_TxOutAccessErrorZ
-  public func free()
+open class Access {
+  public var cOpaqueStruct: LDKFramework.LDKAccess?
+  public init()
+  public init(pointer: LDKFramework.LDKAccess)
+  open func get_utxo(genesis_hash: [Swift.UInt8]?, short_channel_id: Swift.UInt64) -> LDKFramework.Result_TxOutAccessErrorZ
+  open func free()
   @objc deinit
 }
 public class CounterpartyChannelTransactionParameters {
@@ -105,7 +137,8 @@ public class CounterpartyChannelTransactionParameters {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_CounterpartyChannelTransactionParametersDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_PublicKeyErrorZ {
+public class Result_PublicKeyErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_PublicKeyErrorZ)
   @objc deinit
 }
 public class ExpiryTime {
@@ -113,8 +146,8 @@ public class ExpiryTime {
   public func clone(orig: LDKFramework.ExpiryTime) -> LDKFramework.ExpiryTime
   public func from_seconds(seconds: Swift.UInt64) -> LDKFramework.Result_ExpiryTimeCreationErrorZ
   public func from_duration(duration: Swift.UInt64) -> LDKFramework.Result_ExpiryTimeCreationErrorZ
-  public func as_seconds(this_arg: LDKFramework.ExpiryTime) -> Swift.UInt64
-  public func as_duration(this_arg: LDKFramework.ExpiryTime) -> Swift.UInt64
+  public func as_seconds() -> Swift.UInt64
+  public func as_duration() -> Swift.UInt64
   @objc deinit
 }
 public class Init {
@@ -132,15 +165,16 @@ public class MonitorUpdateError {
   public func clone(orig: LDKFramework.MonitorUpdateError) -> LDKFramework.MonitorUpdateError
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_TrustedCommitmentTransactionNoneZ {
+public class Result_TrustedCommitmentTransactionNoneZ {
+  public init(pointer: LDKFramework.LDKCResult_TrustedCommitmentTransactionNoneZ)
   @objc deinit
 }
 public class FundingCreated {
   public init(temporary_channel_id_arg: [Swift.UInt8], funding_txid_arg: [Swift.UInt8], funding_output_index_arg: Swift.UInt16, signature_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKFundingCreated)
-  public func get_temporary_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_temporary_channel_id() -> [Swift.UInt8]
   public func set_temporary_channel_id(val: [Swift.UInt8])
-  public func get_funding_txid() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_funding_txid() -> [Swift.UInt8]
   public func set_funding_txid(val: [Swift.UInt8])
   public func get_funding_output_index() -> Swift.UInt16
   public func set_funding_output_index(val: Swift.UInt16)
@@ -155,39 +189,42 @@ public class ChannelMonitor {
   public init(pointer: LDKFramework.LDKChannelMonitor)
   public func clone(orig: LDKFramework.ChannelMonitor) -> LDKFramework.ChannelMonitor
   public func write(obj: LDKFramework.ChannelMonitor) -> [Swift.UInt8]
-  public func update_monitor(this_arg: LDKFramework.ChannelMonitor, updates: LDKFramework.ChannelMonitorUpdate, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> LDKFramework.Result_NoneMonitorUpdateErrorZ
-  public func get_latest_update_id(this_arg: LDKFramework.ChannelMonitor) -> Swift.UInt64
-  public func get_funding_txo(this_arg: LDKFramework.ChannelMonitor) -> LDKFramework.C2Tuple_OutPointScriptZ
-  public func get_outputs_to_watch(this_arg: LDKFramework.ChannelMonitor) -> [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ]
-  public func load_outputs_to_watch(this_arg: LDKFramework.ChannelMonitor, filter: LDKFramework.Filter)
-  public func get_and_clear_pending_monitor_events(this_arg: LDKFramework.ChannelMonitor) -> [LDKFramework.LDKMonitorEvent]
-  public func get_and_clear_pending_events(this_arg: LDKFramework.ChannelMonitor) -> [LDKFramework.LDKEvent]
-  public func get_latest_holder_commitment_txn(this_arg: LDKFramework.ChannelMonitor, logger: LDKFramework.Logger) -> [[Swift.UInt8]]
-  public func block_connected(this_arg: LDKFramework.ChannelMonitor, header: [Swift.UInt8], txdata: [LDKFramework.LDKC2Tuple_usizeTransactionZ], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.LDKTransactionOutputs]
-  public func block_disconnected(this_arg: LDKFramework.ChannelMonitor, header: [Swift.UInt8], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger)
-  public func transactions_confirmed(this_arg: LDKFramework.ChannelMonitor, header: [Swift.UInt8], txdata: [LDKFramework.LDKC2Tuple_usizeTransactionZ], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.LDKTransactionOutputs]
-  public func transaction_unconfirmed(this_arg: LDKFramework.ChannelMonitor, txid: [Swift.UInt8], broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger)
-  public func best_block_updated(this_arg: LDKFramework.ChannelMonitor, header: [Swift.UInt8], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.LDKTransactionOutputs]
-  public func get_relevant_txids(this_arg: LDKFramework.ChannelMonitor) -> [LDKFramework.LDKTxid]
+  public func update_monitor(updates: LDKFramework.ChannelMonitorUpdate, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> LDKFramework.Result_NoneMonitorUpdateErrorZ
+  public func get_latest_update_id() -> Swift.UInt64
+  public func get_funding_txo() -> LDKFramework.C2Tuple_OutPointScriptZ
+  public func get_outputs_to_watch() -> [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ]
+  public func load_outputs_to_watch(filter: LDKFramework.Filter)
+  public func get_and_clear_pending_monitor_events() -> [LDKFramework.LDKMonitorEvent]
+  public func get_and_clear_pending_events() -> [LDKFramework.LDKEvent]
+  public func get_latest_holder_commitment_txn(logger: LDKFramework.Logger) -> [[Swift.UInt8]]
+  public func block_connected(header: [Swift.UInt8], txdata: [LDKFramework.LDKC2Tuple_usizeTransactionZ], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.LDKTransactionOutputs]
+  public func block_disconnected(header: [Swift.UInt8], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger)
+  public func transactions_confirmed(header: [Swift.UInt8], txdata: [LDKFramework.LDKC2Tuple_usizeTransactionZ], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.LDKTransactionOutputs]
+  public func transaction_unconfirmed(txid: [Swift.UInt8], broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger)
+  public func best_block_updated(header: [Swift.UInt8], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.LDKTransactionOutputs]
+  public func get_relevant_txids() -> [LDKFramework.LDKTxid]
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class C2Tuple_OutPointScriptZ {
+public class C2Tuple_OutPointScriptZ {
+  public init(pointer: LDKFramework.LDKC2Tuple_OutPointScriptZ)
   public func clone(orig: LDKFramework.C2Tuple_OutPointScriptZ) -> LDKFramework.C2Tuple_OutPointScriptZ
   public func new(a: LDKFramework.OutPoint, b: [Swift.UInt8]) -> LDKFramework.C2Tuple_OutPointScriptZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class C2Tuple_BlockHashChannelManagerZ {
+public class C2Tuple_BlockHashChannelManagerZ {
+  public init(pointer: LDKFramework.LDKC2Tuple_BlockHashChannelManagerZ)
   public func new(a: [Swift.UInt8], b: LDKFramework.ChannelManager) -> LDKFramework.C2Tuple_BlockHashChannelManagerZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class C2Tuple_PaymentHashPaymentSecretZ {
+public class C2Tuple_PaymentHashPaymentSecretZ {
+  public init(pointer: LDKFramework.LDKC2Tuple_PaymentHashPaymentSecretZ)
   public func new(a: [Swift.UInt8], b: [Swift.UInt8]) -> LDKFramework.C2Tuple_PaymentHashPaymentSecretZ
   @objc deinit
 }
 public class AnnouncementSignatures {
   public init(channel_id_arg: [Swift.UInt8], short_channel_id_arg: Swift.UInt64, node_signature_arg: [Swift.UInt8], bitcoin_signature_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKAnnouncementSignatures)
-  public func get_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_id() -> [Swift.UInt8]
   public func set_channel_id(val: [Swift.UInt8])
   public func get_short_channel_id() -> Swift.UInt64
   public func set_short_channel_id(val: Swift.UInt64)
@@ -200,25 +237,29 @@ public class AnnouncementSignatures {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_AnnouncementSignaturesDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Logger {
-  public func log(record: Swift.UnsafePointer<Swift.Int8>?)
-  public func free()
+open class Logger {
+  public var cOpaqueStruct: LDKFramework.LDKLogger?
+  public init()
+  public init(pointer: LDKFramework.LDKLogger)
+  open func log(record: Swift.String?)
+  open func free()
   @objc deinit
 }
 public class SignedRawInvoice {
   public init(pointer: LDKFramework.LDKSignedRawInvoice)
   public func clone(orig: LDKFramework.SignedRawInvoice) -> LDKFramework.SignedRawInvoice
-  public func into_parts(this_arg: LDKFramework.SignedRawInvoice) -> LDKFramework.C3Tuple_RawInvoice_u832InvoiceSignatureZ
-  public func raw_invoice(this_arg: LDKFramework.SignedRawInvoice) -> LDKFramework.RawInvoice
-  public func hash(this_arg: LDKFramework.SignedRawInvoice) -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
-  public func signature(this_arg: LDKFramework.SignedRawInvoice) -> LDKFramework.InvoiceSignature
-  public func recover_payee_pub_key(this_arg: LDKFramework.SignedRawInvoice) -> LDKFramework.Result_PayeePubKeyErrorZ
-  public func check_signature(this_arg: LDKFramework.SignedRawInvoice) -> Swift.Bool
+  public func into_parts() -> LDKFramework.C3Tuple_RawInvoice_u832InvoiceSignatureZ
+  public func raw_invoice() -> LDKFramework.RawInvoice
+  public func hash() -> [Swift.UInt8]
+  public func signature() -> LDKFramework.InvoiceSignature
+  public func recover_payee_pub_key() -> LDKFramework.Result_PayeePubKeyErrorZ
+  public func check_signature() -> Swift.Bool
   public func from_str(s: Swift.String) -> LDKFramework.Result_SignedRawInvoiceNoneZ
   public func to_str(o: LDKFramework.SignedRawInvoice) -> Swift.String
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_NoneChannelMonitorUpdateErrZ {
+public class Result_NoneChannelMonitorUpdateErrZ {
+  public init(pointer: LDKFramework.LDKCResult_NoneChannelMonitorUpdateErrZ)
   @objc deinit
 }
 public class ChannelManagerReadArgs {
@@ -238,7 +279,8 @@ public class ChannelManagerReadArgs {
   public func set_default_config(val: LDKFramework.UserConfig)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_InvoiceNoneZ {
+public class Result_InvoiceNoneZ {
+  public init(pointer: LDKFramework.LDKCResult_InvoiceNoneZ)
   @objc deinit
 }
 public class ChannelPublicKeys {
@@ -259,13 +301,14 @@ public class ChannelPublicKeys {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_ChannelPublicKeysDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_C2Tuple_BlockHashChannelManagerZDecodeErrorZ {
+public class Result_C2Tuple_BlockHashChannelManagerZDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_C2Tuple_BlockHashChannelManagerZDecodeErrorZ)
   @objc deinit
 }
 public class Shutdown {
   public init(channel_id_arg: [Swift.UInt8], scriptpubkey_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKShutdown)
-  public func get_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_id() -> [Swift.UInt8]
   public func set_channel_id(val: [Swift.UInt8])
   public func get_scriptpubkey() -> [Swift.UInt8]
   public func set_scriptpubkey(val: [Swift.UInt8])
@@ -283,7 +326,7 @@ public class HTLCOutputInCommitment {
   public func set_amount_msat(val: Swift.UInt64)
   public func get_cltv_expiry() -> Swift.UInt32
   public func set_cltv_expiry(val: Swift.UInt32)
-  public func get_payment_hash() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_payment_hash() -> [Swift.UInt8]
   public func set_payment_hash(val: [Swift.UInt8])
   public func get_transaction_output_index() -> LDKFramework.Option_u32Z
   public func set_transaction_output_index(val: LDKFramework.Option_u32Z)
@@ -292,27 +335,34 @@ public class HTLCOutputInCommitment {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_HTLCOutputInCommitmentDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_BuiltCommitmentTransactionDecodeErrorZ {
+public class Result_BuiltCommitmentTransactionDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_BuiltCommitmentTransactionDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_NodeInfoDecodeErrorZ {
+public class Result_NodeInfoDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_NodeInfoDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_CVec_C2Tuple_BlockHashChannelMonitorZZErrorZ {
+public class Result_CVec_C2Tuple_BlockHashChannelMonitorZZErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_CVec_C2Tuple_BlockHashChannelMonitorZZErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_boolLightningErrorZ {
+public class Result_boolLightningErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_boolLightningErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class C2Tuple_usizeTransactionZ {
+public class C2Tuple_usizeTransactionZ {
+  public init(pointer: LDKFramework.LDKC2Tuple_usizeTransactionZ)
   public func new(a: Swift.UInt, b: [Swift.UInt8]) -> LDKFramework.C2Tuple_usizeTransactionZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ {
+public class C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ {
+  public init(pointer: LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ)
   public func new(a: [Swift.UInt8], b: [LDKFramework.LDKC2Tuple_u32ScriptZ]) -> LDKFramework.C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_UnsignedChannelAnnouncementDecodeErrorZ {
+public class Result_UnsignedChannelAnnouncementDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_UnsignedChannelAnnouncementDecodeErrorZ)
   @objc deinit
 }
 public class ChannelFeatures {
@@ -323,40 +373,45 @@ public class ChannelFeatures {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_ChannelFeaturesDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class C2Tuple_u32TxOutZ {
+public class C2Tuple_u32TxOutZ {
+  public init(pointer: LDKFramework.LDKC2Tuple_u32TxOutZ)
   public func clone(orig: LDKFramework.C2Tuple_u32TxOutZ) -> LDKFramework.C2Tuple_u32TxOutZ
   public func new(a: Swift.UInt32, b: LDKFramework.LDKTxOut) -> LDKFramework.C2Tuple_u32TxOutZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_CommitmentSignedDecodeErrorZ {
+public class Result_CommitmentSignedDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_CommitmentSignedDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_HolderCommitmentTransactionDecodeErrorZ {
+public class Result_HolderCommitmentTransactionDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_HolderCommitmentTransactionDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_PaymentSecretAPIErrorZ {
+public class Result_PaymentSecretAPIErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_PaymentSecretAPIErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_InvoiceSignOrCreationErrorZ {
+public class Result_InvoiceSignOrCreationErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_InvoiceSignOrCreationErrorZ)
   @objc deinit
 }
 public class PeerManager {
   public init(message_handler: LDKFramework.MessageHandler, our_node_secret: [Swift.UInt8], ephemeral_random_data: [Swift.UInt8], logger: LDKFramework.Logger)
   public init(pointer: LDKFramework.LDKPeerManager)
-  public func get_peer_node_ids(this_arg: LDKFramework.PeerManager) -> [[Swift.UInt8]]
-  public func new_outbound_connection(this_arg: LDKFramework.PeerManager, their_node_id: [Swift.UInt8], descriptor: LDKFramework.SocketDescriptor) -> LDKFramework.Result_CVec_u8ZPeerHandleErrorZ
-  public func new_inbound_connection(this_arg: LDKFramework.PeerManager, descriptor: LDKFramework.SocketDescriptor) -> LDKFramework.Result_NonePeerHandleErrorZ
-  public func write_buffer_space_avail(this_arg: LDKFramework.PeerManager, descriptor: LDKFramework.SocketDescriptor) -> LDKFramework.Result_NonePeerHandleErrorZ
-  public func read_event(this_arg: LDKFramework.PeerManager, peer_descriptor: LDKFramework.SocketDescriptor, data: [Swift.UInt8]) -> LDKFramework.Result_boolPeerHandleErrorZ
-  public func process_events(this_arg: LDKFramework.PeerManager)
-  public func socket_disconnected(this_arg: LDKFramework.PeerManager, descriptor: LDKFramework.SocketDescriptor)
-  public func disconnect_by_node_id(this_arg: LDKFramework.PeerManager, node_id: [Swift.UInt8], no_connection_possible: Swift.Bool)
-  public func timer_tick_occurred(this_arg: LDKFramework.PeerManager)
+  public func get_peer_node_ids() -> [[Swift.UInt8]]
+  public func new_outbound_connection(their_node_id: [Swift.UInt8], descriptor: LDKFramework.SocketDescriptor) -> LDKFramework.Result_CVec_u8ZPeerHandleErrorZ
+  public func new_inbound_connection(descriptor: LDKFramework.SocketDescriptor) -> LDKFramework.Result_NonePeerHandleErrorZ
+  public func write_buffer_space_avail(descriptor: LDKFramework.SocketDescriptor) -> LDKFramework.Result_NonePeerHandleErrorZ
+  public func read_event(peer_descriptor: LDKFramework.SocketDescriptor, data: [Swift.UInt8]) -> LDKFramework.Result_boolPeerHandleErrorZ
+  public func process_events()
+  public func socket_disconnected(descriptor: LDKFramework.SocketDescriptor)
+  public func disconnect_by_node_id(node_id: [Swift.UInt8], no_connection_possible: Swift.Bool)
+  public func timer_tick_occurred()
   @objc deinit
 }
 public class LockedNetworkGraph {
   public init(pointer: LDKFramework.LDKLockedNetworkGraph)
-  public func graph(this_arg: LDKFramework.LockedNetworkGraph) -> LDKFramework.NetworkGraph
+  public func graph() -> LDKFramework.NetworkGraph
   @objc deinit
 }
 public class ChannelConfig {
@@ -375,10 +430,12 @@ public class ChannelConfig {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_ChannelConfigDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_boolPeerHandleErrorZ {
+public class Result_boolPeerHandleErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_boolPeerHandleErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_CResult_NetAddressu8ZDecodeErrorZ {
+public class Result_CResult_NetAddressu8ZDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_CResult_NetAddressu8ZDecodeErrorZ)
   @objc deinit
 }
 public class StaticPaymentOutputDescriptor {
@@ -387,27 +444,30 @@ public class StaticPaymentOutputDescriptor {
   public func get_outpoint() -> LDKFramework.OutPoint
   public func set_outpoint(val: LDKFramework.OutPoint)
   public func set_output(val: LDKFramework.LDKTxOut)
-  public func get_channel_keys_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_keys_id() -> [Swift.UInt8]
   public func set_channel_keys_id(val: [Swift.UInt8])
   public func get_channel_value_satoshis() -> Swift.UInt64
   public func set_channel_value_satoshis(val: Swift.UInt64)
   public func clone(orig: LDKFramework.StaticPaymentOutputDescriptor) -> LDKFramework.StaticPaymentOutputDescriptor
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class SocketDescriptor {
-  public func send_data(data: LDKFramework.LDKu8slice, resume_read: Swift.Bool) -> Swift.UInt
-  public func disconnect_socket()
-  public func eq(other_arg: Swift.UnsafePointer<LDKFramework.LDKSocketDescriptor>) -> Swift.Bool
-  public func hash() -> Swift.UInt64
-  public func clone() -> Swift.UnsafeMutableRawPointer
-  public func free()
+open class SocketDescriptor {
+  public var cOpaqueStruct: LDKFramework.LDKSocketDescriptor?
+  public init()
+  public init(pointer: LDKFramework.LDKSocketDescriptor)
+  open func send_data(data: [Swift.UInt8], resume_read: Swift.Bool) -> Swift.UInt
+  open func disconnect_socket()
+  open func eq(other_arg: LDKFramework.SocketDescriptor) -> Swift.Bool
+  open func hash() -> Swift.UInt64
+  open func clone() -> Swift.UnsafeMutableRawPointer
+  open func free()
   @objc deinit
 }
 public class OpenChannel {
   public init(pointer: LDKFramework.LDKOpenChannel)
-  public func get_chain_hash() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_chain_hash() -> [Swift.UInt8]
   public func set_chain_hash(val: [Swift.UInt8])
-  public func get_temporary_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_temporary_channel_id() -> [Swift.UInt8]
   public func set_temporary_channel_id(val: [Swift.UInt8])
   public func get_funding_satoshis() -> Swift.UInt64
   public func set_funding_satoshis(val: Swift.UInt64)
@@ -446,16 +506,18 @@ public class OpenChannel {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_OpenChannelDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_CVec_u8ZPeerHandleErrorZ {
+public class Result_CVec_u8ZPeerHandleErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_CVec_u8ZPeerHandleErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_PayeePubKeyErrorZ {
+public class Result_PayeePubKeyErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_PayeePubKeyErrorZ)
   @objc deinit
 }
 public class ErrorMessage {
   public init(channel_id_arg: [Swift.UInt8], data_arg: Swift.String)
   public init(pointer: LDKFramework.LDKErrorMessage)
-  public func get_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_id() -> [Swift.UInt8]
   public func set_channel_id(val: [Swift.UInt8])
   public func get_data() -> Swift.String
   public func set_data(val: Swift.String)
@@ -464,10 +526,12 @@ public class ErrorMessage {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_ErrorMessageDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_ExpiryTimeCreationErrorZ {
+public class Result_ExpiryTimeCreationErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_ExpiryTimeCreationErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_ChannelReestablishDecodeErrorZ {
+public class Result_ChannelReestablishDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_ChannelReestablishDecodeErrorZ)
   @objc deinit
 }
 public class HTLCUpdate {
@@ -479,7 +543,7 @@ public class HTLCUpdate {
 }
 public class UnsignedChannelUpdate {
   public init(pointer: LDKFramework.LDKUnsignedChannelUpdate)
-  public func get_chain_hash() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_chain_hash() -> [Swift.UInt8]
   public func set_chain_hash(val: [Swift.UInt8])
   public func get_short_channel_id() -> Swift.UInt64
   public func set_short_channel_id(val: Swift.UInt64)
@@ -500,10 +564,12 @@ public class UnsignedChannelUpdate {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_UnsignedChannelUpdateDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_NodeAnnouncementInfoDecodeErrorZ {
+public class Result_NodeAnnouncementInfoDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_NodeAnnouncementInfoDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class NetAddress {
+public class NetAddress {
+  public init(pointer: LDKFramework.LDKNetAddress)
   @objc deinit
 }
 public class CommitmentUpdate {
@@ -520,16 +586,21 @@ public class CommitmentUpdate {
   public func clone(orig: LDKFramework.CommitmentUpdate) -> LDKFramework.CommitmentUpdate
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Persist {
-  public func persist_new_channel(id: LDKFramework.LDKOutPoint, data: Swift.UnsafePointer<LDKFramework.LDKChannelMonitor>) -> LDKFramework.Result_NoneChannelMonitorUpdateErrZ
-  public func update_persisted_channel(id: LDKFramework.LDKOutPoint, update: Swift.UnsafePointer<LDKFramework.LDKChannelMonitorUpdate>, data: Swift.UnsafePointer<LDKFramework.LDKChannelMonitor>) -> LDKFramework.Result_NoneChannelMonitorUpdateErrZ
-  public func free()
+open class Persist {
+  public var cOpaqueStruct: LDKFramework.LDKPersist?
+  public init()
+  public init(pointer: LDKFramework.LDKPersist)
+  open func persist_new_channel(id: LDKFramework.OutPoint, data: LDKFramework.ChannelMonitor) -> LDKFramework.Result_NoneChannelMonitorUpdateErrZ
+  open func update_persisted_channel(id: LDKFramework.OutPoint, update: LDKFramework.ChannelMonitorUpdate, data: LDKFramework.ChannelMonitor) -> LDKFramework.Result_NoneChannelMonitorUpdateErrZ
+  open func free()
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_NoneAPIErrorZ {
+public class Result_NoneAPIErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_NoneAPIErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_CVec_CVec_u8ZZNoneZ {
+public class Result_CVec_CVec_u8ZZNoneZ {
+  public init(pointer: LDKFramework.LDKCResult_CVec_CVec_u8ZZNoneZ)
   @objc deinit
 }
 public class Pong {
@@ -542,20 +613,25 @@ public class Pong {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_PongDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class SignOrCreationError {
+public class SignOrCreationError {
+  public init(pointer: LDKFramework.LDKSignOrCreationError)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_FundingLockedDecodeErrorZ {
+public class Result_FundingLockedDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_FundingLockedDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_CounterpartyChannelTransactionParametersDecodeErrorZ {
+public class Result_CounterpartyChannelTransactionParametersDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_CounterpartyChannelTransactionParametersDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class C2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ {
+public class C2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ {
+  public init(pointer: LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ)
   public func new(a: [Swift.UInt8], b: [LDKFramework.LDKC2Tuple_u32TxOutZ]) -> LDKFramework.C2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_ChannelUpdateDecodeErrorZ {
+public class Result_ChannelUpdateDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_ChannelUpdateDecodeErrorZ)
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class LDKExampleClass {
@@ -563,28 +639,34 @@ public class Pong {
   public func printInstance()
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_InMemorySignerDecodeErrorZ {
+public class Result_InMemorySignerDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_InMemorySignerDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class RoutingMessageHandler {
-  public func handle_node_announcement(msg: Swift.UnsafePointer<LDKFramework.LDKNodeAnnouncement>) -> LDKFramework.Result_boolLightningErrorZ
-  public func handle_channel_announcement(msg: Swift.UnsafePointer<LDKFramework.LDKChannelAnnouncement>) -> LDKFramework.Result_boolLightningErrorZ
-  public func handle_channel_update(msg: Swift.UnsafePointer<LDKFramework.LDKChannelUpdate>) -> LDKFramework.Result_boolLightningErrorZ
-  public func handle_htlc_fail_channel_update(update: Swift.UnsafePointer<LDKFramework.LDKHTLCFailChannelUpdate>)
-  public func get_next_channel_announcements(starting_point: Swift.UInt64, batch_amount: Swift.UInt8) -> [LDKFramework.LDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ]
-  public func get_next_node_announcements(starting_point: LDKFramework.LDKPublicKey, batch_amount: Swift.UInt8) -> [LDKFramework.LDKNodeAnnouncement]
-  public func sync_routing_table(their_node_id: LDKFramework.LDKPublicKey, initValue: Swift.UnsafePointer<LDKFramework.LDKInit>)
-  public func handle_reply_channel_range(their_node_id: LDKFramework.LDKPublicKey, msg: LDKFramework.LDKReplyChannelRange) -> LDKFramework.Result_NoneLightningErrorZ
-  public func handle_reply_short_channel_ids_end(their_node_id: LDKFramework.LDKPublicKey, msg: LDKFramework.LDKReplyShortChannelIdsEnd) -> LDKFramework.Result_NoneLightningErrorZ
-  public func handle_query_channel_range(their_node_id: LDKFramework.LDKPublicKey, msg: LDKFramework.LDKQueryChannelRange) -> LDKFramework.Result_NoneLightningErrorZ
-  public func handle_query_short_channel_ids(their_node_id: LDKFramework.LDKPublicKey, msg: LDKFramework.LDKQueryShortChannelIds) -> LDKFramework.Result_NoneLightningErrorZ
-  public func free()
+open class RoutingMessageHandler {
+  public var cOpaqueStruct: LDKFramework.LDKRoutingMessageHandler?
+  public init()
+  public init(pointer: LDKFramework.LDKRoutingMessageHandler)
+  open func handle_node_announcement(msg: LDKFramework.NodeAnnouncement) -> LDKFramework.Result_boolLightningErrorZ
+  open func handle_channel_announcement(msg: LDKFramework.ChannelAnnouncement) -> LDKFramework.Result_boolLightningErrorZ
+  open func handle_channel_update(msg: LDKFramework.ChannelUpdate) -> LDKFramework.Result_boolLightningErrorZ
+  open func handle_htlc_fail_channel_update(update: LDKFramework.HTLCFailChannelUpdate)
+  open func get_next_channel_announcements(starting_point: Swift.UInt64, batch_amount: Swift.UInt8) -> [LDKFramework.LDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ]
+  open func get_next_node_announcements(starting_point: [Swift.UInt8], batch_amount: Swift.UInt8) -> [LDKFramework.LDKNodeAnnouncement]
+  open func sync_routing_table(their_node_id: [Swift.UInt8], initValue: LDKFramework.Init)
+  open func handle_reply_channel_range(their_node_id: [Swift.UInt8], msg: LDKFramework.ReplyChannelRange) -> LDKFramework.Result_NoneLightningErrorZ
+  open func handle_reply_short_channel_ids_end(their_node_id: [Swift.UInt8], msg: LDKFramework.ReplyShortChannelIdsEnd) -> LDKFramework.Result_NoneLightningErrorZ
+  open func handle_query_channel_range(their_node_id: [Swift.UInt8], msg: LDKFramework.QueryChannelRange) -> LDKFramework.Result_NoneLightningErrorZ
+  open func handle_query_short_channel_ids(their_node_id: [Swift.UInt8], msg: LDKFramework.QueryShortChannelIds) -> LDKFramework.Result_NoneLightningErrorZ
+  open func free()
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_UpdateFulfillHTLCDecodeErrorZ {
+public class Result_UpdateFulfillHTLCDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_UpdateFulfillHTLCDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_PingDecodeErrorZ {
+public class Result_PingDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_PingDecodeErrorZ)
   @objc deinit
 }
 public class BuiltCommitmentTransaction {
@@ -592,16 +674,17 @@ public class BuiltCommitmentTransaction {
   public init(pointer: LDKFramework.LDKBuiltCommitmentTransaction)
   public func get_transaction() -> [Swift.UInt8]
   public func set_transaction(val: [Swift.UInt8])
-  public func get_txid() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_txid() -> [Swift.UInt8]
   public func set_txid(val: [Swift.UInt8])
   public func clone(orig: LDKFramework.BuiltCommitmentTransaction) -> LDKFramework.BuiltCommitmentTransaction
   public func write(obj: LDKFramework.BuiltCommitmentTransaction) -> [Swift.UInt8]
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_BuiltCommitmentTransactionDecodeErrorZ
-  public func get_sighash_all(this_arg: LDKFramework.BuiltCommitmentTransaction, funding_redeemscript: [Swift.UInt8], channel_value_satoshis: Swift.UInt64) -> [Swift.UInt8]
-  public func sign(this_arg: LDKFramework.BuiltCommitmentTransaction, funding_key: [Swift.UInt8], funding_redeemscript: [Swift.UInt8], channel_value_satoshis: Swift.UInt64) -> [Swift.UInt8]
+  public func get_sighash_all(funding_redeemscript: [Swift.UInt8], channel_value_satoshis: Swift.UInt64) -> [Swift.UInt8]
+  public func sign(funding_key: [Swift.UInt8], funding_redeemscript: [Swift.UInt8], channel_value_satoshis: Swift.UInt64) -> [Swift.UInt8]
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_HTLCUpdateDecodeErrorZ {
+public class Result_HTLCUpdateDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_HTLCUpdateDecodeErrorZ)
   @objc deinit
 }
 public class CommitmentTransaction {
@@ -609,12 +692,12 @@ public class CommitmentTransaction {
   public func clone(orig: LDKFramework.CommitmentTransaction) -> LDKFramework.CommitmentTransaction
   public func write(obj: LDKFramework.CommitmentTransaction) -> [Swift.UInt8]
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_CommitmentTransactionDecodeErrorZ
-  public func commitment_number(this_arg: LDKFramework.CommitmentTransaction) -> Swift.UInt64
-  public func to_broadcaster_value_sat(this_arg: LDKFramework.CommitmentTransaction) -> Swift.UInt64
-  public func to_countersignatory_value_sat(this_arg: LDKFramework.CommitmentTransaction) -> Swift.UInt64
-  public func feerate_per_kw(this_arg: LDKFramework.CommitmentTransaction) -> Swift.UInt32
-  public func trust(this_arg: LDKFramework.CommitmentTransaction) -> LDKFramework.TrustedCommitmentTransaction
-  public func verify(this_arg: LDKFramework.CommitmentTransaction, channel_parameters: LDKFramework.DirectedChannelTransactionParameters, broadcaster_keys: LDKFramework.ChannelPublicKeys, countersignatory_keys: LDKFramework.ChannelPublicKeys) -> LDKFramework.Result_TrustedCommitmentTransactionNoneZ
+  public func commitment_number() -> Swift.UInt64
+  public func to_broadcaster_value_sat() -> Swift.UInt64
+  public func to_countersignatory_value_sat() -> Swift.UInt64
+  public func feerate_per_kw() -> Swift.UInt32
+  public func trust() -> LDKFramework.TrustedCommitmentTransaction
+  public func verify(channel_parameters: LDKFramework.DirectedChannelTransactionParameters, broadcaster_keys: LDKFramework.ChannelPublicKeys, countersignatory_keys: LDKFramework.ChannelPublicKeys) -> LDKFramework.Result_TrustedCommitmentTransactionNoneZ
   @objc deinit
 }
 public class InvoiceFeatures {
@@ -637,23 +720,27 @@ public class ChannelUpdate {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_ChannelUpdateDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_NetAddressu8Z {
+public class Result_NetAddressu8Z {
+  public init(pointer: LDKFramework.LDKCResult_NetAddressu8Z)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_TxCreationKeysErrorZ {
+public class Result_TxCreationKeysErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_TxCreationKeysErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_SignatureNoneZ {
+public class Result_SignatureNoneZ {
+  public init(pointer: LDKFramework.LDKCResult_SignatureNoneZ)
   @objc deinit
 }
 public class RouteHint {
   public init(pointer: LDKFramework.LDKRouteHint)
   public func clone(orig: LDKFramework.RouteHint) -> LDKFramework.RouteHint
   public func new(hops: [LDKFramework.LDKRouteHintHop]) -> LDKFramework.Result_RouteHintCreationErrorZ
-  public func into_inner(this_arg: LDKFramework.RouteHint) -> [LDKFramework.LDKRouteHintHop]
+  public func into_inner() -> [LDKFramework.LDKRouteHintHop]
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_RouteHintCreationErrorZ {
+public class Result_RouteHintCreationErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_RouteHintCreationErrorZ)
   @objc deinit
 }
 public class ChannelMonitorUpdate {
@@ -665,16 +752,18 @@ public class ChannelMonitorUpdate {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_ChannelMonitorUpdateDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_C2Tuple_SignatureCVec_SignatureZZNoneZ {
+public class Result_C2Tuple_SignatureCVec_SignatureZZNoneZ {
+  public init(pointer: LDKFramework.LDKCResult_C2Tuple_SignatureCVec_SignatureZZNoneZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class HTLCFailChannelUpdate {
+public class HTLCFailChannelUpdate {
+  public init(pointer: LDKFramework.LDKHTLCFailChannelUpdate)
   @objc deinit
 }
 public class GossipTimestampFilter {
   public init(chain_hash_arg: [Swift.UInt8], first_timestamp_arg: Swift.UInt32, timestamp_range_arg: Swift.UInt32)
   public init(pointer: LDKFramework.LDKGossipTimestampFilter)
-  public func get_chain_hash() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_chain_hash() -> [Swift.UInt8]
   public func set_chain_hash(val: [Swift.UInt8])
   public func get_first_timestamp() -> Swift.UInt32
   public func set_first_timestamp(val: Swift.UInt32)
@@ -685,16 +774,18 @@ public class GossipTimestampFilter {
   public func write(obj: LDKFramework.GossipTimestampFilter) -> [Swift.UInt8]
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_ClosingSignedDecodeErrorZ {
+public class Result_ClosingSignedDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_ClosingSignedDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Fallback {
+public class Fallback {
+  public init(pointer: LDKFramework.LDKFallback)
   @objc deinit
 }
 public class ClosingSigned {
   public init(channel_id_arg: [Swift.UInt8], fee_satoshis_arg: Swift.UInt64, signature_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKClosingSigned)
-  public func get_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_id() -> [Swift.UInt8]
   public func set_channel_id(val: [Swift.UInt8])
   public func get_fee_satoshis() -> Swift.UInt64
   public func set_fee_satoshis(val: Swift.UInt64)
@@ -705,113 +796,120 @@ public class ClosingSigned {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_ClosingSignedDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_UpdateAddHTLCDecodeErrorZ {
+public class Result_UpdateAddHTLCDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_UpdateAddHTLCDecodeErrorZ)
   @objc deinit
 }
 public typealias LDKTransactionOutputs = LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ
 public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
 @_hasMissingDesignatedInitializers public class Bindings {
-  public class func new_LDKSignature(array: [Swift.UInt8]) -> LDKFramework.LDKSignature
-  public class func LDKSignature_to_array(nativeType: LDKFramework.LDKSignature) -> [Swift.UInt8]
-  public class func new_LDKSixteenBytes(array: [Swift.UInt8]) -> LDKFramework.LDKSixteenBytes
-  public class func LDKSixteenBytes_to_array(nativeType: LDKFramework.LDKSixteenBytes) -> [Swift.UInt8]
-  public class func new_LDKTwentyBytes(array: [Swift.UInt8]) -> LDKFramework.LDKTwentyBytes
-  public class func LDKTwentyBytes_to_array(nativeType: LDKFramework.LDKTwentyBytes) -> [Swift.UInt8]
-  public class func new_LDKThirtyTwoBytes(array: [Swift.UInt8]) -> LDKFramework.LDKThirtyTwoBytes
-  public class func LDKThirtyTwoBytes_to_array(nativeType: LDKFramework.LDKThirtyTwoBytes) -> [Swift.UInt8]
+  public class func new_LDKSecretKey(array: [Swift.UInt8]) -> LDKFramework.LDKSecretKey
+  public class func LDKSecretKey_to_array(nativeType: LDKFramework.LDKSecretKey) -> [Swift.UInt8]
   public class func new_LDKTenBytes(array: [Swift.UInt8]) -> LDKFramework.LDKTenBytes
   public class func LDKTenBytes_to_array(nativeType: LDKFramework.LDKTenBytes) -> [Swift.UInt8]
   public class func new_LDKRecoverableSignature(array: [Swift.UInt8]) -> LDKFramework.LDKRecoverableSignature
   public class func LDKRecoverableSignature_to_array(nativeType: LDKFramework.LDKRecoverableSignature) -> [Swift.UInt8]
-  public class func new_LDKPublicKey(array: [Swift.UInt8]) -> LDKFramework.LDKPublicKey
-  public class func LDKPublicKey_to_array(nativeType: LDKFramework.LDKPublicKey) -> [Swift.UInt8]
-  public class func new_LDKThreeBytes(array: [Swift.UInt8]) -> LDKFramework.LDKThreeBytes
-  public class func LDKThreeBytes_to_array(nativeType: LDKFramework.LDKThreeBytes) -> [Swift.UInt8]
-  public class func new_LDKSecretKey(array: [Swift.UInt8]) -> LDKFramework.LDKSecretKey
-  public class func LDKSecretKey_to_array(nativeType: LDKFramework.LDKSecretKey) -> [Swift.UInt8]
   public class func new_LDKFourBytes(array: [Swift.UInt8]) -> LDKFramework.LDKFourBytes
   public class func LDKFourBytes_to_array(nativeType: LDKFramework.LDKFourBytes) -> [Swift.UInt8]
-  public class func new_LDKCVec_MessageSendEventZ(array: [LDKFramework.LDKMessageSendEvent]) -> LDKFramework.LDKCVec_MessageSendEventZ
-  public class func LDKCVec_MessageSendEventZ_to_array(nativeType: LDKFramework.LDKCVec_MessageSendEventZ) -> [LDKFramework.LDKMessageSendEvent]
-  public class func new_LDKCVec_UpdateAddHTLCZ(array: [LDKFramework.LDKUpdateAddHTLC]) -> LDKFramework.LDKCVec_UpdateAddHTLCZ
-  public class func LDKCVec_UpdateAddHTLCZ_to_array(nativeType: LDKFramework.LDKCVec_UpdateAddHTLCZ) -> [LDKFramework.LDKUpdateAddHTLC]
-  public class func new_LDKCVec_TxidZ(array: [LDKFramework.LDKThirtyTwoBytes]) -> LDKFramework.LDKCVec_TxidZ
-  public class func LDKCVec_TxidZ_to_array(nativeType: LDKFramework.LDKCVec_TxidZ) -> [LDKFramework.LDKThirtyTwoBytes]
-  public class func new_LDKCVec_ChannelMonitorZ(array: [LDKFramework.LDKChannelMonitor]) -> LDKFramework.LDKCVec_ChannelMonitorZ
-  public class func LDKCVec_ChannelMonitorZ_to_array(nativeType: LDKFramework.LDKCVec_ChannelMonitorZ) -> [LDKFramework.LDKChannelMonitor]
-  public class func new_LDKCVec_RouteHintZ(array: [LDKFramework.LDKRouteHint]) -> LDKFramework.LDKCVec_RouteHintZ
-  public class func LDKCVec_RouteHintZ_to_array(nativeType: LDKFramework.LDKCVec_RouteHintZ) -> [LDKFramework.LDKRouteHint]
-  public class func new_LDKCVec_UpdateFailHTLCZ(array: [LDKFramework.LDKUpdateFailHTLC]) -> LDKFramework.LDKCVec_UpdateFailHTLCZ
-  public class func LDKCVec_UpdateFailHTLCZ_to_array(nativeType: LDKFramework.LDKCVec_UpdateFailHTLCZ) -> [LDKFramework.LDKUpdateFailHTLC]
-  public class func new_LDKCVec_PublicKeyZ(array: [[Swift.UInt8]]) -> LDKFramework.LDKCVec_PublicKeyZ
-  public class func LDKCVec_PublicKeyZ_to_array(nativeType: LDKFramework.LDKCVec_PublicKeyZ) -> [[Swift.UInt8]]
-  public class func new_LDKCVec_CVec_u8ZZ(array: [[Swift.UInt8]]) -> LDKFramework.LDKCVec_CVec_u8ZZ
-  public class func LDKCVec_CVec_u8ZZ_to_array(nativeType: LDKFramework.LDKCVec_CVec_u8ZZ) -> [[Swift.UInt8]]
-  public class func new_LDKCVec_RouteHintHopZ(array: [LDKFramework.LDKRouteHintHop]) -> LDKFramework.LDKCVec_RouteHintHopZ
-  public class func LDKCVec_RouteHintHopZ_to_array(nativeType: LDKFramework.LDKCVec_RouteHintHopZ) -> [LDKFramework.LDKRouteHintHop]
-  public class func new_LDKCVec_C2Tuple_u32TxOutZZ(array: [LDKFramework.LDKC2Tuple_u32TxOutZ]) -> LDKFramework.LDKCVec_C2Tuple_u32TxOutZZ
-  public class func LDKCVec_C2Tuple_u32TxOutZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_u32TxOutZZ) -> [LDKFramework.LDKC2Tuple_u32TxOutZ]
-  public class func new_LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ(array: [LDKFramework.LDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ]) -> LDKFramework.LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ
-  public class func LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ_to_array(nativeType: LDKFramework.LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ) -> [LDKFramework.LDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ]
+  public class func new_LDKThreeBytes(array: [Swift.UInt8]) -> LDKFramework.LDKThreeBytes
+  public class func LDKThreeBytes_to_array(nativeType: LDKFramework.LDKThreeBytes) -> [Swift.UInt8]
+  public class func new_LDKTwentyBytes(array: [Swift.UInt8]) -> LDKFramework.LDKTwentyBytes
+  public class func LDKTwentyBytes_to_array(nativeType: LDKFramework.LDKTwentyBytes) -> [Swift.UInt8]
+  public class func new_LDKPublicKey(array: [Swift.UInt8]) -> LDKFramework.LDKPublicKey
+  public class func LDKPublicKey_to_array(nativeType: LDKFramework.LDKPublicKey) -> [Swift.UInt8]
+  public class func new_LDKThirtyTwoBytes(array: [Swift.UInt8]) -> LDKFramework.LDKThirtyTwoBytes
+  public class func LDKThirtyTwoBytes_to_array(nativeType: LDKFramework.LDKThirtyTwoBytes) -> [Swift.UInt8]
+  public class func new_LDKSignature(array: [Swift.UInt8]) -> LDKFramework.LDKSignature
+  public class func LDKSignature_to_array(nativeType: LDKFramework.LDKSignature) -> [Swift.UInt8]
+  public class func new_LDKSixteenBytes(array: [Swift.UInt8]) -> LDKFramework.LDKSixteenBytes
+  public class func LDKSixteenBytes_to_array(nativeType: LDKFramework.LDKSixteenBytes) -> [Swift.UInt8]
+  public class func array_to_tuple80(array: [Swift.UInt8]) -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public class func tuple80_to_array(nativeType: (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)) -> [Swift.UInt8]
   public class func new_LDKCVec_UpdateFulfillHTLCZ(array: [LDKFramework.LDKUpdateFulfillHTLC]) -> LDKFramework.LDKCVec_UpdateFulfillHTLCZ
   public class func LDKCVec_UpdateFulfillHTLCZ_to_array(nativeType: LDKFramework.LDKCVec_UpdateFulfillHTLCZ) -> [LDKFramework.LDKUpdateFulfillHTLC]
-  public class func new_LDKCVec_APIErrorZ(array: [LDKFramework.LDKAPIError]) -> LDKFramework.LDKCVec_APIErrorZ
-  public class func LDKCVec_APIErrorZ_to_array(nativeType: LDKFramework.LDKCVec_APIErrorZ) -> [LDKFramework.LDKAPIError]
-  public class func new_LDKCVec_ChannelDetailsZ(array: [LDKFramework.LDKChannelDetails]) -> LDKFramework.LDKCVec_ChannelDetailsZ
-  public class func LDKCVec_ChannelDetailsZ_to_array(nativeType: LDKFramework.LDKCVec_ChannelDetailsZ) -> [LDKFramework.LDKChannelDetails]
-  public class func new_LDKCVec_SpendableOutputDescriptorZ(array: [LDKFramework.LDKSpendableOutputDescriptor]) -> LDKFramework.LDKCVec_SpendableOutputDescriptorZ
-  public class func LDKCVec_SpendableOutputDescriptorZ_to_array(nativeType: LDKFramework.LDKCVec_SpendableOutputDescriptorZ) -> [LDKFramework.LDKSpendableOutputDescriptor]
-  public class func new_LDKCVec_u64Z(array: [Swift.UInt64]) -> LDKFramework.LDKCVec_u64Z
-  public class func LDKCVec_u64Z_to_array(nativeType: LDKFramework.LDKCVec_u64Z) -> [Swift.UInt64]
-  public class func new_LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ(array: [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ]) -> LDKFramework.LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ
-  public class func LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ) -> [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ]
-  public class func new_LDKCVec_UpdateFailMalformedHTLCZ(array: [LDKFramework.LDKUpdateFailMalformedHTLC]) -> LDKFramework.LDKCVec_UpdateFailMalformedHTLCZ
-  public class func LDKCVec_UpdateFailMalformedHTLCZ_to_array(nativeType: LDKFramework.LDKCVec_UpdateFailMalformedHTLCZ) -> [LDKFramework.LDKUpdateFailMalformedHTLC]
-  public class func new_LDKCVec_TransactionOutputsZ(array: [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ]) -> LDKFramework.LDKCVec_TransactionOutputsZ
-  public class func LDKCVec_TransactionOutputsZ_to_array(nativeType: LDKFramework.LDKCVec_TransactionOutputsZ) -> [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ]
-  public class func new_LDKCVec_CVec_RouteHopZZ(array: [[LDKFramework.LDKRouteHop]]) -> LDKFramework.LDKCVec_CVec_RouteHopZZ
-  public class func LDKCVec_CVec_RouteHopZZ_to_array(nativeType: LDKFramework.LDKCVec_CVec_RouteHopZZ) -> [[LDKFramework.LDKRouteHop]]
-  public class func new_LDKCVec_RouteHopZ(array: [LDKFramework.LDKRouteHop]) -> LDKFramework.LDKCVec_RouteHopZ
-  public class func LDKCVec_RouteHopZ_to_array(nativeType: LDKFramework.LDKCVec_RouteHopZ) -> [LDKFramework.LDKRouteHop]
-  public class func new_LDKCVec_EventZ(array: [LDKFramework.LDKEvent]) -> LDKFramework.LDKCVec_EventZ
-  public class func LDKCVec_EventZ_to_array(nativeType: LDKFramework.LDKCVec_EventZ) -> [LDKFramework.LDKEvent]
-  public class func new_LDKCVec_NodeAnnouncementZ(array: [LDKFramework.LDKNodeAnnouncement]) -> LDKFramework.LDKCVec_NodeAnnouncementZ
-  public class func LDKCVec_NodeAnnouncementZ_to_array(nativeType: LDKFramework.LDKCVec_NodeAnnouncementZ) -> [LDKFramework.LDKNodeAnnouncement]
-  public class func new_LDKCVec_C2Tuple_BlockHashChannelMonitorZZ(array: [LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ]) -> LDKFramework.LDKCVec_C2Tuple_BlockHashChannelMonitorZZ
-  public class func LDKCVec_C2Tuple_BlockHashChannelMonitorZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_BlockHashChannelMonitorZZ) -> [LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ]
   public class func new_LDKCVec_NetAddressZ(array: [LDKFramework.LDKNetAddress]) -> LDKFramework.LDKCVec_NetAddressZ
   public class func LDKCVec_NetAddressZ_to_array(nativeType: LDKFramework.LDKCVec_NetAddressZ) -> [LDKFramework.LDKNetAddress]
-  public class func new_LDKCVec_SignatureZ(array: [[Swift.UInt8]]) -> LDKFramework.LDKCVec_SignatureZ
-  public class func LDKCVec_SignatureZ_to_array(nativeType: LDKFramework.LDKCVec_SignatureZ) -> [[Swift.UInt8]]
-  public class func new_LDKCVec_u8Z(array: [Swift.UInt8]) -> LDKFramework.LDKCVec_u8Z
-  public class func LDKCVec_u8Z_to_array(nativeType: LDKFramework.LDKCVec_u8Z) -> [Swift.UInt8]
-  public class func new_LDKCVec_TxOutZ(array: [LDKFramework.LDKTxOut]) -> LDKFramework.LDKCVec_TxOutZ
-  public class func LDKCVec_TxOutZ_to_array(nativeType: LDKFramework.LDKCVec_TxOutZ) -> [LDKFramework.LDKTxOut]
-  public class func new_LDKCVec_TransactionZ(array: [[Swift.UInt8]]) -> LDKFramework.LDKCVec_TransactionZ
-  public class func LDKCVec_TransactionZ_to_array(nativeType: LDKFramework.LDKCVec_TransactionZ) -> [[Swift.UInt8]]
-  public class func new_LDKCVec_MonitorEventZ(array: [LDKFramework.LDKMonitorEvent]) -> LDKFramework.LDKCVec_MonitorEventZ
-  public class func LDKCVec_MonitorEventZ_to_array(nativeType: LDKFramework.LDKCVec_MonitorEventZ) -> [LDKFramework.LDKMonitorEvent]
+  public class func new_LDKCVec_TxidZ(array: [LDKFramework.LDKThirtyTwoBytes]) -> LDKFramework.LDKCVec_TxidZ
+  public class func LDKCVec_TxidZ_to_array(nativeType: LDKFramework.LDKCVec_TxidZ) -> [LDKFramework.LDKThirtyTwoBytes]
+  public class func new_LDKCVec_UpdateFailHTLCZ(array: [LDKFramework.LDKUpdateFailHTLC]) -> LDKFramework.LDKCVec_UpdateFailHTLCZ
+  public class func LDKCVec_UpdateFailHTLCZ_to_array(nativeType: LDKFramework.LDKCVec_UpdateFailHTLCZ) -> [LDKFramework.LDKUpdateFailHTLC]
+  public class func new_LDKCVec_C2Tuple_u32TxOutZZ(array: [LDKFramework.LDKC2Tuple_u32TxOutZ]) -> LDKFramework.LDKCVec_C2Tuple_u32TxOutZZ
+  public class func LDKCVec_C2Tuple_u32TxOutZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_u32TxOutZZ) -> [LDKFramework.LDKC2Tuple_u32TxOutZ]
+  public class func new_LDKCVec_RouteHopZ(array: [LDKFramework.LDKRouteHop]) -> LDKFramework.LDKCVec_RouteHopZ
+  public class func LDKCVec_RouteHopZ_to_array(nativeType: LDKFramework.LDKCVec_RouteHopZ) -> [LDKFramework.LDKRouteHop]
+  public class func new_LDKCVec_UpdateAddHTLCZ(array: [LDKFramework.LDKUpdateAddHTLC]) -> LDKFramework.LDKCVec_UpdateAddHTLCZ
+  public class func LDKCVec_UpdateAddHTLCZ_to_array(nativeType: LDKFramework.LDKCVec_UpdateAddHTLCZ) -> [LDKFramework.LDKUpdateAddHTLC]
   public class func new_LDKCVec_C2Tuple_u32ScriptZZ(array: [LDKFramework.LDKC2Tuple_u32ScriptZ]) -> LDKFramework.LDKCVec_C2Tuple_u32ScriptZZ
   public class func LDKCVec_C2Tuple_u32ScriptZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_u32ScriptZZ) -> [LDKFramework.LDKC2Tuple_u32ScriptZ]
+  public class func new_LDKCVec_RouteHintZ(array: [LDKFramework.LDKRouteHint]) -> LDKFramework.LDKCVec_RouteHintZ
+  public class func LDKCVec_RouteHintZ_to_array(nativeType: LDKFramework.LDKCVec_RouteHintZ) -> [LDKFramework.LDKRouteHint]
+  public class func new_LDKCVec_TxOutZ(array: [LDKFramework.LDKTxOut]) -> LDKFramework.LDKCVec_TxOutZ
+  public class func LDKCVec_TxOutZ_to_array(nativeType: LDKFramework.LDKCVec_TxOutZ) -> [LDKFramework.LDKTxOut]
+  public class func new_LDKCVec_MonitorEventZ(array: [LDKFramework.LDKMonitorEvent]) -> LDKFramework.LDKCVec_MonitorEventZ
+  public class func LDKCVec_MonitorEventZ_to_array(nativeType: LDKFramework.LDKCVec_MonitorEventZ) -> [LDKFramework.LDKMonitorEvent]
+  public class func new_LDKCVec_EventZ(array: [LDKFramework.LDKEvent]) -> LDKFramework.LDKCVec_EventZ
+  public class func LDKCVec_EventZ_to_array(nativeType: LDKFramework.LDKCVec_EventZ) -> [LDKFramework.LDKEvent]
+  public class func new_LDKCVec_CVec_RouteHopZZ(array: [[LDKFramework.LDKRouteHop]]) -> LDKFramework.LDKCVec_CVec_RouteHopZZ
+  public class func LDKCVec_CVec_RouteHopZZ_to_array(nativeType: LDKFramework.LDKCVec_CVec_RouteHopZZ) -> [[LDKFramework.LDKRouteHop]]
+  public class func new_LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ(array: [LDKFramework.LDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ]) -> LDKFramework.LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ
+  public class func LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ_to_array(nativeType: LDKFramework.LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ) -> [LDKFramework.LDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ]
+  public class func new_LDKCVec_SpendableOutputDescriptorZ(array: [LDKFramework.LDKSpendableOutputDescriptor]) -> LDKFramework.LDKCVec_SpendableOutputDescriptorZ
+  public class func LDKCVec_SpendableOutputDescriptorZ_to_array(nativeType: LDKFramework.LDKCVec_SpendableOutputDescriptorZ) -> [LDKFramework.LDKSpendableOutputDescriptor]
   public class func new_LDKCVec_C2Tuple_usizeTransactionZZ(array: [LDKFramework.LDKC2Tuple_usizeTransactionZ]) -> LDKFramework.LDKCVec_C2Tuple_usizeTransactionZZ
   public class func LDKCVec_C2Tuple_usizeTransactionZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_usizeTransactionZZ) -> [LDKFramework.LDKC2Tuple_usizeTransactionZ]
+  public class func new_LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ(array: [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ]) -> LDKFramework.LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ
+  public class func LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ) -> [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ]
+  public class func new_LDKCVec_C2Tuple_BlockHashChannelMonitorZZ(array: [LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ]) -> LDKFramework.LDKCVec_C2Tuple_BlockHashChannelMonitorZZ
+  public class func LDKCVec_C2Tuple_BlockHashChannelMonitorZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_BlockHashChannelMonitorZZ) -> [LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ]
   public class func new_LDKCVec_CResult_NoneAPIErrorZZ(array: [LDKFramework.LDKCResult_NoneAPIErrorZ]) -> LDKFramework.LDKCVec_CResult_NoneAPIErrorZZ
   public class func LDKCVec_CResult_NoneAPIErrorZZ_to_array(nativeType: LDKFramework.LDKCVec_CResult_NoneAPIErrorZZ) -> [LDKFramework.LDKCResult_NoneAPIErrorZ]
+  public class func new_LDKCVec_APIErrorZ(array: [LDKFramework.LDKAPIError]) -> LDKFramework.LDKCVec_APIErrorZ
+  public class func LDKCVec_APIErrorZ_to_array(nativeType: LDKFramework.LDKCVec_APIErrorZ) -> [LDKFramework.LDKAPIError]
+  public class func new_LDKCVec_SignatureZ(array: [[Swift.UInt8]]) -> LDKFramework.LDKCVec_SignatureZ
+  public class func LDKCVec_SignatureZ_to_array(nativeType: LDKFramework.LDKCVec_SignatureZ) -> [[Swift.UInt8]]
+  public class func new_LDKCVec_NodeAnnouncementZ(array: [LDKFramework.LDKNodeAnnouncement]) -> LDKFramework.LDKCVec_NodeAnnouncementZ
+  public class func LDKCVec_NodeAnnouncementZ_to_array(nativeType: LDKFramework.LDKCVec_NodeAnnouncementZ) -> [LDKFramework.LDKNodeAnnouncement]
+  public class func new_LDKCVec_u8Z(array: [Swift.UInt8]) -> LDKFramework.LDKCVec_u8Z
+  public class func LDKCVec_u8Z_to_array(nativeType: LDKFramework.LDKCVec_u8Z) -> [Swift.UInt8]
+  public class func new_LDKCVec_ChannelDetailsZ(array: [LDKFramework.LDKChannelDetails]) -> LDKFramework.LDKCVec_ChannelDetailsZ
+  public class func LDKCVec_ChannelDetailsZ_to_array(nativeType: LDKFramework.LDKCVec_ChannelDetailsZ) -> [LDKFramework.LDKChannelDetails]
+  public class func new_LDKCVec_TransactionZ(array: [[Swift.UInt8]]) -> LDKFramework.LDKCVec_TransactionZ
+  public class func LDKCVec_TransactionZ_to_array(nativeType: LDKFramework.LDKCVec_TransactionZ) -> [[Swift.UInt8]]
+  public class func new_LDKCVec_UpdateFailMalformedHTLCZ(array: [LDKFramework.LDKUpdateFailMalformedHTLC]) -> LDKFramework.LDKCVec_UpdateFailMalformedHTLCZ
+  public class func LDKCVec_UpdateFailMalformedHTLCZ_to_array(nativeType: LDKFramework.LDKCVec_UpdateFailMalformedHTLCZ) -> [LDKFramework.LDKUpdateFailMalformedHTLC]
+  public class func new_LDKCVec_PublicKeyZ(array: [[Swift.UInt8]]) -> LDKFramework.LDKCVec_PublicKeyZ
+  public class func LDKCVec_PublicKeyZ_to_array(nativeType: LDKFramework.LDKCVec_PublicKeyZ) -> [[Swift.UInt8]]
+  public class func new_LDKCVec_MessageSendEventZ(array: [LDKFramework.LDKMessageSendEvent]) -> LDKFramework.LDKCVec_MessageSendEventZ
+  public class func LDKCVec_MessageSendEventZ_to_array(nativeType: LDKFramework.LDKCVec_MessageSendEventZ) -> [LDKFramework.LDKMessageSendEvent]
+  public class func new_LDKCVec_CVec_u8ZZ(array: [[Swift.UInt8]]) -> LDKFramework.LDKCVec_CVec_u8ZZ
+  public class func LDKCVec_CVec_u8ZZ_to_array(nativeType: LDKFramework.LDKCVec_CVec_u8ZZ) -> [[Swift.UInt8]]
+  public class func new_LDKCVec_ChannelMonitorZ(array: [LDKFramework.LDKChannelMonitor]) -> LDKFramework.LDKCVec_ChannelMonitorZ
+  public class func LDKCVec_ChannelMonitorZ_to_array(nativeType: LDKFramework.LDKCVec_ChannelMonitorZ) -> [LDKFramework.LDKChannelMonitor]
+  public class func new_LDKCVec_u64Z(array: [Swift.UInt64]) -> LDKFramework.LDKCVec_u64Z
+  public class func LDKCVec_u64Z_to_array(nativeType: LDKFramework.LDKCVec_u64Z) -> [Swift.UInt64]
+  public class func new_LDKCVec_RouteHintHopZ(array: [LDKFramework.LDKRouteHintHop]) -> LDKFramework.LDKCVec_RouteHintHopZ
+  public class func LDKCVec_RouteHintHopZ_to_array(nativeType: LDKFramework.LDKCVec_RouteHintHopZ) -> [LDKFramework.LDKRouteHintHop]
+  public class func new_LDKCVec_TransactionOutputsZ(array: [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ]) -> LDKFramework.LDKCVec_TransactionOutputsZ
+  public class func LDKCVec_TransactionOutputsZ_to_array(nativeType: LDKFramework.LDKCVec_TransactionOutputsZ) -> [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ]
   public class func instanceToPointer(instance: Swift.AnyObject) -> Swift.UnsafeMutableRawPointer
   public class func pointerToInstance<T>(pointer: Swift.UnsafeRawPointer) -> T where T : AnyObject
   public class func new_LDKu8slice(array: [Swift.UInt8]) -> LDKFramework.LDKu8slice
   public class func LDKu8slice_to_array(nativeType: LDKFramework.LDKu8slice) -> [Swift.UInt8]
   public class func new_LDKTransaction(array: [Swift.UInt8]) -> LDKFramework.LDKTransaction
   public class func LDKTransaction_to_array(nativeType: LDKFramework.LDKTransaction) -> [Swift.UInt8]
+  public class func LDKStr_to_string(nativeType: LDKFramework.LDKStr) -> Swift.String
+  public class func UnsafeIntPointer_to_string(nativeType: Swift.UnsafePointer<Swift.Int8>) -> Swift.String
+  public class func new_LDKStr(string: Swift.String) -> LDKFramework.LDKStr
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_FundingSignedDecodeErrorZ {
+public class Result_FundingSignedDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_FundingSignedDecodeErrorZ)
   @objc deinit
 }
 public class CommitmentSigned {
   public init(channel_id_arg: [Swift.UInt8], signature_arg: [Swift.UInt8], htlc_signatures_arg: [[Swift.UInt8]])
   public init(pointer: LDKFramework.LDKCommitmentSigned)
-  public func get_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_id() -> [Swift.UInt8]
   public func set_channel_id(val: [Swift.UInt8])
   public func get_signature() -> [Swift.UInt8]
   public func set_signature(val: [Swift.UInt8])
@@ -825,20 +923,22 @@ public class BestBlock {
   public init(block_hash: [Swift.UInt8], height: Swift.UInt32)
   public init(pointer: LDKFramework.LDKBestBlock)
   public func clone(orig: LDKFramework.BestBlock) -> LDKFramework.BestBlock
-  public func block_hash(this_arg: LDKFramework.BestBlock) -> [Swift.UInt8]
-  public func height(this_arg: LDKFramework.BestBlock) -> Swift.UInt32
+  public func block_hash() -> [Swift.UInt8]
+  public func height() -> Swift.UInt32
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_UpdateFailMalformedHTLCDecodeErrorZ {
+public class Result_UpdateFailMalformedHTLCDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_UpdateFailMalformedHTLCDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_OutPointDecodeErrorZ {
+public class Result_OutPointDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_OutPointDecodeErrorZ)
   @objc deinit
 }
 public class QueryShortChannelIds {
   public init(chain_hash_arg: [Swift.UInt8], short_channel_ids_arg: [Swift.UInt64])
   public init(pointer: LDKFramework.LDKQueryShortChannelIds)
-  public func get_chain_hash() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_chain_hash() -> [Swift.UInt8]
   public func set_chain_hash(val: [Swift.UInt8])
   public func set_short_channel_ids(val: [Swift.UInt64])
   public func clone(orig: LDKFramework.QueryShortChannelIds) -> LDKFramework.QueryShortChannelIds
@@ -846,13 +946,16 @@ public class QueryShortChannelIds {
   public func write(obj: LDKFramework.QueryShortChannelIds) -> [Swift.UInt8]
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_HTLCOutputInCommitmentDecodeErrorZ {
+public class Result_HTLCOutputInCommitmentDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_HTLCOutputInCommitmentDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_AnnouncementSignaturesDecodeErrorZ {
+public class Result_AnnouncementSignaturesDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_AnnouncementSignaturesDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_TxOutAccessErrorZ {
+public class Result_TxOutAccessErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_TxOutAccessErrorZ)
   @objc deinit
 }
 public class ChannelAnnouncement {
@@ -876,7 +979,7 @@ public class ChannelAnnouncement {
 public class ReplyChannelRange {
   public init(chain_hash_arg: [Swift.UInt8], first_blocknum_arg: Swift.UInt32, number_of_blocks_arg: Swift.UInt32, sync_complete_arg: Swift.Bool, short_channel_ids_arg: [Swift.UInt64])
   public init(pointer: LDKFramework.LDKReplyChannelRange)
-  public func get_chain_hash() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_chain_hash() -> [Swift.UInt8]
   public func set_chain_hash(val: [Swift.UInt8])
   public func get_first_blocknum() -> Swift.UInt32
   public func set_first_blocknum(val: Swift.UInt32)
@@ -890,30 +993,37 @@ public class ReplyChannelRange {
   public func write(obj: LDKFramework.ReplyChannelRange) -> [Swift.UInt8]
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class BaseSign {
-  public func get_per_commitment_point(idx: Swift.UInt64) -> [Swift.UInt8]
-  public func release_commitment_secret(idx: Swift.UInt64) -> [Swift.UInt8]
-  public func channel_keys_id() -> [Swift.UInt8]
-  public func sign_counterparty_commitment(commitment_tx: Swift.UnsafePointer<LDKFramework.LDKCommitmentTransaction>) -> LDKFramework.Result_C2Tuple_SignatureCVec_SignatureZZNoneZ
-  public func sign_holder_commitment_and_htlcs(commitment_tx: Swift.UnsafePointer<LDKFramework.LDKHolderCommitmentTransaction>) -> LDKFramework.Result_C2Tuple_SignatureCVec_SignatureZZNoneZ
-  public func sign_justice_transaction(justice_tx: LDKFramework.LDKTransaction, input: Swift.UInt, amount: Swift.UInt64, per_commitment_key: Swift.UnsafePointer<(Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)>?, htlc: Swift.UnsafePointer<LDKFramework.LDKHTLCOutputInCommitment>) -> LDKFramework.Result_SignatureNoneZ
-  public func sign_counterparty_htlc_transaction(htlc_tx: LDKFramework.LDKTransaction, input: Swift.UInt, amount: Swift.UInt64, per_commitment_point: LDKFramework.LDKPublicKey, htlc: Swift.UnsafePointer<LDKFramework.LDKHTLCOutputInCommitment>) -> LDKFramework.Result_SignatureNoneZ
-  public func sign_closing_transaction(closing_tx: LDKFramework.LDKTransaction) -> LDKFramework.Result_SignatureNoneZ
-  public func sign_channel_announcement(msg: Swift.UnsafePointer<LDKFramework.LDKUnsignedChannelAnnouncement>) -> LDKFramework.Result_SignatureNoneZ
-  public func ready_channel(channel_parameters: Swift.UnsafePointer<LDKFramework.LDKChannelTransactionParameters>)
-  public func free()
+open class BaseSign {
+  public var cOpaqueStruct: LDKFramework.LDKBaseSign?
+  public init()
+  public init(pointer: LDKFramework.LDKBaseSign)
+  open func get_per_commitment_point(idx: Swift.UInt64) -> [Swift.UInt8]
+  open func release_commitment_secret(idx: Swift.UInt64) -> [Swift.UInt8]
+  open func channel_keys_id() -> [Swift.UInt8]
+  open func sign_counterparty_commitment(commitment_tx: LDKFramework.CommitmentTransaction) -> LDKFramework.Result_C2Tuple_SignatureCVec_SignatureZZNoneZ
+  open func sign_holder_commitment_and_htlcs(commitment_tx: LDKFramework.HolderCommitmentTransaction) -> LDKFramework.Result_C2Tuple_SignatureCVec_SignatureZZNoneZ
+  open func sign_justice_transaction(justice_tx: [Swift.UInt8], input: Swift.UInt, amount: Swift.UInt64, per_commitment_key: [Swift.UInt8]?, htlc: LDKFramework.HTLCOutputInCommitment) -> LDKFramework.Result_SignatureNoneZ
+  open func sign_counterparty_htlc_transaction(htlc_tx: [Swift.UInt8], input: Swift.UInt, amount: Swift.UInt64, per_commitment_point: [Swift.UInt8], htlc: LDKFramework.HTLCOutputInCommitment) -> LDKFramework.Result_SignatureNoneZ
+  open func sign_closing_transaction(closing_tx: [Swift.UInt8]) -> LDKFramework.Result_SignatureNoneZ
+  open func sign_channel_announcement(msg: LDKFramework.UnsignedChannelAnnouncement) -> LDKFramework.Result_SignatureNoneZ
+  open func ready_channel(channel_parameters: LDKFramework.ChannelTransactionParameters)
+  open func free()
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_StringErrorZ {
+public class Result_StringErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_StringErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_PongDecodeErrorZ {
+public class Result_PongDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_PongDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_ChannelAnnouncementDecodeErrorZ {
+public class Result_ChannelAnnouncementDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_ChannelAnnouncementDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_ReplyChannelRangeDecodeErrorZ {
+public class Result_ReplyChannelRangeDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_ReplyChannelRangeDecodeErrorZ)
   @objc deinit
 }
 public class ChannelHandshakeConfig {
@@ -935,7 +1045,7 @@ public class Sha256 {
 }
 public class AcceptChannel {
   public init(pointer: LDKFramework.LDKAcceptChannel)
-  public func get_temporary_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_temporary_channel_id() -> [Swift.UInt8]
   public func set_temporary_channel_id(val: [Swift.UInt8])
   public func get_dust_limit_satoshis() -> Swift.UInt64
   public func set_dust_limit_satoshis(val: Swift.UInt64)
@@ -968,47 +1078,64 @@ public class AcceptChannel {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_AcceptChannelDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_UnsignedChannelUpdateDecodeErrorZ {
+public class Result_UnsignedChannelUpdateDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_UnsignedChannelUpdateDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class SpendableOutputDescriptor {
+public class SpendableOutputDescriptor {
+  public init(pointer: LDKFramework.LDKSpendableOutputDescriptor)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_NodeFeaturesDecodeErrorZ {
+public class Result_NodeFeaturesDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_NodeFeaturesDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_DescriptionCreationErrorZ {
+public class Result_DescriptionCreationErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_DescriptionCreationErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Option_u64Z {
+public class Option_u64Z {
+  public init(value: Swift.UInt64?)
+  public init(pointer: LDKFramework.LDKCOption_u64Z)
+  public func getValue() -> Swift.UInt64?
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class KeysInterface {
-  public func get_node_secret() -> [Swift.UInt8]
-  public func get_destination_script() -> [Swift.UInt8]
-  public func get_shutdown_pubkey() -> [Swift.UInt8]
-  public func get_channel_signer(inbound: Swift.Bool, channel_value_satoshis: Swift.UInt64) -> LDKFramework.Sign
-  public func get_secure_random_bytes() -> [Swift.UInt8]
-  public func read_chan_signer(reader: LDKFramework.LDKu8slice) -> LDKFramework.Result_SignDecodeErrorZ
-  public func sign_invoice(invoice_preimage: LDKFramework.LDKCVec_u8Z) -> LDKFramework.Result_RecoverableSignatureNoneZ
-  public func free()
+open class KeysInterface {
+  public var cOpaqueStruct: LDKFramework.LDKKeysInterface?
+  public init()
+  public init(pointer: LDKFramework.LDKKeysInterface)
+  open func get_node_secret() -> [Swift.UInt8]
+  open func get_destination_script() -> [Swift.UInt8]
+  open func get_shutdown_pubkey() -> [Swift.UInt8]
+  open func get_channel_signer(inbound: Swift.Bool, channel_value_satoshis: Swift.UInt64) -> LDKFramework.Sign
+  open func get_secure_random_bytes() -> [Swift.UInt8]
+  open func read_chan_signer(reader: [Swift.UInt8]) -> LDKFramework.Result_SignDecodeErrorZ
+  open func sign_invoice(invoice_preimage: [Swift.UInt8]) -> LDKFramework.Result_RecoverableSignatureNoneZ
+  open func free()
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class C2Tuple_u32ScriptZ {
+public class C2Tuple_u32ScriptZ {
+  public init(pointer: LDKFramework.LDKC2Tuple_u32ScriptZ)
   public func clone(orig: LDKFramework.C2Tuple_u32ScriptZ) -> LDKFramework.C2Tuple_u32ScriptZ
   public func new(a: Swift.UInt32, b: [Swift.UInt8]) -> LDKFramework.C2Tuple_u32ScriptZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_FundingCreatedDecodeErrorZ {
+public class Result_FundingCreatedDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_FundingCreatedDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_InitFeaturesDecodeErrorZ {
+public class Result_InitFeaturesDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_InitFeaturesDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Option_u32Z {
+public class Option_u32Z {
+  public init(value: Swift.UInt32?)
+  public init(pointer: LDKFramework.LDKCOption_u32Z)
+  public func getValue() -> Swift.UInt32?
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class MonitorEvent {
+public class MonitorEvent {
+  public init(pointer: LDKFramework.LDKMonitorEvent)
   @objc deinit
 }
 public class DirectionalChannelInfo {
@@ -1036,11 +1163,11 @@ public class DirectionalChannelInfo {
 public class UpdateFulfillHTLC {
   public init(channel_id_arg: [Swift.UInt8], htlc_id_arg: Swift.UInt64, payment_preimage_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKUpdateFulfillHTLC)
-  public func get_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_id() -> [Swift.UInt8]
   public func set_channel_id(val: [Swift.UInt8])
   public func get_htlc_id() -> Swift.UInt64
   public func set_htlc_id(val: Swift.UInt64)
-  public func get_payment_preimage() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_payment_preimage() -> [Swift.UInt8]
   public func set_payment_preimage(val: [Swift.UInt8])
   public func clone(orig: LDKFramework.UpdateFulfillHTLC) -> LDKFramework.UpdateFulfillHTLC
   public func write(obj: LDKFramework.UpdateFulfillHTLC) -> [Swift.UInt8]
@@ -1051,7 +1178,7 @@ public class UnsignedChannelAnnouncement {
   public init(pointer: LDKFramework.LDKUnsignedChannelAnnouncement)
   public func get_features() -> LDKFramework.ChannelFeatures
   public func set_features(val: LDKFramework.ChannelFeatures)
-  public func get_chain_hash() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_chain_hash() -> [Swift.UInt8]
   public func set_chain_hash(val: [Swift.UInt8])
   public func get_short_channel_id() -> Swift.UInt64
   public func set_short_channel_id(val: Swift.UInt64)
@@ -1068,27 +1195,32 @@ public class UnsignedChannelAnnouncement {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_UnsignedChannelAnnouncementDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Confirm {
-  public func transactions_confirmed(header: Swift.UnsafePointer<(Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)>?, txdata: LDKFramework.LDKCVec_C2Tuple_usizeTransactionZZ, height: Swift.UInt32)
-  public func transaction_unconfirmed(txid: Swift.UnsafePointer<(Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)>?)
-  public func best_block_updated(header: Swift.UnsafePointer<(Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)>?, height: Swift.UInt32)
-  public func get_relevant_txids() -> [LDKFramework.LDKTxid]
-  public func free()
+open class Confirm {
+  public var cOpaqueStruct: LDKFramework.LDKConfirm?
+  public init()
+  public init(pointer: LDKFramework.LDKConfirm)
+  open func transactions_confirmed(header: [Swift.UInt8]?, txdata: [LDKFramework.LDKC2Tuple_usizeTransactionZ], height: Swift.UInt32)
+  open func transaction_unconfirmed(txid: [Swift.UInt8]?)
+  open func best_block_updated(header: [Swift.UInt8]?, height: Swift.UInt32)
+  open func get_relevant_txids() -> [LDKFramework.LDKTxid]
+  open func free()
   @objc deinit
 }
 public class ChainMonitor {
-  public init(chain_source: LDKFramework.Filter, broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger, feeest: LDKFramework.FeeEstimator, persister: LDKFramework.Persist)
+  public init(chain_source: LDKFramework.Filter?, broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger, feeest: LDKFramework.FeeEstimator, persister: LDKFramework.Persist)
   public init(pointer: LDKFramework.LDKChainMonitor)
-  public func as_Listen(this_arg: LDKFramework.ChainMonitor) -> LDKFramework.Listen
-  public func as_Confirm(this_arg: LDKFramework.ChainMonitor) -> LDKFramework.Confirm
-  public func as_Watch(this_arg: LDKFramework.ChainMonitor) -> LDKFramework.Watch
-  public func as_EventsProvider(this_arg: LDKFramework.ChainMonitor) -> LDKFramework.EventsProvider
+  public func as_Listen() -> LDKFramework.Listen
+  public func as_Confirm() -> LDKFramework.Confirm
+  public func as_Watch() -> LDKFramework.Watch
+  public func as_EventsProvider() -> LDKFramework.EventsProvider
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_TxCreationKeysDecodeErrorZ {
+public class Result_TxCreationKeysDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_TxCreationKeysDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_NoneErrorZ {
+public class Result_NoneErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_NoneErrorZ)
   @objc deinit
 }
 public class PositiveTimestamp {
@@ -1096,8 +1228,8 @@ public class PositiveTimestamp {
   public func clone(orig: LDKFramework.PositiveTimestamp) -> LDKFramework.PositiveTimestamp
   public func from_unix_timestamp(unix_seconds: Swift.UInt64) -> LDKFramework.Result_PositiveTimestampCreationErrorZ
   public func from_system_time(time: Swift.UInt64) -> LDKFramework.Result_PositiveTimestampCreationErrorZ
-  public func as_unix_timestamp(this_arg: LDKFramework.PositiveTimestamp) -> Swift.UInt64
-  public func as_time(this_arg: LDKFramework.PositiveTimestamp) -> Swift.UInt64
+  public func as_unix_timestamp() -> Swift.UInt64
+  public func as_time() -> Swift.UInt64
   @objc deinit
 }
 public class NodeAnnouncement {
@@ -1138,9 +1270,9 @@ public class ChannelTransactionParameters {
   public func get_funding_outpoint() -> LDKFramework.OutPoint
   public func set_funding_outpoint(val: LDKFramework.OutPoint)
   public func clone(orig: LDKFramework.ChannelTransactionParameters) -> LDKFramework.ChannelTransactionParameters
-  public func is_populated(this_arg: LDKFramework.ChannelTransactionParameters) -> Swift.Bool
-  public func as_holder_broadcastable(this_arg: LDKFramework.ChannelTransactionParameters) -> LDKFramework.DirectedChannelTransactionParameters
-  public func as_counterparty_broadcastable(this_arg: LDKFramework.ChannelTransactionParameters) -> LDKFramework.DirectedChannelTransactionParameters
+  public func is_populated() -> Swift.Bool
+  public func as_holder_broadcastable() -> LDKFramework.DirectedChannelTransactionParameters
+  public func as_counterparty_broadcastable() -> LDKFramework.DirectedChannelTransactionParameters
   public func write(obj: LDKFramework.ChannelTransactionParameters) -> [Swift.UInt8]
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_ChannelTransactionParametersDecodeErrorZ
   @objc deinit
@@ -1171,24 +1303,27 @@ public class ChannelHandshakeLimits {
   public func clone(orig: LDKFramework.ChannelHandshakeLimits) -> LDKFramework.ChannelHandshakeLimits
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ {
+public class C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ {
+  public init(pointer: LDKFramework.LDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ)
   public func clone(orig: LDKFramework.C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ) -> LDKFramework.C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ
   public func new(a: LDKFramework.ChannelAnnouncement, b: LDKFramework.ChannelUpdate, c: LDKFramework.ChannelUpdate) -> LDKFramework.C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ
   @objc deinit
 }
 public class NetGraphMsgHandler {
-  public init(chain_access: LDKFramework.Access, logger: LDKFramework.Logger, network_graph: LDKFramework.NetworkGraph)
+  public init(chain_access: LDKFramework.Access?, logger: LDKFramework.Logger, network_graph: LDKFramework.NetworkGraph)
   public init(pointer: LDKFramework.LDKNetGraphMsgHandler)
-  public func add_chain_access(this_arg: LDKFramework.NetGraphMsgHandler, chain_access: LDKFramework.Access)
-  public func read_locked_graph(this_arg: LDKFramework.NetGraphMsgHandler) -> LDKFramework.LockedNetworkGraph
-  public func as_RoutingMessageHandler(this_arg: LDKFramework.NetGraphMsgHandler) -> LDKFramework.RoutingMessageHandler
-  public func as_MessageSendEventsProvider(this_arg: LDKFramework.NetGraphMsgHandler) -> LDKFramework.MessageSendEventsProvider
+  public func add_chain_access(chain_access: LDKFramework.Access?)
+  public func read_locked_graph() -> LDKFramework.LockedNetworkGraph
+  public func as_RoutingMessageHandler() -> LDKFramework.RoutingMessageHandler
+  public func as_MessageSendEventsProvider() -> LDKFramework.MessageSendEventsProvider
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_RouteLightningErrorZ {
+public class Result_RouteLightningErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_RouteLightningErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_InitDecodeErrorZ {
+public class Result_InitDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_InitDecodeErrorZ)
   @objc deinit
 }
 public class Route {
@@ -1223,13 +1358,13 @@ public class NetworkGraph {
   public func clone(orig: LDKFramework.NetworkGraph) -> LDKFramework.NetworkGraph
   public func write(obj: LDKFramework.NetworkGraph) -> [Swift.UInt8]
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_NetworkGraphDecodeErrorZ
-  public func update_node_from_announcement(this_arg: LDKFramework.NetworkGraph, msg: LDKFramework.NodeAnnouncement) -> LDKFramework.Result_NoneLightningErrorZ
-  public func update_node_from_unsigned_announcement(this_arg: LDKFramework.NetworkGraph, msg: LDKFramework.UnsignedNodeAnnouncement) -> LDKFramework.Result_NoneLightningErrorZ
-  public func update_channel_from_announcement(this_arg: LDKFramework.NetworkGraph, msg: LDKFramework.ChannelAnnouncement, chain_access: LDKFramework.Access) -> LDKFramework.Result_NoneLightningErrorZ
-  public func update_channel_from_unsigned_announcement(this_arg: LDKFramework.NetworkGraph, msg: LDKFramework.UnsignedChannelAnnouncement, chain_access: LDKFramework.Access) -> LDKFramework.Result_NoneLightningErrorZ
-  public func close_channel_from_update(this_arg: LDKFramework.NetworkGraph, short_channel_id: Swift.UInt64, is_permanent: Swift.Bool)
-  public func update_channel(this_arg: LDKFramework.NetworkGraph, msg: LDKFramework.ChannelUpdate) -> LDKFramework.Result_NoneLightningErrorZ
-  public func update_channel_unsigned(this_arg: LDKFramework.NetworkGraph, msg: LDKFramework.UnsignedChannelUpdate) -> LDKFramework.Result_NoneLightningErrorZ
+  public func update_node_from_announcement(msg: LDKFramework.NodeAnnouncement) -> LDKFramework.Result_NoneLightningErrorZ
+  public func update_node_from_unsigned_announcement(msg: LDKFramework.UnsignedNodeAnnouncement) -> LDKFramework.Result_NoneLightningErrorZ
+  public func update_channel_from_announcement(msg: LDKFramework.ChannelAnnouncement, chain_access: LDKFramework.Access?) -> LDKFramework.Result_NoneLightningErrorZ
+  public func update_channel_from_unsigned_announcement(msg: LDKFramework.UnsignedChannelAnnouncement, chain_access: LDKFramework.Access?) -> LDKFramework.Result_NoneLightningErrorZ
+  public func close_channel_from_update(short_channel_id: Swift.UInt64, is_permanent: Swift.Bool)
+  public func update_channel(msg: LDKFramework.ChannelUpdate) -> LDKFramework.Result_NoneLightningErrorZ
+  public func update_channel_unsigned(msg: LDKFramework.UnsignedChannelUpdate) -> LDKFramework.Result_NoneLightningErrorZ
   @objc deinit
 }
 public class UnsignedNodeAnnouncement {
@@ -1240,9 +1375,9 @@ public class UnsignedNodeAnnouncement {
   public func set_timestamp(val: Swift.UInt32)
   public func get_node_id() -> [Swift.UInt8]
   public func set_node_id(val: [Swift.UInt8])
-  public func get_rgb() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_rgb() -> [Swift.UInt8]
   public func set_rgb(val: [Swift.UInt8])
-  public func get_alias() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_alias() -> [Swift.UInt8]
   public func set_alias(val: [Swift.UInt8])
   public func set_addresses(val: [LDKFramework.LDKNetAddress])
   public func clone(orig: LDKFramework.UnsignedNodeAnnouncement) -> LDKFramework.UnsignedNodeAnnouncement
@@ -1255,23 +1390,23 @@ public class RawInvoice {
   public func get_data() -> LDKFramework.RawDataPart
   public func set_data(val: LDKFramework.RawDataPart)
   public func clone(orig: LDKFramework.RawInvoice) -> LDKFramework.RawInvoice
-  public func hash(this_arg: LDKFramework.RawInvoice) -> [Swift.UInt8]
-  public func payment_hash(this_arg: LDKFramework.RawInvoice) -> LDKFramework.Sha256
-  public func description(this_arg: LDKFramework.RawInvoice) -> LDKFramework.Description
-  public func payee_pub_key(this_arg: LDKFramework.RawInvoice) -> LDKFramework.PayeePubKey
-  public func description_hash(this_arg: LDKFramework.RawInvoice) -> LDKFramework.Sha256
-  public func expiry_time(this_arg: LDKFramework.RawInvoice) -> LDKFramework.ExpiryTime
-  public func min_final_cltv_expiry(this_arg: LDKFramework.RawInvoice) -> LDKFramework.MinFinalCltvExpiry
-  public func payment_secret(this_arg: LDKFramework.RawInvoice) -> [Swift.UInt8]
-  public func features(this_arg: LDKFramework.RawInvoice) -> LDKFramework.InvoiceFeatures
-  public func routes(this_arg: LDKFramework.RawInvoice) -> [LDKFramework.LDKRouteHint]
-  public func amount_pico_btc(this_arg: LDKFramework.RawInvoice) -> LDKFramework.Option_u64Z
-  public func currency(this_arg: LDKFramework.RawInvoice) -> LDKFramework.LDKCurrency
+  public func hash() -> [Swift.UInt8]
+  public func payment_hash() -> LDKFramework.Sha256
+  public func description() -> LDKFramework.Description
+  public func payee_pub_key() -> LDKFramework.PayeePubKey
+  public func description_hash() -> LDKFramework.Sha256
+  public func expiry_time() -> LDKFramework.ExpiryTime
+  public func min_final_cltv_expiry() -> LDKFramework.MinFinalCltvExpiry
+  public func payment_secret() -> [Swift.UInt8]
+  public func features() -> LDKFramework.InvoiceFeatures
+  public func routes() -> [LDKFramework.LDKRouteHint]
+  public func amount_pico_btc() -> LDKFramework.Option_u64Z
+  public func currency() -> LDKFramework.LDKCurrency
   @objc deinit
 }
 public class UpdateFailMalformedHTLC {
   public init(pointer: LDKFramework.LDKUpdateFailMalformedHTLC)
-  public func get_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_id() -> [Swift.UInt8]
   public func set_channel_id(val: [Swift.UInt8])
   public func get_htlc_id() -> Swift.UInt64
   public func set_htlc_id(val: Swift.UInt64)
@@ -1282,22 +1417,25 @@ public class UpdateFailMalformedHTLC {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_UpdateFailMalformedHTLCDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_ChannelPublicKeysDecodeErrorZ {
+public class Result_ChannelPublicKeysDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_ChannelPublicKeysDecodeErrorZ)
   @objc deinit
 }
 public class KeysManager {
   public init(seed: [Swift.UInt8], starting_time_secs: Swift.UInt64, starting_time_nanos: Swift.UInt32)
   public init(pointer: LDKFramework.LDKKeysManager)
-  public func derive_channel_keys(this_arg: LDKFramework.KeysManager, channel_value_satoshis: Swift.UInt64, params: [Swift.UInt8]) -> LDKFramework.InMemorySigner
-  public func spend_spendable_outputs(this_arg: LDKFramework.KeysManager, descriptors: [LDKFramework.LDKSpendableOutputDescriptor], outputs: [LDKFramework.LDKTxOut], change_destination_script: [Swift.UInt8], feerate_sat_per_1000_weight: Swift.UInt32) -> LDKFramework.Result_TransactionNoneZ
-  public func as_KeysInterface(this_arg: LDKFramework.KeysManager) -> LDKFramework.KeysInterface
+  public func derive_channel_keys(channel_value_satoshis: Swift.UInt64, params: [Swift.UInt8]) -> LDKFramework.InMemorySigner
+  public func spend_spendable_outputs(descriptors: [LDKFramework.LDKSpendableOutputDescriptor], outputs: [LDKFramework.LDKTxOut], change_destination_script: [Swift.UInt8], feerate_sat_per_1000_weight: Swift.UInt32) -> LDKFramework.Result_TransactionNoneZ
+  public func as_KeysInterface() -> LDKFramework.KeysInterface
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class C3Tuple_RawInvoice_u832InvoiceSignatureZ {
+public class C3Tuple_RawInvoice_u832InvoiceSignatureZ {
+  public init(pointer: LDKFramework.LDKC3Tuple_RawInvoice_u832InvoiceSignatureZ)
   public func new(a: LDKFramework.RawInvoice, b: [Swift.UInt8], c: LDKFramework.InvoiceSignature) -> LDKFramework.C3Tuple_RawInvoice_u832InvoiceSignatureZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_SignDecodeErrorZ {
+public class Result_SignDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_SignDecodeErrorZ)
   @objc deinit
 }
 public class RawDataPart {
@@ -1315,46 +1453,48 @@ public class NodeFeatures {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_NodeFeaturesDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_NonePaymentSendFailureZ {
+public class Result_NonePaymentSendFailureZ {
+  public init(pointer: LDKFramework.LDKCResult_NonePaymentSendFailureZ)
   @objc deinit
 }
 public class ChannelManager {
   public init(fee_est: LDKFramework.FeeEstimator, chain_monitor: LDKFramework.Watch, tx_broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger, keys_manager: LDKFramework.KeysInterface, config: LDKFramework.UserConfig, params: LDKFramework.ChainParameters)
   public init(pointer: LDKFramework.LDKChannelManager)
-  public func get_current_default_configuration(this_arg: LDKFramework.ChannelManager) -> LDKFramework.UserConfig
-  public func create_channel(this_arg: LDKFramework.ChannelManager, their_network_key: [Swift.UInt8], channel_value_satoshis: Swift.UInt64, push_msat: Swift.UInt64, user_id: Swift.UInt64, override_config: LDKFramework.UserConfig) -> LDKFramework.Result_NoneAPIErrorZ
-  public func list_channels(this_arg: LDKFramework.ChannelManager) -> [LDKFramework.LDKChannelDetails]
-  public func list_usable_channels(this_arg: LDKFramework.ChannelManager) -> [LDKFramework.LDKChannelDetails]
-  public func close_channel(this_arg: LDKFramework.ChannelManager, channel_id: [Swift.UInt8]) -> LDKFramework.Result_NoneAPIErrorZ
-  public func force_close_channel(this_arg: LDKFramework.ChannelManager, channel_id: [Swift.UInt8]) -> LDKFramework.Result_NoneAPIErrorZ
-  public func force_close_all_channels(this_arg: LDKFramework.ChannelManager)
-  public func send_payment(this_arg: LDKFramework.ChannelManager, route: LDKFramework.Route, payment_hash: [Swift.UInt8], payment_secret: [Swift.UInt8]) -> LDKFramework.Result_NonePaymentSendFailureZ
-  public func funding_transaction_generated(this_arg: LDKFramework.ChannelManager, temporary_channel_id: [Swift.UInt8], funding_transaction: [Swift.UInt8]) -> LDKFramework.Result_NoneAPIErrorZ
-  public func broadcast_node_announcement(this_arg: LDKFramework.ChannelManager, rgb: [Swift.UInt8], alias: [Swift.UInt8], addresses: [LDKFramework.LDKNetAddress])
-  public func process_pending_htlc_forwards(this_arg: LDKFramework.ChannelManager)
-  public func timer_tick_occurred(this_arg: LDKFramework.ChannelManager)
-  public func fail_htlc_backwards(this_arg: LDKFramework.ChannelManager, payment_hash: [Swift.UInt8]) -> Swift.Bool
-  public func claim_funds(this_arg: LDKFramework.ChannelManager, payment_preimage: [Swift.UInt8]) -> Swift.Bool
-  public func get_our_node_id(this_arg: LDKFramework.ChannelManager) -> [Swift.UInt8]
-  public func channel_monitor_updated(this_arg: LDKFramework.ChannelManager, funding_txo: LDKFramework.OutPoint, highest_applied_update_id: Swift.UInt64)
-  public func create_inbound_payment(this_arg: LDKFramework.ChannelManager, min_value_msat: LDKFramework.Option_u64Z, invoice_expiry_delta_secs: Swift.UInt32, user_payment_id: Swift.UInt64) -> LDKFramework.C2Tuple_PaymentHashPaymentSecretZ
-  public func create_inbound_payment_for_hash(this_arg: LDKFramework.ChannelManager, payment_hash: [Swift.UInt8], min_value_msat: LDKFramework.Option_u64Z, invoice_expiry_delta_secs: Swift.UInt32, user_payment_id: Swift.UInt64) -> LDKFramework.Result_PaymentSecretAPIErrorZ
-  public func as_MessageSendEventsProvider(this_arg: LDKFramework.ChannelManager) -> LDKFramework.MessageSendEventsProvider
-  public func as_EventsProvider(this_arg: LDKFramework.ChannelManager) -> LDKFramework.EventsProvider
-  public func as_Listen(this_arg: LDKFramework.ChannelManager) -> LDKFramework.Listen
-  public func as_Confirm(this_arg: LDKFramework.ChannelManager) -> LDKFramework.Confirm
-  public func await_persistable_update_timeout(this_arg: LDKFramework.ChannelManager, max_wait: Swift.UInt64) -> Swift.Bool
-  public func await_persistable_update(this_arg: LDKFramework.ChannelManager)
-  public func as_ChannelMessageHandler(this_arg: LDKFramework.ChannelManager) -> LDKFramework.ChannelMessageHandler
+  public func get_current_default_configuration() -> LDKFramework.UserConfig
+  public func create_channel(their_network_key: [Swift.UInt8], channel_value_satoshis: Swift.UInt64, push_msat: Swift.UInt64, user_id: Swift.UInt64, override_config: LDKFramework.UserConfig) -> LDKFramework.Result_NoneAPIErrorZ
+  public func list_channels() -> [LDKFramework.LDKChannelDetails]
+  public func list_usable_channels() -> [LDKFramework.LDKChannelDetails]
+  public func close_channel(channel_id: [Swift.UInt8]) -> LDKFramework.Result_NoneAPIErrorZ
+  public func force_close_channel(channel_id: [Swift.UInt8]) -> LDKFramework.Result_NoneAPIErrorZ
+  public func force_close_all_channels()
+  public func send_payment(route: LDKFramework.Route, payment_hash: [Swift.UInt8], payment_secret: [Swift.UInt8]) -> LDKFramework.Result_NonePaymentSendFailureZ
+  public func funding_transaction_generated(temporary_channel_id: [Swift.UInt8], funding_transaction: [Swift.UInt8]) -> LDKFramework.Result_NoneAPIErrorZ
+  public func broadcast_node_announcement(rgb: [Swift.UInt8], alias: [Swift.UInt8], addresses: [LDKFramework.LDKNetAddress])
+  public func process_pending_htlc_forwards()
+  public func timer_tick_occurred()
+  public func fail_htlc_backwards(payment_hash: [Swift.UInt8]) -> Swift.Bool
+  public func claim_funds(payment_preimage: [Swift.UInt8]) -> Swift.Bool
+  public func get_our_node_id() -> [Swift.UInt8]
+  public func channel_monitor_updated(funding_txo: LDKFramework.OutPoint, highest_applied_update_id: Swift.UInt64)
+  public func create_inbound_payment(min_value_msat: LDKFramework.Option_u64Z, invoice_expiry_delta_secs: Swift.UInt32, user_payment_id: Swift.UInt64) -> LDKFramework.C2Tuple_PaymentHashPaymentSecretZ
+  public func create_inbound_payment_for_hash(payment_hash: [Swift.UInt8], min_value_msat: LDKFramework.Option_u64Z, invoice_expiry_delta_secs: Swift.UInt32, user_payment_id: Swift.UInt64) -> LDKFramework.Result_PaymentSecretAPIErrorZ
+  public func as_MessageSendEventsProvider() -> LDKFramework.MessageSendEventsProvider
+  public func as_EventsProvider() -> LDKFramework.EventsProvider
+  public func as_Listen() -> LDKFramework.Listen
+  public func as_Confirm() -> LDKFramework.Confirm
+  public func await_persistable_update_timeout(max_wait: Swift.UInt64) -> Swift.Bool
+  public func await_persistable_update()
+  public func as_ChannelMessageHandler() -> LDKFramework.ChannelMessageHandler
   public func write(obj: LDKFramework.ChannelManager) -> [Swift.UInt8]
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_NoneSemanticErrorZ {
+public class Result_NoneSemanticErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_NoneSemanticErrorZ)
   @objc deinit
 }
 public class ChannelDetails {
   public init(pointer: LDKFramework.LDKChannelDetails)
-  public func get_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_id() -> [Swift.UInt8]
   public func set_channel_id(val: [Swift.UInt8])
   public func get_short_channel_id() -> LDKFramework.Option_u64Z
   public func set_short_channel_id(val: LDKFramework.Option_u64Z)
@@ -1383,31 +1523,38 @@ public class InitFeatures {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_InitFeaturesDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_RevokeAndACKDecodeErrorZ {
+public class Result_RevokeAndACKDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_RevokeAndACKDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_UpdateFailHTLCDecodeErrorZ {
+public class Result_UpdateFailHTLCDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_UpdateFailHTLCDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_RouteDecodeErrorZ {
+public class Result_RouteDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_RouteDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_InvoiceSemanticErrorZ {
+public class Result_InvoiceSemanticErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_InvoiceSemanticErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_C2Tuple_BlockHashChannelMonitorZDecodeErrorZ {
+public class Result_C2Tuple_BlockHashChannelMonitorZDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_C2Tuple_BlockHashChannelMonitorZDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_InvoiceFeaturesDecodeErrorZ {
+public class Result_InvoiceFeaturesDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_InvoiceFeaturesDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class ErrorAction {
+public class ErrorAction {
+  public init(pointer: LDKFramework.LDKErrorAction)
   @objc deinit
 }
 public class DataLossProtect {
   public init(your_last_per_commitment_secret_arg: [Swift.UInt8], my_current_per_commitment_point_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKDataLossProtect)
-  public func get_your_last_per_commitment_secret() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_your_last_per_commitment_secret() -> [Swift.UInt8]
   public func set_your_last_per_commitment_secret(val: [Swift.UInt8])
   public func get_my_current_per_commitment_point() -> [Swift.UInt8]
   public func set_my_current_per_commitment_point(val: [Swift.UInt8])
@@ -1416,7 +1563,7 @@ public class DataLossProtect {
 }
 public class UpdateFailHTLC {
   public init(pointer: LDKFramework.LDKUpdateFailHTLC)
-  public func get_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_id() -> [Swift.UInt8]
   public func set_channel_id(val: [Swift.UInt8])
   public func get_htlc_id() -> Swift.UInt64
   public func set_htlc_id(val: Swift.UInt64)
@@ -1425,7 +1572,10 @@ public class UpdateFailHTLC {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_UpdateFailHTLCDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Option_C2Tuple_usizeTransactionZZ {
+public class Option_C2Tuple_usizeTransactionZZ {
+  public init(value: LDKFramework.C2Tuple_usizeTransactionZ?)
+  public init(pointer: LDKFramework.LDKCOption_C2Tuple_usizeTransactionZZ)
+  public func getValue() -> LDKFramework.C2Tuple_usizeTransactionZ?
   @objc deinit
 }
 public class WatchedOutput {
@@ -1439,9 +1589,12 @@ public class WatchedOutput {
   public func set_script_pubkey(val: [Swift.UInt8])
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class BroadcasterInterface {
-  public func broadcast_transaction(tx: LDKFramework.LDKTransaction)
-  public func free()
+open class BroadcasterInterface {
+  public var cOpaqueStruct: LDKFramework.LDKBroadcasterInterface?
+  public init()
+  public init(pointer: LDKFramework.LDKBroadcasterInterface)
+  open func broadcast_transaction(tx: [Swift.UInt8])
+  open func free()
   @objc deinit
 }
 public class LightningError {
@@ -1459,45 +1612,54 @@ public class InvoiceSignature {
   public func clone(orig: LDKFramework.InvoiceSignature) -> LDKFramework.InvoiceSignature
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_CommitmentTransactionDecodeErrorZ {
+public class Result_CommitmentTransactionDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_CommitmentTransactionDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Sign {
-  public func write() -> [Swift.UInt8]
-  public func clone() -> Swift.UnsafeMutableRawPointer
-  public func free()
+open class Sign {
+  public var cOpaqueStruct: LDKFramework.LDKSign?
+  public init()
+  public init(pointer: LDKFramework.LDKSign)
+  open func write() -> [Swift.UInt8]
+  open func clone() -> Swift.UnsafeMutableRawPointer
+  open func free()
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_NonePeerHandleErrorZ {
+public class Result_NonePeerHandleErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_NonePeerHandleErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_QueryShortChannelIdsDecodeErrorZ {
+public class Result_QueryShortChannelIdsDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_QueryShortChannelIdsDecodeErrorZ)
   @objc deinit
 }
 public class QueryChannelRange {
   public init(chain_hash_arg: [Swift.UInt8], first_blocknum_arg: Swift.UInt32, number_of_blocks_arg: Swift.UInt32)
   public init(pointer: LDKFramework.LDKQueryChannelRange)
-  public func get_chain_hash() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_chain_hash() -> [Swift.UInt8]
   public func set_chain_hash(val: [Swift.UInt8])
   public func get_first_blocknum() -> Swift.UInt32
   public func set_first_blocknum(val: Swift.UInt32)
   public func get_number_of_blocks() -> Swift.UInt32
   public func set_number_of_blocks(val: Swift.UInt32)
   public func clone(orig: LDKFramework.QueryChannelRange) -> LDKFramework.QueryChannelRange
-  public func end_blocknum(this_arg: LDKFramework.QueryChannelRange) -> Swift.UInt32
+  public func end_blocknum() -> Swift.UInt32
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_QueryChannelRangeDecodeErrorZ
   public func write(obj: LDKFramework.QueryChannelRange) -> [Swift.UInt8]
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class FeeEstimator {
-  public func get_est_sat_per_1000_weight(confirmation_target: LDKFramework.LDKConfirmationTarget) -> Swift.UInt32
-  public func free()
+open class FeeEstimator {
+  public var cOpaqueStruct: LDKFramework.LDKFeeEstimator?
+  public init()
+  public init(pointer: LDKFramework.LDKFeeEstimator)
+  open func get_est_sat_per_1000_weight(confirmation_target: LDKFramework.LDKConfirmationTarget) -> Swift.UInt32
+  open func free()
   @objc deinit
 }
 public class ReplyShortChannelIdsEnd {
   public init(chain_hash_arg: [Swift.UInt8], full_information_arg: Swift.Bool)
   public init(pointer: LDKFramework.LDKReplyShortChannelIdsEnd)
-  public func get_chain_hash() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_chain_hash() -> [Swift.UInt8]
   public func set_chain_hash(val: [Swift.UInt8])
   public func get_full_information() -> Swift.Bool
   public func set_full_information(val: Swift.Bool)
@@ -1515,29 +1677,38 @@ public class MessageHandler {
   public func set_route_handler(val: LDKFramework.RoutingMessageHandler)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_PositiveTimestampCreationErrorZ {
+public class Result_PositiveTimestampCreationErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_PositiveTimestampCreationErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_CVec_SignatureZNoneZ {
+public class Result_CVec_SignatureZNoneZ {
+  public init(pointer: LDKFramework.LDKCResult_CVec_SignatureZNoneZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Filter {
-  public func register_tx(txid: Swift.UnsafePointer<(Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)>?, script_pubkey: LDKFramework.LDKu8slice)
-  public func register_output(output: LDKFramework.LDKWatchedOutput) -> LDKFramework.Option_C2Tuple_usizeTransactionZZ
-  public func free()
+open class Filter {
+  public var cOpaqueStruct: LDKFramework.LDKFilter?
+  public init()
+  public init(pointer: LDKFramework.LDKFilter)
+  open func register_tx(txid: [Swift.UInt8]?, script_pubkey: [Swift.UInt8])
+  open func register_output(output: LDKFramework.WatchedOutput) -> LDKFramework.Option_C2Tuple_usizeTransactionZZ
+  open func free()
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_ReplyShortChannelIdsEndDecodeErrorZ {
+public class Result_ReplyShortChannelIdsEndDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_ReplyShortChannelIdsEndDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class C2Tuple_BlockHashChannelMonitorZ {
+public class C2Tuple_BlockHashChannelMonitorZ {
+  public init(pointer: LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ)
   public func new(a: [Swift.UInt8], b: LDKFramework.ChannelMonitor) -> LDKFramework.C2Tuple_BlockHashChannelMonitorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_RoutingFeesDecodeErrorZ {
+public class Result_RoutingFeesDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_RoutingFeesDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_QueryChannelRangeDecodeErrorZ {
+public class Result_QueryChannelRangeDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_QueryChannelRangeDecodeErrorZ)
   @objc deinit
 }
 public class NodeInfo {
@@ -1553,18 +1724,22 @@ public class NodeInfo {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_NodeInfoDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_AcceptChannelDecodeErrorZ {
+public class Result_AcceptChannelDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_AcceptChannelDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class EventsProvider {
-  public func get_and_clear_pending_events() -> [LDKFramework.LDKEvent]
-  public func free()
+open class EventsProvider {
+  public var cOpaqueStruct: LDKFramework.LDKEventsProvider?
+  public init()
+  public init(pointer: LDKFramework.LDKEventsProvider)
+  open func get_and_clear_pending_events() -> [LDKFramework.LDKEvent]
+  open func free()
   @objc deinit
 }
 public class FundingLocked {
   public init(channel_id_arg: [Swift.UInt8], next_per_commitment_point_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKFundingLocked)
-  public func get_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_id() -> [Swift.UInt8]
   public func set_channel_id(val: [Swift.UInt8])
   public func get_next_per_commitment_point() -> [Swift.UInt8]
   public func set_next_per_commitment_point(val: [Swift.UInt8])
@@ -1575,13 +1750,14 @@ public class FundingLocked {
 }
 public class TrustedCommitmentTransaction {
   public init(pointer: LDKFramework.LDKTrustedCommitmentTransaction)
-  public func txid(this_arg: LDKFramework.TrustedCommitmentTransaction) -> [Swift.UInt8]
-  public func built_transaction(this_arg: LDKFramework.TrustedCommitmentTransaction) -> LDKFramework.BuiltCommitmentTransaction
-  public func keys(this_arg: LDKFramework.TrustedCommitmentTransaction) -> LDKFramework.TxCreationKeys
-  public func get_htlc_sigs(this_arg: LDKFramework.TrustedCommitmentTransaction, htlc_base_key: [Swift.UInt8], channel_parameters: LDKFramework.DirectedChannelTransactionParameters) -> LDKFramework.Result_CVec_SignatureZNoneZ
+  public func txid() -> [Swift.UInt8]
+  public func built_transaction() -> LDKFramework.BuiltCommitmentTransaction
+  public func keys() -> LDKFramework.TxCreationKeys
+  public func get_htlc_sigs(htlc_base_key: [Swift.UInt8], channel_parameters: LDKFramework.DirectedChannelTransactionParameters) -> LDKFramework.Result_CVec_SignatureZNoneZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_SecretKeyErrorZ {
+public class Result_SecretKeyErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_SecretKeyErrorZ)
   @objc deinit
 }
 public class ChannelInfo {
@@ -1626,10 +1802,12 @@ public class ChainParameters {
   public func set_best_block(val: LDKFramework.BestBlock)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class PaymentSendFailure {
+public class PaymentSendFailure {
+  public init(pointer: LDKFramework.LDKPaymentSendFailure)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Event {
+public class Event {
+  public init(pointer: LDKFramework.LDKEvent)
   @objc deinit
 }
 public class UserConfig {
@@ -1647,72 +1825,77 @@ public class UserConfig {
 public class Invoice {
   public init(pointer: LDKFramework.LDKInvoice)
   public func clone(orig: LDKFramework.Invoice) -> LDKFramework.Invoice
-  public func into_signed_raw(this_arg: LDKFramework.Invoice) -> LDKFramework.SignedRawInvoice
-  public func check_signature(this_arg: LDKFramework.Invoice) -> LDKFramework.Result_NoneSemanticErrorZ
+  public func into_signed_raw() -> LDKFramework.SignedRawInvoice
+  public func check_signature() -> LDKFramework.Result_NoneSemanticErrorZ
   public func from_signed(signed_invoice: LDKFramework.SignedRawInvoice) -> LDKFramework.Result_InvoiceSemanticErrorZ
-  public func timestamp(this_arg: LDKFramework.Invoice) -> Swift.UInt64
-  public func payment_hash(this_arg: LDKFramework.Invoice) -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
-  public func payee_pub_key(this_arg: LDKFramework.Invoice) -> [Swift.UInt8]
-  public func payment_secret(this_arg: LDKFramework.Invoice) -> [Swift.UInt8]
-  public func features(this_arg: LDKFramework.Invoice) -> LDKFramework.InvoiceFeatures
-  public func recover_payee_pub_key(this_arg: LDKFramework.Invoice) -> [Swift.UInt8]
-  public func expiry_time(this_arg: LDKFramework.Invoice) -> Swift.UInt64
-  public func min_final_cltv_expiry(this_arg: LDKFramework.Invoice) -> Swift.UInt64
-  public func routes(this_arg: LDKFramework.Invoice) -> [LDKFramework.LDKRouteHint]
-  public func currency(this_arg: LDKFramework.Invoice) -> LDKFramework.LDKCurrency
-  public func amount_pico_btc(this_arg: LDKFramework.Invoice) -> LDKFramework.Option_u64Z
+  public func timestamp() -> Swift.UInt64
+  public func payment_hash() -> [Swift.UInt8]
+  public func payee_pub_key() -> [Swift.UInt8]
+  public func payment_secret() -> [Swift.UInt8]
+  public func features() -> LDKFramework.InvoiceFeatures
+  public func recover_payee_pub_key() -> [Swift.UInt8]
+  public func expiry_time() -> Swift.UInt64
+  public func min_final_cltv_expiry() -> Swift.UInt64
+  public func routes() -> [LDKFramework.LDKRouteHint]
+  public func currency() -> LDKFramework.LDKCurrency
+  public func amount_pico_btc() -> LDKFramework.Option_u64Z
   public func from_str(s: Swift.String) -> LDKFramework.Result_InvoiceNoneZ
   public func to_str(o: LDKFramework.Invoice) -> Swift.String
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_SignedRawInvoiceNoneZ {
+public class Result_SignedRawInvoiceNoneZ {
+  public init(pointer: LDKFramework.LDKCResult_SignedRawInvoiceNoneZ)
   @objc deinit
 }
 public class Description {
   public init(pointer: LDKFramework.LDKDescription)
   public func clone(orig: LDKFramework.Description) -> LDKFramework.Description
   public func new(description: Swift.String) -> LDKFramework.Result_DescriptionCreationErrorZ
-  public func into_inner(this_arg: LDKFramework.Description) -> Swift.String
+  public func into_inner() -> Swift.String
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class APIError {
+public class APIError {
+  public init(pointer: LDKFramework.LDKAPIError)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_ChannelMonitorUpdateDecodeErrorZ {
+public class Result_ChannelMonitorUpdateDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_ChannelMonitorUpdateDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_OpenChannelDecodeErrorZ {
+public class Result_OpenChannelDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_OpenChannelDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_NoneMonitorUpdateErrorZ {
+public class Result_NoneMonitorUpdateErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_NoneMonitorUpdateErrorZ)
   @objc deinit
 }
 public class InMemorySigner {
   public init(funding_key: [Swift.UInt8], revocation_base_key: [Swift.UInt8], payment_key: [Swift.UInt8], delayed_payment_base_key: [Swift.UInt8], htlc_base_key: [Swift.UInt8], commitment_seed: [Swift.UInt8], channel_value_satoshis: Swift.UInt64, channel_keys_id: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKInMemorySigner)
-  public func get_funding_key() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_funding_key() -> [Swift.UInt8]
   public func set_funding_key(val: [Swift.UInt8])
-  public func get_revocation_base_key() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_revocation_base_key() -> [Swift.UInt8]
   public func set_revocation_base_key(val: [Swift.UInt8])
-  public func get_payment_key() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_payment_key() -> [Swift.UInt8]
   public func set_payment_key(val: [Swift.UInt8])
-  public func get_delayed_payment_base_key() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_delayed_payment_base_key() -> [Swift.UInt8]
   public func set_delayed_payment_base_key(val: [Swift.UInt8])
-  public func get_htlc_base_key() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_htlc_base_key() -> [Swift.UInt8]
   public func set_htlc_base_key(val: [Swift.UInt8])
-  public func get_commitment_seed() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_commitment_seed() -> [Swift.UInt8]
   public func set_commitment_seed(val: [Swift.UInt8])
   public func clone(orig: LDKFramework.InMemorySigner) -> LDKFramework.InMemorySigner
-  public func counterparty_pubkeys(this_arg: LDKFramework.InMemorySigner) -> LDKFramework.ChannelPublicKeys
-  public func counterparty_selected_contest_delay(this_arg: LDKFramework.InMemorySigner) -> Swift.UInt16
-  public func holder_selected_contest_delay(this_arg: LDKFramework.InMemorySigner) -> Swift.UInt16
-  public func is_outbound(this_arg: LDKFramework.InMemorySigner) -> Swift.Bool
-  public func funding_outpoint(this_arg: LDKFramework.InMemorySigner) -> LDKFramework.OutPoint
-  public func get_channel_parameters(this_arg: LDKFramework.InMemorySigner) -> LDKFramework.ChannelTransactionParameters
-  public func sign_counterparty_payment_input(this_arg: LDKFramework.InMemorySigner, spend_tx: [Swift.UInt8], input_idx: Swift.UInt, descriptor: LDKFramework.StaticPaymentOutputDescriptor) -> LDKFramework.Result_CVec_CVec_u8ZZNoneZ
-  public func sign_dynamic_p2wsh_input(this_arg: LDKFramework.InMemorySigner, spend_tx: [Swift.UInt8], input_idx: Swift.UInt, descriptor: LDKFramework.DelayedPaymentOutputDescriptor) -> LDKFramework.Result_CVec_CVec_u8ZZNoneZ
-  public func as_BaseSign(this_arg: LDKFramework.InMemorySigner) -> LDKFramework.BaseSign
-  public func as_Sign(this_arg: LDKFramework.InMemorySigner) -> LDKFramework.Sign
+  public func counterparty_pubkeys() -> LDKFramework.ChannelPublicKeys
+  public func counterparty_selected_contest_delay() -> Swift.UInt16
+  public func holder_selected_contest_delay() -> Swift.UInt16
+  public func is_outbound() -> Swift.Bool
+  public func funding_outpoint() -> LDKFramework.OutPoint
+  public func get_channel_parameters() -> LDKFramework.ChannelTransactionParameters
+  public func sign_counterparty_payment_input(spend_tx: [Swift.UInt8], input_idx: Swift.UInt, descriptor: LDKFramework.StaticPaymentOutputDescriptor) -> LDKFramework.Result_CVec_CVec_u8ZZNoneZ
+  public func sign_dynamic_p2wsh_input(spend_tx: [Swift.UInt8], input_idx: Swift.UInt, descriptor: LDKFramework.DelayedPaymentOutputDescriptor) -> LDKFramework.Result_CVec_CVec_u8ZZNoneZ
+  public func as_BaseSign() -> LDKFramework.BaseSign
+  public func as_Sign() -> LDKFramework.Sign
   public func write(obj: LDKFramework.InMemorySigner) -> [Swift.UInt8]
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_InMemorySignerDecodeErrorZ
   @objc deinit
@@ -1720,14 +1903,14 @@ public class InMemorySigner {
 public class IgnoringMessageHandler {
   public init()
   public init(pointer: LDKFramework.LDKIgnoringMessageHandler)
-  public func as_MessageSendEventsProvider(this_arg: LDKFramework.IgnoringMessageHandler) -> LDKFramework.MessageSendEventsProvider
-  public func as_RoutingMessageHandler(this_arg: LDKFramework.IgnoringMessageHandler) -> LDKFramework.RoutingMessageHandler
+  public func as_MessageSendEventsProvider() -> LDKFramework.MessageSendEventsProvider
+  public func as_RoutingMessageHandler() -> LDKFramework.RoutingMessageHandler
   @objc deinit
 }
 public class UpdateFee {
   public init(channel_id_arg: [Swift.UInt8], feerate_per_kw_arg: Swift.UInt32)
   public init(pointer: LDKFramework.LDKUpdateFee)
-  public func get_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_id() -> [Swift.UInt8]
   public func set_channel_id(val: [Swift.UInt8])
   public func get_feerate_per_kw() -> Swift.UInt32
   public func set_feerate_per_kw(val: Swift.UInt32)
@@ -1738,14 +1921,15 @@ public class UpdateFee {
 }
 public class DirectedChannelTransactionParameters {
   public init(pointer: LDKFramework.LDKDirectedChannelTransactionParameters)
-  public func broadcaster_pubkeys(this_arg: LDKFramework.DirectedChannelTransactionParameters) -> LDKFramework.ChannelPublicKeys
-  public func countersignatory_pubkeys(this_arg: LDKFramework.DirectedChannelTransactionParameters) -> LDKFramework.ChannelPublicKeys
-  public func contest_delay(this_arg: LDKFramework.DirectedChannelTransactionParameters) -> Swift.UInt16
-  public func is_outbound(this_arg: LDKFramework.DirectedChannelTransactionParameters) -> Swift.Bool
-  public func funding_outpoint(this_arg: LDKFramework.DirectedChannelTransactionParameters) -> LDKFramework.OutPoint
+  public func broadcaster_pubkeys() -> LDKFramework.ChannelPublicKeys
+  public func countersignatory_pubkeys() -> LDKFramework.ChannelPublicKeys
+  public func contest_delay() -> Swift.UInt16
+  public func is_outbound() -> Swift.Bool
+  public func funding_outpoint() -> LDKFramework.OutPoint
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_NetworkGraphDecodeErrorZ {
+public class Result_NetworkGraphDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_NetworkGraphDecodeErrorZ)
   @objc deinit
 }
 public class MinFinalCltvExpiry {
@@ -1753,7 +1937,8 @@ public class MinFinalCltvExpiry {
   public func clone(orig: LDKFramework.MinFinalCltvExpiry) -> LDKFramework.MinFinalCltvExpiry
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_UnsignedNodeAnnouncementDecodeErrorZ {
+public class Result_UnsignedNodeAnnouncementDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_UnsignedNodeAnnouncementDecodeErrorZ)
   @objc deinit
 }
 public class PeerHandleError {
@@ -1764,28 +1949,31 @@ public class PeerHandleError {
   public func clone(orig: LDKFramework.PeerHandleError) -> LDKFramework.PeerHandleError
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class ChannelMessageHandler {
-  public func handle_open_channel(their_node_id: LDKFramework.LDKPublicKey, their_features: LDKFramework.LDKInitFeatures, msg: Swift.UnsafePointer<LDKFramework.LDKOpenChannel>)
-  public func handle_accept_channel(their_node_id: LDKFramework.LDKPublicKey, their_features: LDKFramework.LDKInitFeatures, msg: Swift.UnsafePointer<LDKFramework.LDKAcceptChannel>)
-  public func handle_funding_created(their_node_id: LDKFramework.LDKPublicKey, msg: Swift.UnsafePointer<LDKFramework.LDKFundingCreated>)
-  public func handle_funding_signed(their_node_id: LDKFramework.LDKPublicKey, msg: Swift.UnsafePointer<LDKFramework.LDKFundingSigned>)
-  public func handle_funding_locked(their_node_id: LDKFramework.LDKPublicKey, msg: Swift.UnsafePointer<LDKFramework.LDKFundingLocked>)
-  public func handle_shutdown(their_node_id: LDKFramework.LDKPublicKey, their_features: Swift.UnsafePointer<LDKFramework.LDKInitFeatures>, msg: Swift.UnsafePointer<LDKFramework.LDKShutdown>)
-  public func handle_closing_signed(their_node_id: LDKFramework.LDKPublicKey, msg: Swift.UnsafePointer<LDKFramework.LDKClosingSigned>)
-  public func handle_update_add_htlc(their_node_id: LDKFramework.LDKPublicKey, msg: Swift.UnsafePointer<LDKFramework.LDKUpdateAddHTLC>)
-  public func handle_update_fulfill_htlc(their_node_id: LDKFramework.LDKPublicKey, msg: Swift.UnsafePointer<LDKFramework.LDKUpdateFulfillHTLC>)
-  public func handle_update_fail_htlc(their_node_id: LDKFramework.LDKPublicKey, msg: Swift.UnsafePointer<LDKFramework.LDKUpdateFailHTLC>)
-  public func handle_update_fail_malformed_htlc(their_node_id: LDKFramework.LDKPublicKey, msg: Swift.UnsafePointer<LDKFramework.LDKUpdateFailMalformedHTLC>)
-  public func handle_commitment_signed(their_node_id: LDKFramework.LDKPublicKey, msg: Swift.UnsafePointer<LDKFramework.LDKCommitmentSigned>)
-  public func handle_revoke_and_ack(their_node_id: LDKFramework.LDKPublicKey, msg: Swift.UnsafePointer<LDKFramework.LDKRevokeAndACK>)
-  public func handle_update_fee(their_node_id: LDKFramework.LDKPublicKey, msg: Swift.UnsafePointer<LDKFramework.LDKUpdateFee>)
-  public func handle_announcement_signatures(their_node_id: LDKFramework.LDKPublicKey, msg: Swift.UnsafePointer<LDKFramework.LDKAnnouncementSignatures>)
-  public func peer_disconnected(their_node_id: LDKFramework.LDKPublicKey, no_connection_possible: Swift.Bool)
-  public func peer_connected(their_node_id: LDKFramework.LDKPublicKey, msg: Swift.UnsafePointer<LDKFramework.LDKInit>)
-  public func handle_channel_reestablish(their_node_id: LDKFramework.LDKPublicKey, msg: Swift.UnsafePointer<LDKFramework.LDKChannelReestablish>)
-  public func handle_channel_update(their_node_id: LDKFramework.LDKPublicKey, msg: Swift.UnsafePointer<LDKFramework.LDKChannelUpdate>)
-  public func handle_error(their_node_id: LDKFramework.LDKPublicKey, msg: Swift.UnsafePointer<LDKFramework.LDKErrorMessage>)
-  public func free()
+open class ChannelMessageHandler {
+  public var cOpaqueStruct: LDKFramework.LDKChannelMessageHandler?
+  public init()
+  public init(pointer: LDKFramework.LDKChannelMessageHandler)
+  open func handle_open_channel(their_node_id: [Swift.UInt8], their_features: LDKFramework.InitFeatures, msg: LDKFramework.OpenChannel)
+  open func handle_accept_channel(their_node_id: [Swift.UInt8], their_features: LDKFramework.InitFeatures, msg: LDKFramework.AcceptChannel)
+  open func handle_funding_created(their_node_id: [Swift.UInt8], msg: LDKFramework.FundingCreated)
+  open func handle_funding_signed(their_node_id: [Swift.UInt8], msg: LDKFramework.FundingSigned)
+  open func handle_funding_locked(their_node_id: [Swift.UInt8], msg: LDKFramework.FundingLocked)
+  open func handle_shutdown(their_node_id: [Swift.UInt8], their_features: LDKFramework.InitFeatures, msg: LDKFramework.Shutdown)
+  open func handle_closing_signed(their_node_id: [Swift.UInt8], msg: LDKFramework.ClosingSigned)
+  open func handle_update_add_htlc(their_node_id: [Swift.UInt8], msg: LDKFramework.UpdateAddHTLC)
+  open func handle_update_fulfill_htlc(their_node_id: [Swift.UInt8], msg: LDKFramework.UpdateFulfillHTLC)
+  open func handle_update_fail_htlc(their_node_id: [Swift.UInt8], msg: LDKFramework.UpdateFailHTLC)
+  open func handle_update_fail_malformed_htlc(their_node_id: [Swift.UInt8], msg: LDKFramework.UpdateFailMalformedHTLC)
+  open func handle_commitment_signed(their_node_id: [Swift.UInt8], msg: LDKFramework.CommitmentSigned)
+  open func handle_revoke_and_ack(their_node_id: [Swift.UInt8], msg: LDKFramework.RevokeAndACK)
+  open func handle_update_fee(their_node_id: [Swift.UInt8], msg: LDKFramework.UpdateFee)
+  open func handle_announcement_signatures(their_node_id: [Swift.UInt8], msg: LDKFramework.AnnouncementSignatures)
+  open func peer_disconnected(their_node_id: [Swift.UInt8], no_connection_possible: Swift.Bool)
+  open func peer_connected(their_node_id: [Swift.UInt8], msg: LDKFramework.Init)
+  open func handle_channel_reestablish(their_node_id: [Swift.UInt8], msg: LDKFramework.ChannelReestablish)
+  open func handle_channel_update(their_node_id: [Swift.UInt8], msg: LDKFramework.ChannelUpdate)
+  open func handle_error(their_node_id: [Swift.UInt8], msg: LDKFramework.ErrorMessage)
+  open func free()
   @objc deinit
 }
 public class RouteHop {
@@ -1806,18 +1994,19 @@ public class RouteHop {
   public func clone(orig: LDKFramework.RouteHop) -> LDKFramework.RouteHop
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_ChannelTransactionParametersDecodeErrorZ {
+public class Result_ChannelTransactionParametersDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_ChannelTransactionParametersDecodeErrorZ)
   @objc deinit
 }
 public class UpdateAddHTLC {
   public init(pointer: LDKFramework.LDKUpdateAddHTLC)
-  public func get_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_id() -> [Swift.UInt8]
   public func set_channel_id(val: [Swift.UInt8])
   public func get_htlc_id() -> Swift.UInt64
   public func set_htlc_id(val: Swift.UInt64)
   public func get_amount_msat() -> Swift.UInt64
   public func set_amount_msat(val: Swift.UInt64)
-  public func get_payment_hash() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_payment_hash() -> [Swift.UInt8]
   public func set_payment_hash(val: [Swift.UInt8])
   public func get_cltv_expiry() -> Swift.UInt32
   public func set_cltv_expiry(val: Swift.UInt32)
@@ -1826,7 +2015,8 @@ public class UpdateAddHTLC {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_UpdateAddHTLCDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_SpendableOutputDescriptorDecodeErrorZ {
+public class Result_SpendableOutputDescriptorDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_SpendableOutputDescriptorDecodeErrorZ)
   @objc deinit
 }
 public class DecodeError {
@@ -1834,15 +2024,16 @@ public class DecodeError {
   public func clone(orig: LDKFramework.DecodeError) -> LDKFramework.DecodeError
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_ChannelFeaturesDecodeErrorZ {
+public class Result_ChannelFeaturesDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_ChannelFeaturesDecodeErrorZ)
   @objc deinit
 }
 public class RevokeAndACK {
   public init(channel_id_arg: [Swift.UInt8], per_commitment_secret_arg: [Swift.UInt8], next_per_commitment_point_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKRevokeAndACK)
-  public func get_channel_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_id() -> [Swift.UInt8]
   public func set_channel_id(val: [Swift.UInt8])
-  public func get_per_commitment_secret() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_per_commitment_secret() -> [Swift.UInt8]
   public func set_per_commitment_secret(val: [Swift.UInt8])
   public func get_next_per_commitment_point() -> [Swift.UInt8]
   public func set_next_per_commitment_point(val: [Swift.UInt8])
@@ -1851,7 +2042,8 @@ public class RevokeAndACK {
   public func read(ser: [Swift.UInt8]) -> LDKFramework.Result_RevokeAndACKDecodeErrorZ
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_NoneLightningErrorZ {
+public class Result_NoneLightningErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_NoneLightningErrorZ)
   @objc deinit
 }
 public class DelayedPaymentOutputDescriptor {
@@ -1866,17 +2058,19 @@ public class DelayedPaymentOutputDescriptor {
   public func set_output(val: LDKFramework.LDKTxOut)
   public func get_revocation_pubkey() -> [Swift.UInt8]
   public func set_revocation_pubkey(val: [Swift.UInt8])
-  public func get_channel_keys_id() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_channel_keys_id() -> [Swift.UInt8]
   public func set_channel_keys_id(val: [Swift.UInt8])
   public func get_channel_value_satoshis() -> Swift.UInt64
   public func set_channel_value_satoshis(val: Swift.UInt64)
   public func clone(orig: LDKFramework.DelayedPaymentOutputDescriptor) -> LDKFramework.DelayedPaymentOutputDescriptor
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class MessageSendEvent {
+public class MessageSendEvent {
+  public init(pointer: LDKFramework.LDKMessageSendEvent)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_NodeAnnouncementDecodeErrorZ {
+public class Result_NodeAnnouncementDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_NodeAnnouncementDecodeErrorZ)
   @objc deinit
 }
 public class TxCreationKeys {
@@ -1902,19 +2096,22 @@ public class TxCreationKeys {
 public class FilesystemPersister {
   public init(path_to_channel_data: Swift.String)
   public init(pointer: LDKFramework.LDKFilesystemPersister)
-  public func get_data_dir(this_arg: LDKFramework.FilesystemPersister) -> Swift.String
+  public func get_data_dir() -> Swift.String
   public func persist_manager(data_dir: Swift.String, manager: LDKFramework.ChannelManager) -> LDKFramework.Result_NoneErrorZ
-  public func read_channelmonitors(this_arg: LDKFramework.FilesystemPersister, keys_manager: LDKFramework.KeysInterface) -> LDKFramework.Result_CVec_C2Tuple_BlockHashChannelMonitorZZErrorZ
-  public func as_Persist(this_arg: LDKFramework.FilesystemPersister) -> LDKFramework.Persist
+  public func read_channelmonitors(keys_manager: LDKFramework.KeysInterface) -> LDKFramework.Result_CVec_C2Tuple_BlockHashChannelMonitorZZErrorZ
+  public func as_Persist() -> LDKFramework.Persist
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_DirectionalChannelInfoDecodeErrorZ {
+public class Result_DirectionalChannelInfoDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_DirectionalChannelInfoDecodeErrorZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_RecoverableSignatureNoneZ {
+public class Result_RecoverableSignatureNoneZ {
+  public init(pointer: LDKFramework.LDKCResult_RecoverableSignatureNoneZ)
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class Result_GossipTimestampFilterDecodeErrorZ {
+public class Result_GossipTimestampFilterDecodeErrorZ {
+  public init(pointer: LDKFramework.LDKCResult_GossipTimestampFilterDecodeErrorZ)
   @objc deinit
 }
 public class RouteHintHop {
@@ -1935,9 +2132,12 @@ public class RouteHintHop {
   public func clone(orig: LDKFramework.RouteHintHop) -> LDKFramework.RouteHintHop
   @objc deinit
 }
-@_hasMissingDesignatedInitializers public class MessageSendEventsProvider {
-  public func get_and_clear_pending_msg_events() -> [LDKFramework.LDKMessageSendEvent]
-  public func free()
+open class MessageSendEventsProvider {
+  public var cOpaqueStruct: LDKFramework.LDKMessageSendEventsProvider?
+  public init()
+  public init(pointer: LDKFramework.LDKMessageSendEventsProvider)
+  open func get_and_clear_pending_msg_events() -> [LDKFramework.LDKMessageSendEvent]
+  open func free()
   @objc deinit
 }
 public class NodeAnnouncementInfo {
@@ -1947,9 +2147,9 @@ public class NodeAnnouncementInfo {
   public func set_features(val: LDKFramework.NodeFeatures)
   public func get_last_update() -> Swift.UInt32
   public func set_last_update(val: Swift.UInt32)
-  public func get_rgb() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_rgb() -> [Swift.UInt8]
   public func set_rgb(val: [Swift.UInt8])
-  public func get_alias() -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
+  public func get_alias() -> [Swift.UInt8]
   public func set_alias(val: [Swift.UInt8])
   public func set_addresses(val: [LDKFramework.LDKNetAddress])
   public func get_announcement_message() -> LDKFramework.NodeAnnouncement
