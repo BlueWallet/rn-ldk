@@ -1,11 +1,24 @@
 import Foundation
 import LDKFramework
 
+// borrowed from JS:
+let MARKER_LOG = "log";
+let MARKER_REGISTER_OUTPUT = "marker_register_output";
+let MARKER_REGISTER_TX = "register_tx";
+let MARKER_BROADCAST = "broadcast";
+let MARKER_PERSIST = "persist";
+let MARKER_PAYMENT_SENT = "payment_sent";
+let MARKER_PAYMENT_FAILED = "payment_failed";
+let MARKER_PAYMENT_RECEIVED = "payment_received";
+let MARKER_FUNDING_GENERATION_READY = "funding_generation_ready";
+//
+
 var feerate_fast = 7500; // estimate fee rate in BTC/kB
 var feerate_medium = 7500; // estimate fee rate in BTC/kB
 var feerate_slow = 7500; // estimate fee rate in BTC/kB
 
 var channel_manager: LDKFramework.ChannelManager?;
+var peer_manager: LDKFramework.PeerManager?;
 
 class MyFeeEstimator: FeeEstimator {
     override func get_est_sat_per_1000_weight(confirmation_target: LDKConfirmationTarget) -> UInt32 {
@@ -22,35 +35,35 @@ class MyFeeEstimator: FeeEstimator {
 class MyLogger: Logger {
     override func log(record: String?) {
         if let record = record {
-            //let string = Bindings.UnsafeIntPointer_to_string(nativeType: record)
-            print("log: \(record)")
-            EventEmitter.sharedInstance()?.sendEvent(withName: "log", body: record);
+            print("ReactNativeLDK: \(record)")
+            _sendEvent(eventName: MARKER_LOG, eventBody: ["line" : record])
         }
     }
 }
 
 class MyBroadcasterInterface: BroadcasterInterface {
     override func broadcast_transaction(tx: [UInt8]) {
-        // insert code to broadcast transaction
+        print("ReactNativeLDK: want to broadcast txhex")
+        _sendEvent(eventName: MARKER_BROADCAST, eventBody: ["txhex": bytesToHex(bytes: tx)])
     }
 }
 
 class MyPersister: Persist {
     override func persist_new_channel(id: OutPoint, data: ChannelMonitor) -> Result_NoneChannelMonitorUpdateErrZ {
+        print("ReactNativeLDK: persist_new_channel")
         let idBytes: [UInt8] = id.write(obj: id)
         let monitorBytes: [UInt8] = data.write(obj: data)
-        
-        // persist monitorBytes to disk, keyed by idBytes
+        _sendEvent(eventName: MARKER_PERSIST, eventBody: ["id": bytesToHex(bytes: idBytes), "data": bytesToHex(bytes: monitorBytes)]);
         
         // simplified result instantiation calls coming shortly!
         return Result_NoneChannelMonitorUpdateErrZ(pointer: LDKCResult_NoneChannelMonitorUpdateErrZ())
     }
     
     override func update_persisted_channel(id: OutPoint, update: ChannelMonitorUpdate, data: ChannelMonitor) -> Result_NoneChannelMonitorUpdateErrZ {
+        print("ReactNativeLDK: update_persisted_channel");
         let idBytes: [UInt8] = id.write(obj: id)
         let monitorBytes: [UInt8] = data.write(obj: data)
-        
-        // modify persisted monitorBytes keyed by idBytes on disk
+        _sendEvent(eventName: MARKER_PERSIST, eventBody: ["id": bytesToHex(bytes: idBytes), "data": bytesToHex(bytes: monitorBytes)]);
         
         // simplified result instantiation calls coming shortly!
         return Result_NoneChannelMonitorUpdateErrZ(pointer: LDKCResult_NoneChannelMonitorUpdateErrZ())
@@ -60,19 +73,22 @@ class MyPersister: Persist {
 class MyFilter: Filter {
     
     override func register_tx(txid: [UInt8]?, script_pubkey: [UInt8]) {
-        // watch this transaction on-chain
+        print("ReactNativeLDK: register_tx");
+        _sendEvent(eventName: MARKER_REGISTER_TX, eventBody: ["txid": bytesToHex(bytes: txid ?? []), "script_pubkey": bytesToHex(bytes: script_pubkey)]);
     }
     
     override func register_output(output: WatchedOutput) -> Option_C2Tuple_usizeTransactionZZ {
+        print("ReactNativeLDK: register_output");
         let scriptPubkeyBytes = output.get_script_pubkey()
         let outpoint = output.get_outpoint()
-        let txid = outpoint.get_txid()
         let outputIndex = outpoint.get_index()
         
         // watch for any transactions that spend this output on-chain
         
         let blockHashBytes = output.get_block_hash()
         // if block hash bytes are not null, return any transaction spending the output that is found in the corresponding block along with its index
+        
+        _sendEvent(eventName: MARKER_REGISTER_OUTPUT, eventBody: ["block_hash": bytesToHex(bytes: blockHashBytes), "index": String(outputIndex), "script_pubkey": bytesToHex(bytes: scriptPubkeyBytes)]);
         
         return Option_C2Tuple_usizeTransactionZZ(value: nil)
     }
@@ -86,70 +102,59 @@ let persister = MyPersister();
 let filter = MyFilter();
 
 
-
-/*func get_est_sat_per_1000_weight(instancePointer: UnsafeRawPointer?, confirmationTarget: LDKConfirmationTarget) -> UInt64 {
-    if (confirmationTarget as AnyObject === LDKConfirmationTarget_HighPriority as AnyObject) {
-        return UInt64(feerate_fast);
-    }
-    if (confirmationTarget as AnyObject === LDKConfirmationTarget_Normal as AnyObject) {
-        return UInt64(feerate_medium);
-    }
-    return UInt64(feerate_slow);
-}*/
-
-
-func logCallback(pointer: UnsafeRawPointer?, buffer: UnsafePointer<Int8>?) -> Void {
-    //let instance: Logger = RawLDKTypes.pointerToInstance(pointer: pointer!)
-    //let message = String(cString: buffer!)
-    //instance.log(message: message)
-}
-
 @objc(RnLdk)
 class RnLdk: NSObject {
 
     @objc
-    func start(_ entropyHex: String, blockchainTipHeight: Int, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    func start(_ entropyHex: String, blockchainTipHeight: NSNumber, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
 
         let chainMonitor = ChainMonitor.init(chain_source: filter, broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister);
        
-        let seed = stringToBytes(entropyHex);
+        let seed = hexToBytes(entropyHex);
         let timestamp_seconds = UInt64(NSDate().timeIntervalSince1970)
         let timestamp_nanos = UInt32.init(truncating: NSNumber(value: timestamp_seconds * 1000 * 1000))
         let keysManager = KeysManager(seed: seed, starting_time_secs: timestamp_seconds, starting_time_nanos: timestamp_nanos)
-        
         let keysInterface = keysManager.as_KeysInterface();
-        
-        print(stringToBytes(blockchainTipHashHex));
-        print(blockchainTipHeight)
-        print(UInt32(blockchainTipHeight));
-        
-        resolve("yolo");
-        return;
-        let bestBlock = BestBlock(block_hash: stringToBytes(blockchainTipHashHex), height: UInt32(blockchainTipHeight))
-        let chainParameters = ChainParameters(network_arg: LDKNetwork_Bitcoin, best_block_arg: bestBlock)
-        
+        let nodeSecret = Bindings.LDKSecretKey_to_array(nativeType: keysInterface.cOpaqueStruct!.get_node_secret(keysInterface.cOpaqueStruct!.this_arg))
+        let secureRandomBytes = Bindings.LDKThirtyTwoBytes_to_array(nativeType: keysInterface.cOpaqueStruct!.get_secure_random_bytes(keysInterface.cOpaqueStruct!.this_arg))
         let userConfig = UserConfig.init();
         
-        if (true) {
-            channel_manager = ChannelManager.init(fee_est: feeEstimator, chain_monitor: chainMonitor.as_Watch(), tx_broadcaster: broadcaster, logger: logger, keys_manager: keysInterface, config: userConfig, params: chainParameters);
-        } else {
-            let serialized_channel_manager: [UInt8] = [2, 1, 111, 226, 140, 10, 182, 241, 179, 114, 193, 166, 162, 70, 174, 99, 247, 79, 147, 30, 131, 101, 225, 90, 8, 156, 104, 214, 25, 0, 0, 0, 0, 0, 0, 10, 174, 219, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 238, 87, 135, 110, 67, 215, 108, 228, 66, 226, 192, 37, 6, 193, 120, 186, 5, 214, 209, 16, 169, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] // <insert bytes you would have written in following the later step "Persist channel manager">
-            let serializedChannelMonitors: [[UInt8]] = []
+        if (serializedChannelManagerHex != "") {
+            var serializedChannelMonitors: [[UInt8]] = [];
+            let hexesArr = monitorHexes.split(separator: ",");
+            for hex in hexesArr {
+                serializedChannelMonitors.append(hexToBytes(String(hex)))
+            }
+            
+            let serialized_channel_manager: [UInt8] = hexToBytes(serializedChannelManagerHex);
+            
             do {
                 let channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: serializedChannelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, tx_broadcaster: broadcaster, logger: logger)
+                
                 channel_manager = channel_manager_constructor.channelManager;
             } catch {
                 resolve(false);
+                return;
             }
+        } else {
+            let channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: userConfig, current_blockchain_tip_hash: hexToBytes(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, tx_broadcaster: broadcaster, logger: logger);
+            channel_manager = channel_manager_constructor.channelManager;
             
         }
+        
+        let ignorer = IgnoringMessageHandler()
+        let messageHandler = MessageHandler(chan_handler_arg: channel_manager!.as_ChannelMessageHandler(), route_handler_arg:  ignorer.as_RoutingMessageHandler())
+        
+        peer_manager = PeerManager(message_handler: messageHandler, our_node_secret: nodeSecret, ephemeral_random_data: secureRandomBytes, logger: logger)
+        
+        
         resolve("hello ldk")
     }
     
     
     @objc
     func getVersion(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
-        resolve("0.0.5d")
+        resolve("0.0.11")
     }
     
     func getName() -> String {
@@ -200,7 +205,7 @@ class RnLdk: NSObject {
     @objc
     func getNodeId(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
         if let nodeId = channel_manager?.get_our_node_id() {
-            resolve(bytesToHex(bytes: nodeId, spacing: ""))
+            resolve(bytesToHex(bytes: nodeId))
         } else {
             resolve("");
         }
@@ -237,35 +242,63 @@ class RnLdk: NSObject {
     
     @objc
     func listChannels(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+        let rawChannels = channel_manager?.list_channels() ?? []
+        var jsonArray = "[";
+        var first = true;
+        rawChannels.map { (rawDetails: LDKChannelDetails) ->  ChannelDetails in
+             let it = ChannelDetails(pointer: rawDetails)
+            let short_channel_id = it.get_short_channel_id().getValue() ?? 0;
+
+            var channelObject = "{";
+            channelObject += "\"channel_id\":" + "\"" + bytesToHex(bytes: it.get_channel_id()) + "\",";
+            channelObject += "\"channel_value_satoshis\":" + String(it.get_channel_value_satoshis()) + ",";
+            channelObject += "\"inbound_capacity_msat\":" + String(it.get_inbound_capacity_msat()) + ",";
+            channelObject += "\"outbound_capacity_msat\":" + String(it.get_outbound_capacity_msat()) + ",";
+            channelObject += "\"short_channel_id\":" + "\"" + String(short_channel_id) + "\",";
+            channelObject += "\"is_live\":" + (it.get_is_live() ? "true" : "false") + ",";
+            channelObject += "\"remote_network_id\":" + "\"" + bytesToHex(bytes: it.get_remote_network_id()) + "\",";
+            channelObject += "\"user_id\":" + String(it.get_user_id());
+            channelObject += "}";
+
+            if (!first) { jsonArray += ","; }
+            jsonArray += channelObject;
+            first = false;
+            return it;
+        }
         
+        jsonArray += "]";
+        resolve(jsonArray);
     }
     
     @objc
-    func setFeerate(_ newFeerateFast: Int, newFeerateMedium: Int, newFeerateSlow: Int, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
-        
+    func setFeerate(_ newFeerateFast: NSNumber, newFeerateMedium: NSNumber, newFeerateSlow: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+        if (Int(newFeerateFast) < 300) { return resolve(false); }
+        if (Int(newFeerateMedium) < 300) { return resolve(false); }
+        if (Int(newFeerateSlow) < 300) { return resolve(false); }
+    
+        feerate_fast = Int(newFeerateFast);
+        feerate_medium = Int(newFeerateMedium);
+        feerate_slow = Int(newFeerateSlow);
+        resolve(true);
     }
     
     @objc
     func fireAnEvent(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
-        //NSString *eventName = notification.userInfo[@"name"];
-        //[self sendEventWithName:@"EventReminder" body:@{@"name": eventName}];
-        //EventEmitter.sharedInstance()?.sendEvent(withName: "log", body: ["txid": "111", "script_pubkey": "1111"]);
-        self._sendEvent(eventName: "log", eventBody: ["txid": "111", "script_pubkey": "1111"]);
-        //self.bridge.eventDispatcher.sendAppEventWithName( eventName: "trololo", body: "Woot!" );
+        _sendEvent(eventName: "log", eventBody: ["txid": "this is", "script_pubkey": "a debug event"]);
         resolve(true);
     }
-    
-    func _sendEvent(eventName: String, eventBody: [String: String]) {
-        EventEmitter.sharedInstance()?.sendEvent(withName: eventName, body: eventBody);
-    }
-    
-    
+}
+
+
+
+func _sendEvent(eventName: String, eventBody: [String: String]) {
+    EventEmitter.sharedInstance()?.sendEvent(withName: eventName, body: eventBody);
 }
 
 
 
 
-func stringToBytes(_ string: String) -> [UInt8] {
+func hexToBytes(_ string: String) -> [UInt8] {
     let length = string.count
     if length & 1 != 0 {
         return [];
@@ -285,7 +318,7 @@ func stringToBytes(_ string: String) -> [UInt8] {
     return bytes
 }
 
-func bytesToHex(bytes: [UInt8], spacing: String) -> String
+func bytesToHex(bytes: [UInt8]) -> String
 {
     var hexString: String = ""
     var count = bytes.count
@@ -293,12 +326,8 @@ func bytesToHex(bytes: [UInt8], spacing: String) -> String
     {
         hexString.append(String(format:"%02X", byte))
         count = count - 1
-        if count > 0
-        {
-            hexString.append(spacing)
-        }
     }
-    return hexString
+    return hexString.lowercased()
 }
 
 
