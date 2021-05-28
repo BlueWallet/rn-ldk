@@ -19,6 +19,9 @@ var feerate_slow = 7500; // estimate fee rate in BTC/kB
 
 var channel_manager: LDKFramework.ChannelManager?;
 var peer_manager: LDKFramework.PeerManager?;
+var keys_manager: LDKFramework.KeysManager?;
+var temporary_channel_id: [UInt8]? = nil;
+var peer_handler: SwiftSocketPeerHandler?;
 
 class MyFeeEstimator: FeeEstimator {
     override func get_est_sat_per_1000_weight(confirmation_target: LDKConfirmationTarget) -> UInt32 {
@@ -70,6 +73,18 @@ class MyPersister: Persist {
     }
 }
 
+class MyChannelManagerPersister: ChannelManagerPersister {
+    func handle_events(events: [LDKFramework.Event]) {
+        for currentEvent in events {
+            handleEvent(event: currentEvent)
+        }
+    }
+
+    func persist_manager(channel_manager_bytes: [UInt8]) {
+        _sendEvent(eventName: "persist_manager", eventBody: ["channel_manager_bytes": bytesToHex(bytes: channel_manager_bytes)]);
+    }
+}
+
 class MyFilter: Filter {
     
     override func register_tx(txid: [UInt8]?, script_pubkey: [UInt8]) {
@@ -100,6 +115,7 @@ let logger = MyLogger();
 let broadcaster = MyBroadcasterInterface();
 let persister = MyPersister();
 let filter = MyFilter();
+let channel_manager_persister = MyChannelManagerPersister();
 
 
 @objc(RnLdk)
@@ -113,8 +129,8 @@ class RnLdk: NSObject {
         let seed = hexToBytes(entropyHex);
         let timestamp_seconds = UInt64(NSDate().timeIntervalSince1970)
         let timestamp_nanos = UInt32.init(truncating: NSNumber(value: timestamp_seconds * 1000 * 1000))
-        let keysManager = KeysManager(seed: seed, starting_time_secs: timestamp_seconds, starting_time_nanos: timestamp_nanos)
-        let keysInterface = keysManager.as_KeysInterface();
+        keys_manager = KeysManager(seed: seed, starting_time_secs: timestamp_seconds, starting_time_nanos: timestamp_nanos);
+        let keysInterface = keys_manager!.as_KeysInterface();
         let nodeSecret = Bindings.LDKSecretKey_to_array(nativeType: keysInterface.cOpaqueStruct!.get_node_secret(keysInterface.cOpaqueStruct!.this_arg))
         let secureRandomBytes = Bindings.LDKThirtyTwoBytes_to_array(nativeType: keysInterface.cOpaqueStruct!.get_secure_random_bytes(keysInterface.cOpaqueStruct!.this_arg))
         let userConfig = UserConfig.init();
@@ -132,6 +148,7 @@ class RnLdk: NSObject {
                 let channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: serializedChannelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, tx_broadcaster: broadcaster, logger: logger)
                 
                 channel_manager = channel_manager_constructor.channelManager;
+                channel_manager_constructor.chain_sync_completed(persister: channel_manager_persister);
             } catch {
                 resolve(false);
                 return;
@@ -139,7 +156,7 @@ class RnLdk: NSObject {
         } else {
             let channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: userConfig, current_blockchain_tip_hash: hexToBytes(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, tx_broadcaster: broadcaster, logger: logger);
             channel_manager = channel_manager_constructor.channelManager;
-            
+            channel_manager_constructor.chain_sync_completed(persister: channel_manager_persister);
         }
         
         let ignorer = IgnoringMessageHandler()
@@ -154,7 +171,7 @@ class RnLdk: NSObject {
     
     @objc
     func getVersion(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
-        resolve("0.0.11")
+        resolve("0.0.13")
     }
     
     func getName() -> String {
@@ -198,9 +215,7 @@ class RnLdk: NSObject {
         
     }
     
-    private func handleEvent(event: Event) {
-        
-    }
+
     
     @objc
     func getNodeId(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
@@ -287,6 +302,67 @@ class RnLdk: NSObject {
         _sendEvent(eventName: "log", eventBody: ["txid": "this is", "script_pubkey": "a debug event"]);
         resolve(true);
     }
+}
+
+func handleEvent(event: Event) {
+    if let spendableOutputEvent = event.getValueAsSpendableOutputs() {
+        print("ReactNativeLDK: " + "trying to spend output");
+        let outputs = spendableOutputEvent.getOutputs()
+        let destinationScript = hexToBytes("76a91419129d53e6319baf19dba059bead166df90ab8f588ac"); // TODO unhardcode me
+        let result = keys_manager?.spend_spendable_outputs(descriptors: outputs, outputs: [], change_destination_script: destinationScript, feerate_sat_per_1000_weight: UInt32(feerate_fast))
+        
+        // TODO: handle result and _sendEvent
+//        if result?.cOpaqueStruct?.result_ok == true {
+            // send event
+//        }
+        return;
+    }
+    
+    if let paymentSentEvent = event.getValueAsPaymentSent() {
+        print("ReactNativeLDK: payment sent");
+        _sendEvent(eventName: MARKER_PAYMENT_SENT, eventBody: ["payment_preimage": bytesToHex(bytes: paymentSentEvent.getPayment_preimage())]);
+        return;
+    }
+    
+    if let paymentFailedEvent = event.getValueAsPaymentFailed() {
+        print("ReactNativeLDK: payment failed");
+        _sendEvent(eventName: MARKER_PAYMENT_FAILED, eventBody: ["payment_hash": bytesToHex(bytes: paymentFailedEvent.getPayment_hash()), "rejected_by_dest": paymentFailedEvent.getRejected_by_dest() ? "true" : "false"]);
+        return;
+    }
+    
+    if let pendingHTLCsForwardableEvent = event.getValueAsPendingHTLCsForwardable() {
+        channel_manager?.process_pending_htlc_forwards();
+    }
+    
+    if let paymentReceivedEvent = event.getValueAsPaymentReceived() {
+        print("ReactNativeLDK: payment received");
+        channel_manager?.claim_funds(payment_preimage: paymentReceivedEvent.getPayment_preimage());
+        _sendEvent(eventName: MARKER_PAYMENT_RECEIVED, eventBody: [
+            "payment_hash": bytesToHex(bytes: paymentReceivedEvent.getPayment_hash()),
+            "payment_secret": bytesToHex(bytes: paymentReceivedEvent.getPayment_secret()),
+            "amt": String(paymentReceivedEvent.getAmt()),
+        ]);
+        return;
+    }
+    
+    if let fundingGenerationReadyEvent = event.getValueAsFundingGenerationReady() {
+        print("ReactNativeLDK: funding generation ready");
+        let funding_spk = fundingGenerationReadyEvent.getOutput_script();
+        if funding_spk.count == 34 && funding_spk[0] == 0 && funding_spk[1] == 32 {
+            _sendEvent(eventName: MARKER_FUNDING_GENERATION_READY, eventBody: [
+                "channel_value_satoshis": String(fundingGenerationReadyEvent.getChannel_value_satoshis()),
+                "output_script": bytesToHex(bytes: fundingGenerationReadyEvent.getOutput_script()),
+                "temporary_channel_id": bytesToHex(bytes: fundingGenerationReadyEvent.getTemporary_channel_id()),
+                "user_channel_id": String(fundingGenerationReadyEvent.getUser_channel_id()),
+            ]);
+            temporary_channel_id = fundingGenerationReadyEvent.getTemporary_channel_id();
+        } else {
+            print("ReactNativeLDK: funding generation ready: something went wrong " + bytesToHex(bytes: fundingGenerationReadyEvent.getOutput_script()));
+        }
+        return;
+    }
+    
+    
 }
 
 
