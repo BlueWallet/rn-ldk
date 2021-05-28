@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6D13AC53264EC461002CC78F /* EventEmitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D13AC52264EC461002CC78F /* EventEmitter.m */; };
+		84CA5168266123AF00833C40 /* SwiftSocketPeerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CA5167266123AF00833C40 /* SwiftSocketPeerHandler.swift */; };
 		F4FF95D7245B92E800C19C63 /* RnLdk.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* RnLdk.swift */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +28,7 @@
 		134814201AA4EA6300B7C361 /* libRnLdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRnLdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D13AC51264EC461002CC78F /* EventEmitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventEmitter.h; sourceTree = "<group>"; };
 		6D13AC52264EC461002CC78F /* EventEmitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventEmitter.m; sourceTree = "<group>"; };
+		84CA5167266123AF00833C40 /* SwiftSocketPeerHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftSocketPeerHandler.swift; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RnLdk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RnLdk.m; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* RnLdk-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RnLdk-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4FF95D6245B92E800C19C63 /* RnLdk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RnLdk.swift; sourceTree = "<group>"; };
@@ -54,6 +56,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				84CA5167266123AF00833C40 /* SwiftSocketPeerHandler.swift */,
 				6D13AC51264EC461002CC78F /* EventEmitter.h */,
 				6D13AC52264EC461002CC78F /* EventEmitter.m */,
 				F4FF95D6245B92E800C19C63 /* RnLdk.swift */,
@@ -122,6 +125,7 @@
 			files = (
 				F4FF95D7245B92E800C19C63 /* RnLdk.swift in Sources */,
 				6D13AC53264EC461002CC78F /* EventEmitter.m in Sources */,
+				84CA5168266123AF00833C40 /* SwiftSocketPeerHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
