@@ -8,8 +8,8 @@ target 'RnLdkExample' do
 
   use_react_native!(:path => config["reactNativePath"])
 
-      pod 'rn-ldk', :path => '../..'
-  
+  pod 'rn-ldk', :path => '../..'
+  pod 'SwiftSocket', :git => 'https://github.com/swiftsocket/SwiftSocket.git', :branch => 'master'
   # Enables Flipper.
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and

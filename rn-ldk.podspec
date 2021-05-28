@@ -18,6 +18,6 @@ Pod::Spec.new do |s|
   
 
   s.dependency "React-Core"
- s.vendored_framework = "ios/LDKFramework.xcframework"
+  s.vendored_framework = "ios/LDKFramework.xcframework"
 
 end
