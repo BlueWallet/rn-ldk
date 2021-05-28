@@ -30,27 +30,27 @@
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		9XfPpLsEUNngRjOUHffWD3LHldw=
+		GQ82M5g8jY6as7L50hovu39O47k=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		0HTV9XibYOmKPvjTdqxM0MJh0mA=
+		HmdZLz+YVavR8w55WcTw7iUS+6s=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		kvekT9dhOfeTfjk4vYrx/3BlYPg=
+		LSa2kY8VXtMotW7x+6LU8f8meGw=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftdoc</key>
 		<data>
-		9XfPpLsEUNngRjOUHffWD3LHldw=
+		GQ82M5g8jY6as7L50hovu39O47k=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftinterface</key>
 		<data>
-		0HTV9XibYOmKPvjTdqxM0MJh0mA=
+		HmdZLz+YVavR8w55WcTw7iUS+6s=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftmodule</key>
 		<data>
-		kvekT9dhOfeTfjk4vYrx/3BlYPg=
+		LSa2kY8VXtMotW7x+6LU8f8meGw=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -98,42 +98,42 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			aTVGyW4js/Y4fExPD++ZVPkObDBugh0joa8E07puGaQ=
+			lpH+gRXbMkt3MBS3yj8Y04eYrevTW2n0alv8FqY7Y+Y=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			6eOPjE4KysE770rOEOc6qId9hiowtaFByx2ZF+25udM=
+			rSwJMirBe8BFH9lnKKtXm5r7wbqi0mFipL+WDvzupxg=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			WzRoMXqIo3OYUExW8pEQ5Z4tzCMMdiwnuK3j/KH3yuA=
+			Bu4dzAyEi9xpgURH5bGcJFoRU4wc8NE8eM6DM03EwNQ=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			aTVGyW4js/Y4fExPD++ZVPkObDBugh0joa8E07puGaQ=
+			lpH+gRXbMkt3MBS3yj8Y04eYrevTW2n0alv8FqY7Y+Y=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			6eOPjE4KysE770rOEOc6qId9hiowtaFByx2ZF+25udM=
+			rSwJMirBe8BFH9lnKKtXm5r7wbqi0mFipL+WDvzupxg=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			WzRoMXqIo3OYUExW8pEQ5Z4tzCMMdiwnuK3j/KH3yuA=
+			Bu4dzAyEi9xpgURH5bGcJFoRU4wc8NE8eM6DM03EwNQ=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
