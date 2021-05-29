@@ -30,6 +30,7 @@ const val MARKER_PERSIST = "persist";
 const val MARKER_PAYMENT_SENT = "payment_sent";
 const val MARKER_PAYMENT_FAILED = "payment_failed";
 const val MARKER_PAYMENT_RECEIVED = "payment_received";
+const val MARKER_PERSIST_MANAGER = "persist_manager";
 const val MARKER_FUNDING_GENERATION_READY = "funding_generation_ready";
 //
 
@@ -121,18 +122,15 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         events?.iterator()?.forEach {
           if (it != null) that.handleEvent(it);
         }
-
       }
 
       override fun persist_manager(channel_manager_bytes: ByteArray?) {
         if (channel_manager_bytes != null) {
           val params = Arguments.createMap()
           params.putString("channel_manager_bytes", byteArrayToHex(channel_manager_bytes))
-          that.sendEvent("persist_manager", params);
+          that.sendEvent(MARKER_PERSIST_MANAGER, params);
         }
       }
-
-
     }
 
     // INITIALIZE THE CHAINMONITOR #################################################################
@@ -453,18 +451,6 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
-  fun getChannelManagerBytes(promise: Promise) {
-    promise.resolve("");
-
-    /*val channel_manager_bytes_to_write = channel_manager?.write()
-    if (channel_manager_bytes_to_write !== null) {
-      promise.resolve(byteArrayToHex(channel_manager_bytes_to_write));
-    } else {
-      promise.resolve("");
-    }*/
-  }
-
-  @ReactMethod
   fun closeChannelCooperatively(channelIdHex: String, promise: Promise) {
     val close_result = channel_manager?.close_channel(hexStringToByteArray(channelIdHex))
     if (close_result is Result_NoneAPIErrorZ_OK) {
@@ -613,9 +599,6 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun fireAnEvent(promise: Promise) {
-//    val params = Arguments.createMap()
-//    params.putString("eventProperty", "someValue")
-//    sendEvent("EventReminder", params);
     println("ReactNativeLDK: " + "broadcaster sends an event asking to broadcast some txhex...")
     val params = Arguments.createMap();
     params.putString("txhex", "ffff");
