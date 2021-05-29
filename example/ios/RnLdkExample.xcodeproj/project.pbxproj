@@ -50,6 +50,7 @@
 		2D02E47B1E0B4A5D006451C7 /* RnLdkExample-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RnLdkExample-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* RnLdkExample-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RnLdkExample-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		47F7ED3B7971BE374F7B8635 /* Pods-RnLdkExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RnLdkExample.debug.xcconfig"; path = "Target Support Files/Pods-RnLdkExample/Pods-RnLdkExample.debug.xcconfig"; sourceTree = "<group>"; };
+		6D2C7F7026617CA6002939FA /* SwiftSocket.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SwiftSocket.xcframework; path = ../../ios/SwiftSocket.xcframework; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = RnLdkExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CA3E69C5B9553B26FBA2DF04 /* libPods-RnLdkExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RnLdkExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E00ACF0FDA8BF921659E2F9A /* Pods-RnLdkExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RnLdkExample.release.xcconfig"; path = "Target Support Files/Pods-RnLdkExample/Pods-RnLdkExample.release.xcconfig"; sourceTree = "<group>"; };
@@ -124,6 +125,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6D2C7F7026617CA6002939FA /* SwiftSocket.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				CA3E69C5B9553B26FBA2DF04 /* libPods-RnLdkExample.a */,
@@ -205,7 +207,7 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				C1D60D28B925C94BD88E79D7 /* [CP] Copy Pods Resources */,
-				CC1FA8FE0CF01CA026067CD7 /* [CP] Embed Pods Frameworks */,
+				EA1050DD8D7E91584EE7F03A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -403,7 +405,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RnLdkExample/Pods-RnLdkExample-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		CC1FA8FE0CF01CA026067CD7 /* [CP] Embed Pods Frameworks */ = {
+		EA1050DD8D7E91584EE7F03A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -411,10 +413,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-RnLdkExample/Pods-RnLdkExample-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/LDKFramework/LDKFramework.framework/LDKFramework",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/SwiftSocket/SwiftSocket.framework/SwiftSocket",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LDKFramework.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftSocket.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

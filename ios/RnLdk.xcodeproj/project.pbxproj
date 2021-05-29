@@ -28,6 +28,7 @@
 		134814201AA4EA6300B7C361 /* libRnLdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRnLdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D13AC51264EC461002CC78F /* EventEmitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventEmitter.h; sourceTree = "<group>"; };
 		6D13AC52264EC461002CC78F /* EventEmitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventEmitter.m; sourceTree = "<group>"; };
+		6D2C7F6E26617B98002939FA /* SwiftSocket.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = SwiftSocket.xcframework; sourceTree = "<group>"; };
 		84CA5167266123AF00833C40 /* SwiftSocketPeerHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftSocketPeerHandler.swift; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RnLdk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RnLdk.m; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* RnLdk-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RnLdk-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -63,7 +64,16 @@
 				B3E7B5891CC2AC0600A0062D /* RnLdk.m */,
 				F4FF95D5245B92E700C19C63 /* RnLdk-Bridging-Header.h */,
 				134814211AA4EA7D00B7C361 /* Products */,
+				6D2C7F6D26617B98002939FA /* Frameworks */,
 			);
+			sourceTree = "<group>";
+		};
+		6D2C7F6D26617B98002939FA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6D2C7F6E26617B98002939FA /* SwiftSocket.xcframework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
