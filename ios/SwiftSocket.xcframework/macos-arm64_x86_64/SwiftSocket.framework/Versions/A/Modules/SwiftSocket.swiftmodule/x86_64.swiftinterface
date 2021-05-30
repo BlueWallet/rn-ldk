@@ -1,0 +1,78 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.3.2 (swiftlang-1200.0.45 clang-1200.0.32.28)
+// swift-module-flags: -target x86_64-apple-macos10.11 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name SwiftSocket
+import Foundation
+import Swift
+@_exported import SwiftSocket
+@_inheritsConvenienceInitializers open class UDPClient : SwiftSocket.Socket {
+  override public init(address: Swift.String, port: Swift.Int32)
+  open func send(data: [SwiftSocket.Byte]) -> SwiftSocket.Result
+  open func send(string: Swift.String) -> SwiftSocket.Result
+  open func enableBroadcast()
+  open func send(data: Foundation.Data) -> SwiftSocket.Result
+  open func recv(_ expectlen: Swift.Int) -> ([SwiftSocket.Byte]?, Swift.String, Swift.Int)
+  open func close()
+  @objc deinit
+}
+@_inheritsConvenienceInitializers open class UDPServer : SwiftSocket.Socket {
+  override public init(address: Swift.String, port: Swift.Int32)
+  open func recv(_ expectlen: Swift.Int) -> ([SwiftSocket.Byte]?, Swift.String, Swift.Int)
+  open func close()
+  @objc deinit
+}
+public typealias Byte = Swift.UInt8
+open class Socket {
+  final public let address: Swift.String
+  public var port: Swift.Int32 {
+    get
+  }
+  public var fd: Swift.Int32? {
+    get
+  }
+  public init(address: Swift.String, port: Swift.Int32)
+  @objc deinit
+}
+public enum SocketError : Swift.Error {
+  case queryFailed
+  case connectionClosed
+  case connectionTimeout
+  case unknownError
+  public static func == (a: SwiftSocket.SocketError, b: SwiftSocket.SocketError) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+public enum Result {
+  case success
+  case failure(Swift.Error)
+  public var isSuccess: Swift.Bool {
+    get
+  }
+  public var isFailure: Swift.Bool {
+    get
+  }
+  public var error: Swift.Error? {
+    get
+  }
+}
+@_inheritsConvenienceInitializers open class TCPClient : SwiftSocket.Socket {
+  open func connect(timeout: Swift.Int) -> SwiftSocket.Result
+  open func close()
+  open func send(data: [SwiftSocket.Byte]) -> SwiftSocket.Result
+  open func send(string: Swift.String) -> SwiftSocket.Result
+  open func send(data: Foundation.Data) -> SwiftSocket.Result
+  open func read(_ expectlen: Swift.Int, timeout: Swift.Int = -1) -> [SwiftSocket.Byte]?
+  open func bytesAvailable() -> Swift.Int32?
+  @objc deinit
+  override public init(address: Swift.String, port: Swift.Int32)
+}
+@_inheritsConvenienceInitializers open class TCPServer : SwiftSocket.Socket {
+  open func listen() -> SwiftSocket.Result
+  open func accept(timeout: Swift.Int32 = 0) -> SwiftSocket.TCPClient?
+  open func close()
+  @objc deinit
+  override public init(address: Swift.String, port: Swift.Int32)
+}
+extension SwiftSocket.SocketError : Swift.Equatable {}
+extension SwiftSocket.SocketError : Swift.Hashable {}

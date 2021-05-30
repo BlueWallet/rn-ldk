@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftSocket
+import LDKFramework
 
 class SwiftSocketPeerHandler: ObservableObject {
     

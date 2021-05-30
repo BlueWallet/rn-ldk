@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.license      = package["license"]
   s.authors      = package["author"]
 
-  s.platforms    = { :ios => "11.1" }
+  s.platforms    = { :ios => "13.0" }
   s.source       = { :git => "https://github.com/Overtorment/rn-ldk.git", :tag => "#{s.version}" }
 
   
