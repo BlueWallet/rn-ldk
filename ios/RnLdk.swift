@@ -22,6 +22,7 @@ var peer_manager: LDKFramework.PeerManager?;
 var keys_manager: LDKFramework.KeysManager?;
 var temporary_channel_id: [UInt8]? = nil;
 var peer_handler: SwiftSocketPeerHandler?;
+var chain_monitor: ChainMonitor?;
 
 class MyFeeEstimator: FeeEstimator {
     override func get_est_sat_per_1000_weight(confirmation_target: LDKConfirmationTarget) -> UInt32 {
@@ -124,7 +125,7 @@ class RnLdk: NSObject {
     @objc
     func start(_ entropyHex: String, blockchainTipHeight: NSNumber, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
 
-        let chainMonitor = ChainMonitor.init(chain_source: filter, broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister);
+        chain_monitor = ChainMonitor.init(chain_source: filter, broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister);
        
         let seed = hexToBytes(entropyHex);
         let timestamp_seconds = UInt64(NSDate().timeIntervalSince1970)
@@ -145,7 +146,7 @@ class RnLdk: NSObject {
             let serialized_channel_manager: [UInt8] = hexToBytes(serializedChannelManagerHex);
             
             do {
-                let channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: serializedChannelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, tx_broadcaster: broadcaster, logger: logger)
+                let channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: serializedChannelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chain_monitor!, filter: filter, tx_broadcaster: broadcaster, logger: logger)
                 
                 channel_manager = channel_manager_constructor.channelManager;
                 channel_manager_constructor.chain_sync_completed(persister: channel_manager_persister);
@@ -154,7 +155,7 @@ class RnLdk: NSObject {
                 return;
             }
         } else {
-            let channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: userConfig, current_blockchain_tip_hash: hexToBytes(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, tx_broadcaster: broadcaster, logger: logger);
+            let channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: userConfig, current_blockchain_tip_hash: hexToBytes(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chain_monitor!, tx_broadcaster: broadcaster, logger: logger);
             channel_manager = channel_manager_constructor.channelManager;
             channel_manager_constructor.chain_sync_completed(persister: channel_manager_persister);
         }
@@ -164,6 +165,7 @@ class RnLdk: NSObject {
         
         peer_manager = PeerManager(message_handler: messageHandler, our_node_secret: nodeSecret, ephemeral_random_data: secureRandomBytes, logger: logger)
         
+        peer_handler = SwiftSocketPeerHandler(peerManager: peer_manager!);
         
         resolve("hello ldk")
     }
@@ -171,7 +173,7 @@ class RnLdk: NSObject {
     
     @objc
     func getVersion(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
-        resolve("0.0.13")
+        resolve("0.0.14")
     }
     
     func getName() -> String {
@@ -180,39 +182,89 @@ class RnLdk: NSObject {
     
     @objc
     func getRelevantTxids(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+        if (channel_manager == nil) {
+          reject("no channel_manager inited");
+          return;
+        }
+
+        var first = true;
+        var json: String = "[";
+        for it in channel_manager!.as_Confirm().get_relevant_txids() {
+            if (!first) { json += ","; }
+            first = false;
+            json += "\"" + bytesToHex32Reversed(bytes: it.data) + "\""; // reversed
+        }
         
+        for it in chain_monitor!.as_Confirm().get_relevant_txids() {
+            if (!first) { json += ","; }
+          first = false;
+            json += "\"" + bytesToHex32Reversed(bytes: it.data) + "\""; // reversed
+        }
+        json += "]";
+        resolve(json);
     }
     
     @objc
     func transactionUnconfirmed(_ txidHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+        channel_manager!.as_Confirm().transaction_unconfirmed(txid: hexToBytes(txidHex));
+        chain_monitor!.as_Confirm().transaction_unconfirmed(txid: hexToBytes(txidHex));
+        resolve(true);
     }
     
     @objc
-    func transactionConfirmed(_ headerHex: String, height: Int, txPos: Int, transactionHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
-        
+    func transactionConfirmed(_ headerHex: String, height: NSNumber, txPos: NSNumber, transactionHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+        let txData = LDKC2Tuple_usizeTransactionZ(a: UInt(truncating: txPos), b: Bindings.new_LDKTransaction(array: hexToBytes(transactionHex)))
+        let txarray = [txData];
+        channel_manager!.as_Confirm().transactions_confirmed(header: hexToBytes(headerHex), txdata: txarray, height: UInt32(truncating: height))
+        chain_monitor!.as_Confirm().transactions_confirmed(header: hexToBytes(headerHex), txdata: txarray, height: UInt32(truncating: height))
+        resolve(true);
     }
     
     @objc
-    func updateBestBlock(_ headerHex: String, height: Int, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func updateBestBlock(_ headerHex: String, height: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+        channel_manager!.as_Confirm().best_block_updated(header: hexToBytes(headerHex), height: UInt32(truncating: height));
+        chain_monitor!.as_Confirm().best_block_updated(header: hexToBytes(headerHex), height: UInt32(truncating: height));
+        resolve(true);
     }
     
     @objc
-    func connectPeer(_ pubkeyHex: String, hostname: String, port: Int, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
-        
+    func connectPeer(_ pubkeyHex: String, hostname: String, port: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+        print("ReactNativeLDK: connecting to peer " + pubkeyHex);
+        let result = peer_handler!.connect(address: hostname, port: Int32(truncating: port),  theirNodeId: hexToBytes(pubkeyHex));
+        if result == nil {
+            resolve(false);
+        } else {
+            resolve(true);
+        }
     }
     
     @objc
-    func sendPayment(_ destPubkeyHex: String, paymentHashHex: String, paymentSecretHex: String, shortChannelId: String, paymentValueMsat: Int, finalCltvValue: Int, LdkRoutesJsonArrayString: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func sendPayment(_ destPubkeyHex: String, paymentHashHex: String, paymentSecretHex: String, shortChannelId: String, paymentValueMsat: NSNumber, finalCltvValue: NSNumber, LdkRoutesJsonArrayString: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
     }
     
     @objc
     func addInvoice(_ amtMsat: Int, description: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
-        
     }
     
     @objc
     func listPeers(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+        if peer_manager == nil {
+            reject("no peer_manager inited");
+            return;
+        }
         
+        let peer_node_ids = peer_manager!.get_peer_node_ids();
+        print(peer_node_ids)
+        
+        var json = "[";
+        var first = true;
+        for it in peer_node_ids {
+          if (!first) { json += ","; }
+          first = false;
+            json += "\"" + bytesToHex(bytes: it) + "\"";
+        }
+        json += "]";
+        resolve(json);
     }
     
 
@@ -227,10 +279,6 @@ class RnLdk: NSObject {
     }
     
     @objc
-    func getChannelManagerBytes(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
-        
-    }
-    @objc
     func closeChannelCooperatively(_ channelIdHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
         
     }
@@ -241,8 +289,21 @@ class RnLdk: NSObject {
     }
     
     @objc
-    func openChannelStep1(_ pubkey: String, channelValue: Int, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func openChannelStep1(_ pubkey: String, channelValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+        temporary_channel_id = nil;
+        let peer_node_pubkey = hexToBytes(pubkey);
+        let userConfig = UserConfig.init();
+        let create_channel_result = channel_manager!.create_channel(
+            their_network_key: peer_node_pubkey, channel_value_satoshis: UInt64(truncating: channelValue), push_msat: 0, user_id: 42, override_config: userConfig
+        );
         
+        if create_channel_result.cOpaqueStruct?.result_ok == true {
+          print("ReactNativeLDK: create_channel_result = true");
+          resolve(true);
+        } else {
+          print("ReactNativeLDK: create_channel_result = false");
+          resolve(false);
+        }
     }
     
     @objc
@@ -252,7 +313,32 @@ class RnLdk: NSObject {
     
     @objc
     func listUsableChannels(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+        let rawChannels = channel_manager?.list_usable_channels() ?? []
+        var jsonArray = "[";
+        var first = true;
+        rawChannels.map { (rawDetails: LDKChannelDetails) ->  ChannelDetails in
+             let it = ChannelDetails(pointer: rawDetails)
+            let short_channel_id = it.get_short_channel_id().getValue() ?? 0;
+
+            var channelObject = "{";
+            channelObject += "\"channel_id\":" + "\"" + bytesToHex(bytes: it.get_channel_id()) + "\",";
+            channelObject += "\"channel_value_satoshis\":" + String(it.get_channel_value_satoshis()) + ",";
+            channelObject += "\"inbound_capacity_msat\":" + String(it.get_inbound_capacity_msat()) + ",";
+            channelObject += "\"outbound_capacity_msat\":" + String(it.get_outbound_capacity_msat()) + ",";
+            channelObject += "\"short_channel_id\":" + "\"" + String(short_channel_id) + "\",";
+            channelObject += "\"is_live\":" + (it.get_is_live() ? "true" : "false") + ",";
+            channelObject += "\"remote_network_id\":" + "\"" + bytesToHex(bytes: it.get_remote_network_id()) + "\",";
+            channelObject += "\"user_id\":" + String(it.get_user_id());
+            channelObject += "}";
+
+            if (!first) { jsonArray += ","; }
+            jsonArray += channelObject;
+            first = false;
+            return it;
+        }
         
+        jsonArray += "]";
+        resolve(jsonArray);
     }
     
     @objc
@@ -306,15 +392,16 @@ class RnLdk: NSObject {
 
 func handleEvent(event: Event) {
     if let spendableOutputEvent = event.getValueAsSpendableOutputs() {
-        print("ReactNativeLDK: " + "trying to spend output");
+        print("ReactNativeLDK: trying to spend output");
         let outputs = spendableOutputEvent.getOutputs()
         let destinationScript = hexToBytes("76a91419129d53e6319baf19dba059bead166df90ab8f588ac"); // TODO unhardcode me
         let result = keys_manager?.spend_spendable_outputs(descriptors: outputs, outputs: [], change_destination_script: destinationScript, feerate_sat_per_1000_weight: UInt32(feerate_fast))
         
-        // TODO: handle result and _sendEvent
-//        if result?.cOpaqueStruct?.result_ok == true {
-            // send event
-//        }
+        if result?.cOpaqueStruct?.result_ok == true {
+            // success building the transaction, passing it to outer code to broadcast
+            let transaction = Bindings.LDKTransaction_to_array(nativeType: result!.cOpaqueStruct!.contents.result.pointee)
+            _sendEvent(eventName: MARKER_BROADCAST, eventBody: ["txhex": bytesToHex(bytes: transaction)])
+        }
         return;
     }
     
@@ -331,12 +418,14 @@ func handleEvent(event: Event) {
     }
     
     if let pendingHTLCsForwardableEvent = event.getValueAsPendingHTLCsForwardable() {
+        print("ReactNativeLDK: forward HTLC");
         channel_manager?.process_pending_htlc_forwards();
+        return;
     }
     
     if let paymentReceivedEvent = event.getValueAsPaymentReceived() {
         print("ReactNativeLDK: payment received");
-        channel_manager?.claim_funds(payment_preimage: paymentReceivedEvent.getPayment_preimage());
+        channel_manager!.claim_funds(payment_preimage: paymentReceivedEvent.getPayment_preimage());
         _sendEvent(eventName: MARKER_PAYMENT_RECEIVED, eventBody: [
             "payment_hash": bytesToHex(bytes: paymentReceivedEvent.getPayment_hash()),
             "payment_secret": bytesToHex(bytes: paymentReceivedEvent.getPayment_secret()),
@@ -361,8 +450,6 @@ func handleEvent(event: Event) {
         }
         return;
     }
-    
-    
 }
 
 
@@ -405,5 +492,48 @@ func bytesToHex(bytes: [UInt8]) -> String
     }
     return hexString.lowercased()
 }
+
+
+
+func bytesToHex32Reversed(bytes: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8)) -> String
+{
+    var bytesArray: [UInt8] = [];
+    bytesArray.append(bytes.0);
+    bytesArray.append(bytes.1);
+    bytesArray.append(bytes.2);
+    bytesArray.append(bytes.3);
+    bytesArray.append(bytes.4);
+    bytesArray.append(bytes.5);
+    bytesArray.append(bytes.6);
+    bytesArray.append(bytes.7);
+    bytesArray.append(bytes.8);
+    bytesArray.append(bytes.9);
+    bytesArray.append(bytes.10);
+    bytesArray.append(bytes.11);
+    bytesArray.append(bytes.12);
+    bytesArray.append(bytes.13);
+    bytesArray.append(bytes.14);
+    bytesArray.append(bytes.15);
+    bytesArray.append(bytes.16);
+    bytesArray.append(bytes.17);
+    bytesArray.append(bytes.18);
+    bytesArray.append(bytes.19);
+    bytesArray.append(bytes.20);
+    bytesArray.append(bytes.21);
+    bytesArray.append(bytes.22);
+    bytesArray.append(bytes.23);
+    bytesArray.append(bytes.24);
+    bytesArray.append(bytes.25);
+    bytesArray.append(bytes.26);
+    bytesArray.append(bytes.27);
+    bytesArray.append(bytes.28);
+    bytesArray.append(bytes.29);
+    bytesArray.append(bytes.30);
+    bytesArray.append(bytes.31);
+    
+    return bytesToHex(bytes: bytesArray.reversed());
+}
+
+
 
 
