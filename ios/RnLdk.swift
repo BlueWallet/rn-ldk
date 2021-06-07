@@ -310,27 +310,17 @@ class RnLdk: NSObject {
     }
 
     @objc
-    func addInvoice(_ amtMsat: Int, description: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func addInvoice(_ amtMsat: NSNumber, description: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
         
-        /*var amountStruct = Option_u64Z.constructor_none();
-        if (amtMsat != 0) {
-          amountStruct = Option_u64Z.constructor_some(amtMsat.toLong());
-        }
-
-        let invoice = UtilMethods.constructor_invoice_from_channelmanager(
-          channel_manager,
-          keys_manager!.as_KeysInterface(),
-          LDKCurrency.LDKCurrency_Bitcoin,
-          amountStruct,
-          description
-        );
-
-        if (invoice is Result_InvoiceSignOrCreationErrorZ.Result_InvoiceSignOrCreationErrorZ_OK) {
-          print("Got invoice: " + invoice.res.to_str())
-          resolve(invoice.res.to_str());
+        let invoiceResult = Bindings.createInvoiceFromChannelManager(channelManager: channel_manager!, keysManager: keys_manager!.as_KeysInterface(), network: LDKCurrency_Bitcoin, amountMsat: UInt64(truncating: amtMsat), description: description)
+        // 
+        if invoiceResult.isOk() {
+            let invoice = Invoice(pointer: invoiceResult.cOpaqueStruct!.contents.result.pointee)
+            let invoiceString = invoice.to_str(o: invoice)
+            resolve(invoiceString);
         } else {
-          resolve(false);
-        }*/
+            resolve(false);
+        }
     }
     
     @objc
