@@ -60,6 +60,7 @@ export default function App() {
       <Button
         onPress={async () => {
           const address = await RnLdk.openChannelStep1('02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1', 100000);
+          console.log(address + '');
           onChangeText(address + '');
         }}
         title="openChannelStep1"
@@ -150,6 +151,14 @@ export default function App() {
           );
         }}
         title="restore async storage from backup"
+        color="#841584"
+      />
+
+      <Button
+        onPress={async () => {
+          await AsyncStorage.clear();
+        }}
+        title="PURGE async storage"
         color="#841584"
       />
     </View>

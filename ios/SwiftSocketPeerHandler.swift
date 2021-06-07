@@ -23,7 +23,7 @@ class SwiftSocketPeerHandler: ObservableObject {
     
     init(peerManager: PeerManager) {
         self.peerManager = peerManager
-        self.server = TCPServer(address: "127.0.0.1", port: 9735)
+        self.server = TCPServer(address: "127.0.0.1", port: 9734)
         
         self.ioWorkItem = DispatchWorkItem {
             if self.server.listen().isSuccess {
@@ -53,7 +53,7 @@ class SwiftSocketPeerHandler: ObservableObject {
                     self.peerManager.timer_tick_occurred()
                     lastTimerTick = currentTimerTick
                 }
-                print("calling PeerManager::process_events()")
+                // print("calling PeerManager::process_events()")
                 self.peerManager.process_events()
                 Thread.sleep(forTimeInterval: 1)
             }
@@ -145,6 +145,7 @@ fileprivate class TcpPeer: SocketDescriptor {
     
     let dispatchQueue: DispatchQueue
     var workItems: [DispatchWorkItem] = []
+    var consecutiveReadFails = 0
     
     init(peerManager: PeerManager, tcpClient: TCPClient, connectionId: Int64) {
         self.peerManager = peerManager
@@ -156,22 +157,27 @@ fileprivate class TcpPeer: SocketDescriptor {
     
     fileprivate func doRead() {
         if let bytesAvailable = self.client.bytesAvailable() {
-            print("\(bytesAvailable) bytes available from peer #\(self.connectionId)")
+            // print("\(bytesAvailable) bytes available from peer #\(self.connectionId)")
             let workItem = DispatchWorkItem {
                 if bytesAvailable == 0 {
                     Thread.sleep(forTimeInterval: 1)
                     self.doRead()
                     return
                 }
-                print("starting read from peer #\(self.connectionId)")
-                if let readData = self.client.read(Int(bytesAvailable)){
+                // print("starting read from peer #\(self.connectionId)")
+                if let readData = self.client.read(Int(bytesAvailable), timeout: 0){
                     let readBytes = [UInt8](readData)
-                    print("Read from peer #\(self.connectionId):\n\(readBytes)\n")
+                    self.consecutiveReadFails = 0
+                    // print("Read from peer #\(self.connectionId):\n\(readBytes)\n")
                     
                     // after read, always write
                     self.peerManager.read_event(peer_descriptor: self, data: readBytes)
                 }else{
-                    print("read failed from peer #\(self.connectionId)")
+                    print("failed to read \(bytesAvailable) from peer #\(self.connectionId)")
+                    self.consecutiveReadFails += 1
+                    if self.consecutiveReadFails >= 3 {
+                        print("Consecutive read fails: \(self.consecutiveReadFails)")
+                    }
                 }
             }
             self.workItems.append(workItem)
@@ -190,14 +196,14 @@ fileprivate class TcpPeer: SocketDescriptor {
         }
         let result = self.client.send(data: Data(data))
         if result.isSuccess {
-            print("Write to peer #\(self.connectionId):\n\(data)\n")
+            // print("Write to peer #\(self.connectionId):\n\(data)\n")
             return UInt(data.count)
         }
         return 0
     }
     
     fileprivate func disconnect() {
-        if(!self.disconnectInitiated){
+        if(!self.disconnectInitiated && !self.disconnectRequested){
             self.disconnectInitiated = true
             self.peerManager.socket_disconnected(descriptor: self)
             self.client.close()
