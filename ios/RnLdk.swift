@@ -258,25 +258,40 @@ class RnLdk: NSObject {
                 cltv_expiry_delta_arg: UInt32(truncating: finalCltvValue)
             ).cOpaqueStruct!
         ];
-        
+        //
         if (LdkRoutesJsonArrayString != "") {
           // full route was provided
-          /*path = arrayOf<RouteHop>(); // reset path and start from scratch
-          val hopsJson = JSONArray(LdkRoutesJsonArrayString);
-          for (c in 1..hopsJson.length()) {
-            val hopJson = hopsJson.getJSONObject(c - 1);
-
-            path = path.plusElement(RouteHop.constructor_new(
-              hexStringToByteArray(hopJson.getString("pubkey")),
-              NodeFeatures.constructor_known(),
-              hopJson.getString("short_channel_id").toLong(),
-              ChannelFeatures.constructor_known(),
-              hopJson.getString("fee_msat").toLong(),
-              hopJson.getString("cltv_expiry_delta").toInt()
-            ));
-          }*/
+            path = [];
+            
+            do {
+                let data = Data(LdkRoutesJsonArrayString.utf8)
+                // make sure this JSON is in the format we expect
+                
+                if let json = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions()) as? [AnyObject] {
+                    // try to read out an array
+                    for hopJson in json {
+                        print("hop:::: ")
+//                        print(hopJson);
+                        
+                        print(hopJson["pubkey"] as! String);
+                        print(hopJson["short_channel_id"] as! String)
+                        print(hopJson["fee_msat"] as! NSNumber);
+                        print(hopJson["cltv_expiry_delta"] as! NSNumber);
+                        //
+                        path.append(RouteHop(
+                            pubkey_arg: hexStringToByteArray(hopJson["pubkey"] as! String),
+                            node_features_arg: NodeFeatures(),
+                            short_channel_id_arg: UInt64(hopJson["short_channel_id"] as! String)!,
+                            channel_features_arg: ChannelFeatures(),
+                            fee_msat_arg: UInt64(truncating: hopJson["fee_msat"] as! NSNumber),
+                            cltv_expiry_delta_arg: UInt32(truncating: hopJson["cltv_expiry_delta"] as! NSNumber)
+                        ).cOpaqueStruct!)
+                    }
+                }
+            } catch let error as NSError {
+                reject("Failed to load: \(error.localizedDescription)")
+            }
         }
-
 
         let route = Route(
             paths_arg: [
@@ -293,7 +308,7 @@ class RnLdk: NSObject {
           resolve(false);
         }
     }
-    
+
     @objc
     func addInvoice(_ amtMsat: Int, description: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
         
