@@ -74,15 +74,21 @@ class MyPersister: Persist {
     }
 }
 
-class MyChannelManagerPersister: ChannelManagerPersister {
-    func handle_events(events: [LDKFramework.Event]) {
+class MyChannelManagerPersister : ChannelManagerPersister, ExtendedChannelManagerPersister {
+    func handle_event(event: Event) {
+        handleEvent(event: event)
+    }
+    
+    /*func handle_events(events: [LDKFramework.Event]) {
         for currentEvent in events {
             handleEvent(event: currentEvent)
         }
-    }
+    }*/
 
-    func persist_manager(channel_manager_bytes: [UInt8]) {
+    override func persist_manager(channel_manager: ChannelManager) -> Result_NoneErrorZ {
+        let channel_manager_bytes = channel_manager.write(obj: channel_manager);
         _sendEvent(eventName: "persist_manager", eventBody: ["channel_manager_bytes": bytesToHex(bytes: channel_manager_bytes)]);
+        return Result_NoneErrorZ();
     }
 }
 
@@ -145,24 +151,25 @@ class RnLdk: NSObject {
             let serialized_channel_manager: [UInt8] = hexStringToByteArray(serializedChannelManagerHex);
             
             do {
-                let channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: serializedChannelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chain_monitor!, filter: filter, tx_broadcaster: broadcaster, logger: logger)
+                let channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: serializedChannelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chain_monitor!, filter: filter, router: nil, tx_broadcaster: broadcaster, logger: logger)
                 
                 channel_manager = channel_manager_constructor.channelManager;
                 channel_manager_constructor.chain_sync_completed(persister: channel_manager_persister);
+                peer_manager = channel_manager_constructor.peerManager;
             } catch {
                 resolve(false);
                 return;
             }
         } else {
-            let channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: userConfig, current_blockchain_tip_hash: hexStringToByteArray(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chain_monitor!, tx_broadcaster: broadcaster, logger: logger);
+            let channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: userConfig, current_blockchain_tip_hash: hexStringToByteArray(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chain_monitor!, router: nil, tx_broadcaster: broadcaster, logger: logger);
             channel_manager = channel_manager_constructor.channelManager;
             channel_manager_constructor.chain_sync_completed(persister: channel_manager_persister);
+            peer_manager = channel_manager_constructor.peerManager;
         }
         
-        let ignorer = IgnoringMessageHandler()
-        let messageHandler = MessageHandler(chan_handler_arg: channel_manager!.as_ChannelMessageHandler(), route_handler_arg:  ignorer.as_RoutingMessageHandler())
-        
-        peer_manager = PeerManager(message_handler: messageHandler, our_node_secret: nodeSecret, ephemeral_random_data: secureRandomBytes, logger: logger)
+//        let ignorer = IgnoringMessageHandler()
+//        let messageHandler = MessageHandler(chan_handler_arg: channel_manager!.as_ChannelMessageHandler(), route_handler_arg:  ignorer.as_RoutingMessageHandler())
+//        peer_manager = PeerManager(message_handler: messageHandler, our_node_secret: nodeSecret, ephemeral_random_data: secureRandomBytes, logger: logger)
         
         peer_handler = SwiftSocketPeerHandler(peerManager: peer_manager!);
         
@@ -172,7 +179,7 @@ class RnLdk: NSObject {
     
     @objc
     func getVersion(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
-        resolve("0.0.16")
+        resolve("0.0.17")
     }
     
     func getName() -> String {
@@ -313,11 +320,9 @@ class RnLdk: NSObject {
     func addInvoice(_ amtMsat: NSNumber, description: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
         
         let invoiceResult = Bindings.createInvoiceFromChannelManager(channelManager: channel_manager!, keysManager: keys_manager!.as_KeysInterface(), network: LDKCurrency_Bitcoin, amountMsat: UInt64(truncating: amtMsat), description: description)
-        // 
-        if invoiceResult.isOk() {
-            let invoice = Invoice(pointer: invoiceResult.cOpaqueStruct!.contents.result.pointee)
-            let invoiceString = invoice.to_str(o: invoice)
-            resolve(invoiceString);
+        
+        if let invoice = invoiceResult.getValue() {
+            resolve(invoice.to_str(o: invoice))
         } else {
             resolve(false);
         }
@@ -444,7 +449,7 @@ class RnLdk: NSObject {
             channelObject += "\"inbound_capacity_msat\":" + String(it.get_inbound_capacity_msat()) + ",";
             channelObject += "\"outbound_capacity_msat\":" + String(it.get_outbound_capacity_msat()) + ",";
             channelObject += "\"short_channel_id\":" + "\"" + String(short_channel_id) + "\",";
-            channelObject += "\"is_live\":" + (it.get_is_live() ? "true" : "false") + ",";
+            channelObject += "\"is_live\":" + (it.get_is_usable() ? "true" : "false") + ",";
             channelObject += "\"remote_network_id\":" + "\"" + bytesToHex(bytes: it.get_remote_network_id()) + "\",";
             channelObject += "\"user_id\":" + String(it.get_user_id());
             channelObject += "}";
@@ -474,7 +479,7 @@ class RnLdk: NSObject {
             channelObject += "\"inbound_capacity_msat\":" + String(it.get_inbound_capacity_msat()) + ",";
             channelObject += "\"outbound_capacity_msat\":" + String(it.get_outbound_capacity_msat()) + ",";
             channelObject += "\"short_channel_id\":" + "\"" + String(short_channel_id) + "\",";
-            channelObject += "\"is_live\":" + (it.get_is_live() ? "true" : "false") + ",";
+            channelObject += "\"is_live\":" + (it.get_is_usable() ? "true" : "false") + ",";
             channelObject += "\"remote_network_id\":" + "\"" + bytesToHex(bytes: it.get_remote_network_id()) + "\",";
             channelObject += "\"user_id\":" + String(it.get_user_id());
             channelObject += "}";

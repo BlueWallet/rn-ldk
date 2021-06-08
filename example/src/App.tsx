@@ -94,13 +94,13 @@ export default function App() {
         color="#841584"
       />
 
-      {/*<Button
+      <Button
         onPress={async () => {
-          await AsyncStorage.clear();
+          await RnLdk.closeChannelCooperatively(text);
         }}
-        title="nuke storage"
+        title="closeChannelCooperatively"
         color="#841584"
-      />*/}
+      />
 
       <Button
         onPress={async () => {

@@ -332,6 +332,11 @@ class RnLdkImplementation {
     return RnLdkNative.openChannelStep2(txhex);
   }
 
+  async closeChannelCooperatively(channelIdHex: string) {
+    if (!this.started) throw new Error('LDK not yet started');
+    return RnLdkNative.closeChannelCooperatively(channelIdHex);
+  }
+
   /**
    * @returns node pubkey
    */
