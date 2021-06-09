@@ -44,20 +44,24 @@ class SwiftSocketPeerHandler: ObservableObject {
             }
         }
         
+        
         self.eventProcessingItem = DispatchWorkItem {
             var lastTimerTick = NSDate().timeIntervalSince1970
             while !self.shutdown {
+                /*
                 let currentTimerTick = NSDate().timeIntervalSince1970
                 if lastTimerTick < (currentTimerTick-30) { // more than 30 seconds have passed since the last timer tick
                     print("calling PeerManager::timer_tick_occurred()")
                     self.peerManager.timer_tick_occurred()
                     lastTimerTick = currentTimerTick
                 }
+                */
                 // print("calling PeerManager::process_events()")
                 self.peerManager.process_events()
                 Thread.sleep(forTimeInterval: 1)
             }
         }
+        
         
         let backgroundQueueA = DispatchQueue(label: "org.ldk.SwiftSocketPeerHandler.ioThread", qos: .background)
         let backgroundQueueB = DispatchQueue(label: "org.ldk.SwiftSocketPeerHandler.eventProcessingThread", qos: .background)
@@ -212,14 +216,16 @@ fileprivate class TcpPeer: SocketDescriptor {
     
     override func disconnect_socket() {
         print("LDK disconnected from Peer #\(self.connectionId)")
-        self.disconnectRequested = true
-        self.client.close()
+        if(!self.disconnectInitiated && !self.disconnectRequested){
+            self.disconnectRequested = true
+            self.client.close()
+        }
     }
     override func hash() -> UInt64 {
         return self.connectionId
     }
     override func eq(other_arg: SocketDescriptor) -> Bool {
-        let comparable: TcpPeer = Bindings.pointerToInstance(pointer: other_arg.cOpaqueStruct!.this_arg)
+        let comparable: TcpPeer = Bindings.pointerToInstance(pointer: other_arg.cOpaqueStruct!.this_arg, sourceMarker: "SwiftSocketPeerHandler.swift::eq")
         return comparable.connectionId == self.connectionId
     }
     

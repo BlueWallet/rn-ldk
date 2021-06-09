@@ -1336,94 +1336,94 @@ public class ChannelDetails {
 public typealias LDKTransactionOutputs = LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ
 public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
 @_hasMissingDesignatedInitializers public class Bindings {
-  public class func new_LDKSignature(array: [Swift.UInt8]) -> LDKFramework.LDKSignature
-  public class func LDKSignature_to_array(nativeType: LDKFramework.LDKSignature) -> [Swift.UInt8]
-  public class func new_LDKFourBytes(array: [Swift.UInt8]) -> LDKFramework.LDKFourBytes
-  public class func LDKFourBytes_to_array(nativeType: LDKFramework.LDKFourBytes) -> [Swift.UInt8]
-  public class func new_LDKSixteenBytes(array: [Swift.UInt8]) -> LDKFramework.LDKSixteenBytes
-  public class func LDKSixteenBytes_to_array(nativeType: LDKFramework.LDKSixteenBytes) -> [Swift.UInt8]
-  public class func new_LDKTenBytes(array: [Swift.UInt8]) -> LDKFramework.LDKTenBytes
-  public class func LDKTenBytes_to_array(nativeType: LDKFramework.LDKTenBytes) -> [Swift.UInt8]
-  public class func new_LDKRecoverableSignature(array: [Swift.UInt8]) -> LDKFramework.LDKRecoverableSignature
-  public class func LDKRecoverableSignature_to_array(nativeType: LDKFramework.LDKRecoverableSignature) -> [Swift.UInt8]
   public class func new_LDKPublicKey(array: [Swift.UInt8]) -> LDKFramework.LDKPublicKey
   public class func LDKPublicKey_to_array(nativeType: LDKFramework.LDKPublicKey) -> [Swift.UInt8]
-  public class func new_LDKThirtyTwoBytes(array: [Swift.UInt8]) -> LDKFramework.LDKThirtyTwoBytes
-  public class func LDKThirtyTwoBytes_to_array(nativeType: LDKFramework.LDKThirtyTwoBytes) -> [Swift.UInt8]
+  public class func new_LDKSixteenBytes(array: [Swift.UInt8]) -> LDKFramework.LDKSixteenBytes
+  public class func LDKSixteenBytes_to_array(nativeType: LDKFramework.LDKSixteenBytes) -> [Swift.UInt8]
   public class func new_LDKThreeBytes(array: [Swift.UInt8]) -> LDKFramework.LDKThreeBytes
   public class func LDKThreeBytes_to_array(nativeType: LDKFramework.LDKThreeBytes) -> [Swift.UInt8]
+  public class func new_LDKSignature(array: [Swift.UInt8]) -> LDKFramework.LDKSignature
+  public class func LDKSignature_to_array(nativeType: LDKFramework.LDKSignature) -> [Swift.UInt8]
   public class func new_LDKTwentyBytes(array: [Swift.UInt8]) -> LDKFramework.LDKTwentyBytes
   public class func LDKTwentyBytes_to_array(nativeType: LDKFramework.LDKTwentyBytes) -> [Swift.UInt8]
   public class func new_LDKSecretKey(array: [Swift.UInt8]) -> LDKFramework.LDKSecretKey
   public class func LDKSecretKey_to_array(nativeType: LDKFramework.LDKSecretKey) -> [Swift.UInt8]
+  public class func new_LDKThirtyTwoBytes(array: [Swift.UInt8]) -> LDKFramework.LDKThirtyTwoBytes
+  public class func LDKThirtyTwoBytes_to_array(nativeType: LDKFramework.LDKThirtyTwoBytes) -> [Swift.UInt8]
+  public class func new_LDKRecoverableSignature(array: [Swift.UInt8]) -> LDKFramework.LDKRecoverableSignature
+  public class func LDKRecoverableSignature_to_array(nativeType: LDKFramework.LDKRecoverableSignature) -> [Swift.UInt8]
+  public class func new_LDKTenBytes(array: [Swift.UInt8]) -> LDKFramework.LDKTenBytes
+  public class func LDKTenBytes_to_array(nativeType: LDKFramework.LDKTenBytes) -> [Swift.UInt8]
+  public class func new_LDKFourBytes(array: [Swift.UInt8]) -> LDKFramework.LDKFourBytes
+  public class func LDKFourBytes_to_array(nativeType: LDKFramework.LDKFourBytes) -> [Swift.UInt8]
   public class func array_to_tuple80(array: [Swift.UInt8]) -> (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)
   public class func tuple80_to_array(nativeType: (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)) -> [Swift.UInt8]
-  public class func new_LDKCVec_SpendableOutputDescriptorZ(array: [LDKFramework.LDKSpendableOutputDescriptor]) -> LDKFramework.LDKCVec_SpendableOutputDescriptorZ
-  public class func LDKCVec_SpendableOutputDescriptorZ_to_array(nativeType: LDKFramework.LDKCVec_SpendableOutputDescriptorZ) -> [LDKFramework.LDKSpendableOutputDescriptor]
-  public class func new_LDKCVec_u64Z(array: [Swift.UInt64]) -> LDKFramework.LDKCVec_u64Z
-  public class func LDKCVec_u64Z_to_array(nativeType: LDKFramework.LDKCVec_u64Z) -> [Swift.UInt64]
-  public class func new_LDKCVec_ChannelMonitorZ(array: [LDKFramework.LDKChannelMonitor]) -> LDKFramework.LDKCVec_ChannelMonitorZ
-  public class func LDKCVec_ChannelMonitorZ_to_array(nativeType: LDKFramework.LDKCVec_ChannelMonitorZ) -> [LDKFramework.LDKChannelMonitor]
-  public class func new_LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ(array: [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ]) -> LDKFramework.LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ
-  public class func LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ) -> [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ]
-  public class func new_LDKCVec_TxidZ(array: [LDKFramework.LDKThirtyTwoBytes]) -> LDKFramework.LDKCVec_TxidZ
-  public class func LDKCVec_TxidZ_to_array(nativeType: LDKFramework.LDKCVec_TxidZ) -> [LDKFramework.LDKThirtyTwoBytes]
-  public class func new_LDKCVec_CVec_u8ZZ(array: [[Swift.UInt8]]) -> LDKFramework.LDKCVec_CVec_u8ZZ
-  public class func LDKCVec_CVec_u8ZZ_to_array(nativeType: LDKFramework.LDKCVec_CVec_u8ZZ) -> [[Swift.UInt8]]
-  public class func new_LDKCVec_UpdateAddHTLCZ(array: [LDKFramework.LDKUpdateAddHTLC]) -> LDKFramework.LDKCVec_UpdateAddHTLCZ
-  public class func LDKCVec_UpdateAddHTLCZ_to_array(nativeType: LDKFramework.LDKCVec_UpdateAddHTLCZ) -> [LDKFramework.LDKUpdateAddHTLC]
-  public class func new_LDKCVec_TxOutZ(array: [LDKFramework.LDKTxOut]) -> LDKFramework.LDKCVec_TxOutZ
-  public class func LDKCVec_TxOutZ_to_array(nativeType: LDKFramework.LDKCVec_TxOutZ) -> [LDKFramework.LDKTxOut]
-  public class func new_LDKCVec_C2Tuple_u32ScriptZZ(array: [LDKFramework.LDKC2Tuple_u32ScriptZ]) -> LDKFramework.LDKCVec_C2Tuple_u32ScriptZZ
-  public class func LDKCVec_C2Tuple_u32ScriptZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_u32ScriptZZ) -> [LDKFramework.LDKC2Tuple_u32ScriptZ]
-  public class func new_LDKCVec_MessageSendEventZ(array: [LDKFramework.LDKMessageSendEvent]) -> LDKFramework.LDKCVec_MessageSendEventZ
-  public class func LDKCVec_MessageSendEventZ_to_array(nativeType: LDKFramework.LDKCVec_MessageSendEventZ) -> [LDKFramework.LDKMessageSendEvent]
-  public class func new_LDKCVec_NodeAnnouncementZ(array: [LDKFramework.LDKNodeAnnouncement]) -> LDKFramework.LDKCVec_NodeAnnouncementZ
-  public class func LDKCVec_NodeAnnouncementZ_to_array(nativeType: LDKFramework.LDKCVec_NodeAnnouncementZ) -> [LDKFramework.LDKNodeAnnouncement]
-  public class func new_LDKCVec_C2Tuple_BlockHashChannelMonitorZZ(array: [LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ]) -> LDKFramework.LDKCVec_C2Tuple_BlockHashChannelMonitorZZ
-  public class func LDKCVec_C2Tuple_BlockHashChannelMonitorZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_BlockHashChannelMonitorZZ) -> [LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ]
-  public class func new_LDKCVec_EventZ(array: [LDKFramework.LDKEvent]) -> LDKFramework.LDKCVec_EventZ
-  public class func LDKCVec_EventZ_to_array(nativeType: LDKFramework.LDKCVec_EventZ) -> [LDKFramework.LDKEvent]
-  public class func new_LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ(array: [LDKFramework.LDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ]) -> LDKFramework.LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ
-  public class func LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ_to_array(nativeType: LDKFramework.LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ) -> [LDKFramework.LDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ]
-  public class func new_LDKCVec_TransactionOutputsZ(array: [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ]) -> LDKFramework.LDKCVec_TransactionOutputsZ
-  public class func LDKCVec_TransactionOutputsZ_to_array(nativeType: LDKFramework.LDKCVec_TransactionOutputsZ) -> [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ]
-  public class func new_LDKCVec_NetAddressZ(array: [LDKFramework.LDKNetAddress]) -> LDKFramework.LDKCVec_NetAddressZ
-  public class func LDKCVec_NetAddressZ_to_array(nativeType: LDKFramework.LDKCVec_NetAddressZ) -> [LDKFramework.LDKNetAddress]
-  public class func new_LDKCVec_RouteHintZ(array: [LDKFramework.LDKRouteHint]) -> LDKFramework.LDKCVec_RouteHintZ
-  public class func LDKCVec_RouteHintZ_to_array(nativeType: LDKFramework.LDKCVec_RouteHintZ) -> [LDKFramework.LDKRouteHint]
-  public class func new_LDKCVec_RouteHintHopZ(array: [LDKFramework.LDKRouteHintHop]) -> LDKFramework.LDKCVec_RouteHintHopZ
-  public class func LDKCVec_RouteHintHopZ_to_array(nativeType: LDKFramework.LDKCVec_RouteHintHopZ) -> [LDKFramework.LDKRouteHintHop]
-  public class func new_LDKCVec_TransactionZ(array: [[Swift.UInt8]]) -> LDKFramework.LDKCVec_TransactionZ
-  public class func LDKCVec_TransactionZ_to_array(nativeType: LDKFramework.LDKCVec_TransactionZ) -> [[Swift.UInt8]]
-  public class func new_LDKCVec_UpdateFulfillHTLCZ(array: [LDKFramework.LDKUpdateFulfillHTLC]) -> LDKFramework.LDKCVec_UpdateFulfillHTLCZ
-  public class func LDKCVec_UpdateFulfillHTLCZ_to_array(nativeType: LDKFramework.LDKCVec_UpdateFulfillHTLCZ) -> [LDKFramework.LDKUpdateFulfillHTLC]
-  public class func new_LDKCVec_RouteHopZ(array: [LDKFramework.LDKRouteHop]) -> LDKFramework.LDKCVec_RouteHopZ
-  public class func LDKCVec_RouteHopZ_to_array(nativeType: LDKFramework.LDKCVec_RouteHopZ) -> [LDKFramework.LDKRouteHop]
-  public class func new_LDKCVec_u8Z(array: [Swift.UInt8]) -> LDKFramework.LDKCVec_u8Z
-  public class func LDKCVec_u8Z_to_array(nativeType: LDKFramework.LDKCVec_u8Z) -> [Swift.UInt8]
-  public class func new_LDKCVec_CVec_RouteHopZZ(array: [[LDKFramework.LDKRouteHop]]) -> LDKFramework.LDKCVec_CVec_RouteHopZZ
-  public class func LDKCVec_CVec_RouteHopZZ_to_array(nativeType: LDKFramework.LDKCVec_CVec_RouteHopZZ) -> [[LDKFramework.LDKRouteHop]]
-  public class func new_LDKCVec_ChannelDetailsZ(array: [LDKFramework.LDKChannelDetails]) -> LDKFramework.LDKCVec_ChannelDetailsZ
-  public class func LDKCVec_ChannelDetailsZ_to_array(nativeType: LDKFramework.LDKCVec_ChannelDetailsZ) -> [LDKFramework.LDKChannelDetails]
-  public class func new_LDKCVec_C2Tuple_u32TxOutZZ(array: [LDKFramework.LDKC2Tuple_u32TxOutZ]) -> LDKFramework.LDKCVec_C2Tuple_u32TxOutZZ
-  public class func LDKCVec_C2Tuple_u32TxOutZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_u32TxOutZZ) -> [LDKFramework.LDKC2Tuple_u32TxOutZ]
-  public class func new_LDKCVec_PublicKeyZ(array: [[Swift.UInt8]]) -> LDKFramework.LDKCVec_PublicKeyZ
-  public class func LDKCVec_PublicKeyZ_to_array(nativeType: LDKFramework.LDKCVec_PublicKeyZ) -> [[Swift.UInt8]]
-  public class func new_LDKCVec_SignatureZ(array: [[Swift.UInt8]]) -> LDKFramework.LDKCVec_SignatureZ
-  public class func LDKCVec_SignatureZ_to_array(nativeType: LDKFramework.LDKCVec_SignatureZ) -> [[Swift.UInt8]]
   public class func new_LDKCVec_MonitorEventZ(array: [LDKFramework.LDKMonitorEvent]) -> LDKFramework.LDKCVec_MonitorEventZ
   public class func LDKCVec_MonitorEventZ_to_array(nativeType: LDKFramework.LDKCVec_MonitorEventZ) -> [LDKFramework.LDKMonitorEvent]
+  public class func new_LDKCVec_SignatureZ(array: [[Swift.UInt8]]) -> LDKFramework.LDKCVec_SignatureZ
+  public class func LDKCVec_SignatureZ_to_array(nativeType: LDKFramework.LDKCVec_SignatureZ) -> [[Swift.UInt8]]
   public class func new_LDKCVec_C2Tuple_usizeTransactionZZ(array: [LDKFramework.LDKC2Tuple_usizeTransactionZ]) -> LDKFramework.LDKCVec_C2Tuple_usizeTransactionZZ
   public class func LDKCVec_C2Tuple_usizeTransactionZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_usizeTransactionZZ) -> [LDKFramework.LDKC2Tuple_usizeTransactionZ]
-  public class func new_LDKCVec_CResult_NoneAPIErrorZZ(array: [LDKFramework.LDKCResult_NoneAPIErrorZ]) -> LDKFramework.LDKCVec_CResult_NoneAPIErrorZZ
-  public class func LDKCVec_CResult_NoneAPIErrorZZ_to_array(nativeType: LDKFramework.LDKCVec_CResult_NoneAPIErrorZZ) -> [LDKFramework.LDKCResult_NoneAPIErrorZ]
-  public class func new_LDKCVec_APIErrorZ(array: [LDKFramework.LDKAPIError]) -> LDKFramework.LDKCVec_APIErrorZ
-  public class func LDKCVec_APIErrorZ_to_array(nativeType: LDKFramework.LDKCVec_APIErrorZ) -> [LDKFramework.LDKAPIError]
+  public class func new_LDKCVec_UpdateFulfillHTLCZ(array: [LDKFramework.LDKUpdateFulfillHTLC]) -> LDKFramework.LDKCVec_UpdateFulfillHTLCZ
+  public class func LDKCVec_UpdateFulfillHTLCZ_to_array(nativeType: LDKFramework.LDKCVec_UpdateFulfillHTLCZ) -> [LDKFramework.LDKUpdateFulfillHTLC]
+  public class func new_LDKCVec_NetAddressZ(array: [LDKFramework.LDKNetAddress]) -> LDKFramework.LDKCVec_NetAddressZ
+  public class func LDKCVec_NetAddressZ_to_array(nativeType: LDKFramework.LDKCVec_NetAddressZ) -> [LDKFramework.LDKNetAddress]
   public class func new_LDKCVec_UpdateFailMalformedHTLCZ(array: [LDKFramework.LDKUpdateFailMalformedHTLC]) -> LDKFramework.LDKCVec_UpdateFailMalformedHTLCZ
   public class func LDKCVec_UpdateFailMalformedHTLCZ_to_array(nativeType: LDKFramework.LDKCVec_UpdateFailMalformedHTLCZ) -> [LDKFramework.LDKUpdateFailMalformedHTLC]
+  public class func new_LDKCVec_C2Tuple_u32TxOutZZ(array: [LDKFramework.LDKC2Tuple_u32TxOutZ]) -> LDKFramework.LDKCVec_C2Tuple_u32TxOutZZ
+  public class func LDKCVec_C2Tuple_u32TxOutZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_u32TxOutZZ) -> [LDKFramework.LDKC2Tuple_u32TxOutZ]
+  public class func new_LDKCVec_CVec_u8ZZ(array: [[Swift.UInt8]]) -> LDKFramework.LDKCVec_CVec_u8ZZ
+  public class func LDKCVec_CVec_u8ZZ_to_array(nativeType: LDKFramework.LDKCVec_CVec_u8ZZ) -> [[Swift.UInt8]]
   public class func new_LDKCVec_UpdateFailHTLCZ(array: [LDKFramework.LDKUpdateFailHTLC]) -> LDKFramework.LDKCVec_UpdateFailHTLCZ
   public class func LDKCVec_UpdateFailHTLCZ_to_array(nativeType: LDKFramework.LDKCVec_UpdateFailHTLCZ) -> [LDKFramework.LDKUpdateFailHTLC]
+  public class func new_LDKCVec_TransactionZ(array: [[Swift.UInt8]]) -> LDKFramework.LDKCVec_TransactionZ
+  public class func LDKCVec_TransactionZ_to_array(nativeType: LDKFramework.LDKCVec_TransactionZ) -> [[Swift.UInt8]]
+  public class func new_LDKCVec_ChannelMonitorZ(array: [LDKFramework.LDKChannelMonitor]) -> LDKFramework.LDKCVec_ChannelMonitorZ
+  public class func LDKCVec_ChannelMonitorZ_to_array(nativeType: LDKFramework.LDKCVec_ChannelMonitorZ) -> [LDKFramework.LDKChannelMonitor]
+  public class func new_LDKCVec_SpendableOutputDescriptorZ(array: [LDKFramework.LDKSpendableOutputDescriptor]) -> LDKFramework.LDKCVec_SpendableOutputDescriptorZ
+  public class func LDKCVec_SpendableOutputDescriptorZ_to_array(nativeType: LDKFramework.LDKCVec_SpendableOutputDescriptorZ) -> [LDKFramework.LDKSpendableOutputDescriptor]
+  public class func new_LDKCVec_MessageSendEventZ(array: [LDKFramework.LDKMessageSendEvent]) -> LDKFramework.LDKCVec_MessageSendEventZ
+  public class func LDKCVec_MessageSendEventZ_to_array(nativeType: LDKFramework.LDKCVec_MessageSendEventZ) -> [LDKFramework.LDKMessageSendEvent]
+  public class func new_LDKCVec_u64Z(array: [Swift.UInt64]) -> LDKFramework.LDKCVec_u64Z
+  public class func LDKCVec_u64Z_to_array(nativeType: LDKFramework.LDKCVec_u64Z) -> [Swift.UInt64]
+  public class func new_LDKCVec_C2Tuple_u32ScriptZZ(array: [LDKFramework.LDKC2Tuple_u32ScriptZ]) -> LDKFramework.LDKCVec_C2Tuple_u32ScriptZZ
+  public class func LDKCVec_C2Tuple_u32ScriptZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_u32ScriptZZ) -> [LDKFramework.LDKC2Tuple_u32ScriptZ]
+  public class func new_LDKCVec_CResult_NoneAPIErrorZZ(array: [LDKFramework.LDKCResult_NoneAPIErrorZ]) -> LDKFramework.LDKCVec_CResult_NoneAPIErrorZZ
+  public class func LDKCVec_CResult_NoneAPIErrorZZ_to_array(nativeType: LDKFramework.LDKCVec_CResult_NoneAPIErrorZZ) -> [LDKFramework.LDKCResult_NoneAPIErrorZ]
+  public class func new_LDKCVec_RouteHintHopZ(array: [LDKFramework.LDKRouteHintHop]) -> LDKFramework.LDKCVec_RouteHintHopZ
+  public class func LDKCVec_RouteHintHopZ_to_array(nativeType: LDKFramework.LDKCVec_RouteHintHopZ) -> [LDKFramework.LDKRouteHintHop]
+  public class func new_LDKCVec_RouteHopZ(array: [LDKFramework.LDKRouteHop]) -> LDKFramework.LDKCVec_RouteHopZ
+  public class func LDKCVec_RouteHopZ_to_array(nativeType: LDKFramework.LDKCVec_RouteHopZ) -> [LDKFramework.LDKRouteHop]
+  public class func new_LDKCVec_C2Tuple_BlockHashChannelMonitorZZ(array: [LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ]) -> LDKFramework.LDKCVec_C2Tuple_BlockHashChannelMonitorZZ
+  public class func LDKCVec_C2Tuple_BlockHashChannelMonitorZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_BlockHashChannelMonitorZZ) -> [LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ]
+  public class func new_LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ(array: [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ]) -> LDKFramework.LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ
+  public class func LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ_to_array(nativeType: LDKFramework.LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ) -> [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ]
+  public class func new_LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ(array: [LDKFramework.LDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ]) -> LDKFramework.LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ
+  public class func LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ_to_array(nativeType: LDKFramework.LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ) -> [LDKFramework.LDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ]
+  public class func new_LDKCVec_TxidZ(array: [LDKFramework.LDKThirtyTwoBytes]) -> LDKFramework.LDKCVec_TxidZ
+  public class func LDKCVec_TxidZ_to_array(nativeType: LDKFramework.LDKCVec_TxidZ) -> [LDKFramework.LDKThirtyTwoBytes]
+  public class func new_LDKCVec_TransactionOutputsZ(array: [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ]) -> LDKFramework.LDKCVec_TransactionOutputsZ
+  public class func LDKCVec_TransactionOutputsZ_to_array(nativeType: LDKFramework.LDKCVec_TransactionOutputsZ) -> [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ]
+  public class func new_LDKCVec_CVec_RouteHopZZ(array: [[LDKFramework.LDKRouteHop]]) -> LDKFramework.LDKCVec_CVec_RouteHopZZ
+  public class func LDKCVec_CVec_RouteHopZZ_to_array(nativeType: LDKFramework.LDKCVec_CVec_RouteHopZZ) -> [[LDKFramework.LDKRouteHop]]
+  public class func new_LDKCVec_RouteHintZ(array: [LDKFramework.LDKRouteHint]) -> LDKFramework.LDKCVec_RouteHintZ
+  public class func LDKCVec_RouteHintZ_to_array(nativeType: LDKFramework.LDKCVec_RouteHintZ) -> [LDKFramework.LDKRouteHint]
+  public class func new_LDKCVec_PublicKeyZ(array: [[Swift.UInt8]]) -> LDKFramework.LDKCVec_PublicKeyZ
+  public class func LDKCVec_PublicKeyZ_to_array(nativeType: LDKFramework.LDKCVec_PublicKeyZ) -> [[Swift.UInt8]]
+  public class func new_LDKCVec_NodeAnnouncementZ(array: [LDKFramework.LDKNodeAnnouncement]) -> LDKFramework.LDKCVec_NodeAnnouncementZ
+  public class func LDKCVec_NodeAnnouncementZ_to_array(nativeType: LDKFramework.LDKCVec_NodeAnnouncementZ) -> [LDKFramework.LDKNodeAnnouncement]
+  public class func new_LDKCVec_UpdateAddHTLCZ(array: [LDKFramework.LDKUpdateAddHTLC]) -> LDKFramework.LDKCVec_UpdateAddHTLCZ
+  public class func LDKCVec_UpdateAddHTLCZ_to_array(nativeType: LDKFramework.LDKCVec_UpdateAddHTLCZ) -> [LDKFramework.LDKUpdateAddHTLC]
+  public class func new_LDKCVec_u8Z(array: [Swift.UInt8]) -> LDKFramework.LDKCVec_u8Z
+  public class func LDKCVec_u8Z_to_array(nativeType: LDKFramework.LDKCVec_u8Z) -> [Swift.UInt8]
+  public class func new_LDKCVec_ChannelDetailsZ(array: [LDKFramework.LDKChannelDetails]) -> LDKFramework.LDKCVec_ChannelDetailsZ
+  public class func LDKCVec_ChannelDetailsZ_to_array(nativeType: LDKFramework.LDKCVec_ChannelDetailsZ) -> [LDKFramework.LDKChannelDetails]
+  public class func new_LDKCVec_TxOutZ(array: [LDKFramework.LDKTxOut]) -> LDKFramework.LDKCVec_TxOutZ
+  public class func LDKCVec_TxOutZ_to_array(nativeType: LDKFramework.LDKCVec_TxOutZ) -> [LDKFramework.LDKTxOut]
+  public class func new_LDKCVec_APIErrorZ(array: [LDKFramework.LDKAPIError]) -> LDKFramework.LDKCVec_APIErrorZ
+  public class func LDKCVec_APIErrorZ_to_array(nativeType: LDKFramework.LDKCVec_APIErrorZ) -> [LDKFramework.LDKAPIError]
+  public class func new_LDKCVec_EventZ(array: [LDKFramework.LDKEvent]) -> LDKFramework.LDKCVec_EventZ
+  public class func LDKCVec_EventZ_to_array(nativeType: LDKFramework.LDKCVec_EventZ) -> [LDKFramework.LDKEvent]
   public class func swift_ldk_get_compiled_version() -> Swift.String
   public class func swift_ldk_c_bindings_get_compiled_version() -> Swift.String
   public class func swift_sign(msg: [Swift.UInt8], sk: [Swift.UInt8]) -> LDKFramework.Result_StringErrorZ
@@ -1445,7 +1445,7 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func swift_check_platform()
   public class func swift_create_invoice_from_channelmanager(channelmanager: LDKFramework.ChannelManager, keys_manager: LDKFramework.KeysInterface, network: LDKFramework.LDKCurrency, amt_msat: LDKFramework.Option_u64Z, description: Swift.String) -> LDKFramework.Result_InvoiceSignOrCreationErrorZ
   public class func instanceToPointer(instance: Swift.AnyObject) -> Swift.UnsafeMutableRawPointer
-  public class func pointerToInstance<T>(pointer: Swift.UnsafeRawPointer) -> T where T : AnyObject
+  public class func pointerToInstance<T>(pointer: Swift.UnsafeRawPointer, sourceMarker: Swift.String?) -> T where T : AnyObject
   public class func new_LDKu8slice(array: [Swift.UInt8]) -> LDKFramework.LDKu8slice
   public class func LDKu8slice_to_array(nativeType: LDKFramework.LDKu8slice) -> [Swift.UInt8]
   public class func new_LDKTransaction(array: [Swift.UInt8]) -> LDKFramework.LDKTransaction
@@ -1465,6 +1465,11 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   }
   public func getScriptPubkey() -> [Swift.UInt8]
   public func getValue() -> Swift.UInt64
+  @objc deinit
+}
+public class InstanceCrashSimulator {
+  public init()
+  public func getPointer() -> Swift.UnsafeMutableRawPointer
   @objc deinit
 }
 open class ChannelMessageHandler {
