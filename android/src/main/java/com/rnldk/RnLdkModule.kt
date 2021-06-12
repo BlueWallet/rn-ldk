@@ -6,9 +6,9 @@ import org.json.JSONArray
 import org.ldk.batteries.ChannelManagerConstructor
 import org.ldk.batteries.ChannelManagerConstructor.ChannelManagerPersister
 import org.ldk.batteries.NioPeerHandler
-import org.ldk.enums.LDKConfirmationTarget
-import org.ldk.enums.LDKCurrency
-import org.ldk.enums.LDKNetwork
+import org.ldk.enums.ConfirmationTarget
+import org.ldk.enums.Currency
+import org.ldk.enums.Network
 import org.ldk.structs.*
 import org.ldk.structs.FeeEstimator
 import org.ldk.structs.Filter.FilterInterface
@@ -63,12 +63,12 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     // INITIALIZE THE FEEESTIMATOR #################################################################
     // What it's used for: estimating fees for on-chain transactions that LDK wants broadcasted.
-    val fee_estimator = FeeEstimator.new_impl { confirmation_target: LDKConfirmationTarget? ->
+    val fee_estimator = FeeEstimator.new_impl { confirmation_target: ConfirmationTarget? ->
       var ret = feerate_fast;
       if (confirmation_target != null) {
-        if (confirmation_target.equals(LDKConfirmationTarget.LDKConfirmationTarget_HighPriority)) ret = feerate_fast;
-        if (confirmation_target.equals(LDKConfirmationTarget.LDKConfirmationTarget_Normal)) ret = feerate_medium;
-        if (confirmation_target.equals(LDKConfirmationTarget.LDKConfirmationTarget_Background)) ret = feerate_slow;
+        if (confirmation_target.equals(ConfirmationTarget.LDKConfirmationTarget_HighPriority)) ret = feerate_fast;
+        if (confirmation_target.equals(ConfirmationTarget.LDKConfirmationTarget_Normal)) ret = feerate_medium;
+        if (confirmation_target.equals(ConfirmationTarget.LDKConfirmationTarget_Background)) ret = feerate_slow;
       }
       return@new_impl ret;
     }
@@ -101,7 +101,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         params.putString("id", byteArrayToHex(id.to_channel_id()))
         params.putString("data", byteArrayToHex(channel_monitor_bytes))
         that.sendEvent(MARKER_PERSIST, params);
-        return Result_NoneChannelMonitorUpdateErrZ.constructor_ok();
+        return Result_NoneChannelMonitorUpdateErrZ.ok();
       }
 
       override fun update_persisted_channel(id: OutPoint, update: ChannelMonitorUpdate, data: ChannelMonitor): Result_NoneChannelMonitorUpdateErrZ {
@@ -111,17 +111,15 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         params.putString("id", byteArrayToHex(id.to_channel_id()))
         params.putString("data", byteArrayToHex(channel_monitor_bytes))
         that.sendEvent(MARKER_PERSIST, params);
-        return Result_NoneChannelMonitorUpdateErrZ.constructor_ok();
+        return Result_NoneChannelMonitorUpdateErrZ.ok();
       }
     })
 
     // now, initializing channel manager persister that is responsoble for backing up channel_manager bytes
 
     val channel_manager_persister = object : ChannelManagerPersister {
-      override fun handle_events(events: Array<Event?>?) {
-        events?.iterator()?.forEach {
-          if (it != null) that.handleEvent(it);
-        }
+      override fun handle_event(event: Event) {
+        that.handleEvent(event);
       }
 
       override fun persist_manager(channel_manager_bytes: ByteArray?) {
@@ -155,15 +153,15 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         params.putString("index", output._outpoint._index.toString())
         params.putString("script_pubkey", byteArrayToHex(output._script_pubkey))
         that.sendEvent(MARKER_REGISTER_OUTPUT, params);
-        return Option_C2Tuple_usizeTransactionZZ.constructor_none();
+        return Option_C2Tuple_usizeTransactionZZ.none();
       }
     })
 
-    chain_monitor = ChainMonitor.constructor_new(tx_filter, tx_broadcaster, logger, fee_estimator, persister);
+    chain_monitor = ChainMonitor.of(tx_filter, tx_broadcaster, logger, fee_estimator, persister);
 
     // INITIALIZE THE KEYSMANAGER ##################################################################
     // What it's used for: providing keys for signing lightning transactions
-    keys_manager = KeysManager.constructor_new(hexStringToByteArray(entropyHex), System.currentTimeMillis() / 1000, (System.currentTimeMillis() * 1000).toInt())
+    keys_manager = KeysManager.of(hexStringToByteArray(entropyHex), System.currentTimeMillis() / 1000, (System.currentTimeMillis() * 1000).toInt())
 
     // READ CHANNELMONITOR STATE FROM DISK #########################################################
 
@@ -189,36 +187,18 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     if (serializedChannelManagerHex != "") {
       // loading from disk
-      val channel_manager_constructor = ChannelManagerConstructor(hexStringToByteArray(serializedChannelManagerHex), channelMonitors, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor, tx_filter, tx_broadcaster, logger);
+      val channel_manager_constructor = ChannelManagerConstructor(hexStringToByteArray(serializedChannelManagerHex), channelMonitors, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor, tx_filter, null, tx_broadcaster, logger);
       channel_manager = channel_manager_constructor.channel_manager;
       channel_manager_constructor.chain_sync_completed(channel_manager_persister);
+      peer_manager = channel_manager_constructor.peer_manager;
+      nio_peer_handler = channel_manager_constructor.nio_peer_handler;
     } else {
       // fresh start
-      val channel_manager_constructor = ChannelManagerConstructor(LDKNetwork.LDKNetwork_Bitcoin, UserConfig.constructor_default(), hexStringToByteArray(blockchainTipHashHex), blockchainTipHeight, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor, tx_broadcaster, logger);
+      val channel_manager_constructor = ChannelManagerConstructor(Network.LDKNetwork_Bitcoin, UserConfig.with_default(), hexStringToByteArray(blockchainTipHashHex), blockchainTipHeight, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor, null, tx_broadcaster, logger);
       channel_manager = channel_manager_constructor.channel_manager;
       channel_manager_constructor.chain_sync_completed(channel_manager_persister);
-    }
-
-
-//      val chain_watch = chain_monitor.as_Watch();
-//      chain_watch.watch_channel(channel_monitor.get_funding_txo().a, channel_monitor);
-
-
-    // INITIALIZE THE NETGRAPHMSGHANDLER ###########################################################
-    // What it's used for: generating routes to send payments over
-    val router = NetGraphMsgHandler.constructor_new(keys_manager?.as_KeysInterface()?._secure_random_bytes, null, logger);
-
-    // INITIALIZE THE PEERMANAGER ##################################################################
-    // What it's used for: managing peer data
-    peer_manager = PeerManager.constructor_new(channel_manager?.as_ChannelMessageHandler(), router.as_RoutingMessageHandler(), keys_manager?.as_KeysInterface()?._node_secret, keys_manager?.as_KeysInterface()?._secure_random_bytes, logger);
-
-    try {
-      nio_peer_handler = NioPeerHandler(peer_manager)
-      nio_peer_handler?.bind_listener(InetSocketAddress("0.0.0.0", 9735));
-      promise.resolve(true)
-    } catch (e: IOException) {
-      println("io exception " + e.message);
-      promise.resolve(false)
+      peer_manager = channel_manager_constructor.peer_manager;
+      nio_peer_handler = channel_manager_constructor.nio_peer_handler;
     }
   }
 
@@ -292,11 +272,11 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     // first hop:
     // (also the last one of no route provided - assuming paying to neighbor node)
     var path = arrayOf(
-      RouteHop.constructor_new(
+      RouteHop.of(
         hexStringToByteArray(destPubkeyHex),
-        NodeFeatures.constructor_known(),
+        NodeFeatures.known(),
         shortChannelId.toLong(),
-        ChannelFeatures.constructor_known(),
+        ChannelFeatures.known(),
         paymentValueMsat.toLong(),
         finalCltvValue
       )
@@ -309,11 +289,11 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       for (c in 1..hopsJson.length()) {
         val hopJson = hopsJson.getJSONObject(c - 1);
 
-        path = path.plusElement(RouteHop.constructor_new(
+        path = path.plusElement(RouteHop.of(
           hexStringToByteArray(hopJson.getString("pubkey")),
-          NodeFeatures.constructor_known(),
+          NodeFeatures.known(),
           hopJson.getString("short_channel_id").toLong(),
-          ChannelFeatures.constructor_known(),
+          ChannelFeatures.known(),
           hopJson.getString("fee_msat").toLong(),
           hopJson.getString("cltv_expiry_delta").toInt()
         ));
@@ -321,7 +301,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     }
 
 
-    val route = Route.constructor_new(
+    val route = Route.of(
       arrayOf(
         path
       )
@@ -339,15 +319,15 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun addInvoice(amtMsat: Int, description: String, promise: Promise) {
-    var amountStruct = Option_u64Z.constructor_none();
+    var amountStruct = Option_u64Z.none();
     if (amtMsat != 0) {
-      amountStruct = Option_u64Z.constructor_some(amtMsat.toLong());
+      amountStruct = Option_u64Z.some(amtMsat.toLong());
     }
 
-    val invoice = UtilMethods.constructor_invoice_from_channelmanager(
+    val invoice = UtilMethods.create_invoice_from_channelmanager(
       channel_manager,
       keys_manager?.as_KeysInterface(),
-      LDKCurrency.LDKCurrency_Bitcoin,
+      Currency.LDKCurrency_Bitcoin,
       amountStruct,
       description
     );
@@ -458,9 +438,6 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     } else {
       promise.resolve(false);
     }
-
-    // Make sure the peer manager processes this new event.
-    nio_peer_handler?.check_events()
   }
 
   @ReactMethod
@@ -471,9 +448,6 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     } else {
       promise.resolve(false);
     }
-
-    // Make sure the peer manager processes this new event.
-    nio_peer_handler?.check_events();
   }
 
   @ReactMethod
@@ -507,9 +481,6 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       return;
     }
 
-    // Ensure we immediately send a `funding_created` message to the counterparty.
-    nio_peer_handler?.check_events()
-
     // At this point LDK will exchange the remaining channel open messages with
     // the counterparty and, when appropriate, broadcast the funding transaction
     // provided.
@@ -538,7 +509,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       channelObject += "\"inbound_capacity_msat\":" + it._inbound_capacity_msat + ",";
       channelObject += "\"outbound_capacity_msat\":" + it._outbound_capacity_msat + ",";
       channelObject += "\"short_channel_id\":" + "\"" + short_channel_id + "\",";
-      channelObject += "\"is_live\":" + it._is_live + ",";
+      channelObject += "\"is_usable\":" + it._is_usable + ",";
       channelObject += "\"remote_network_id\":" + "\"" + byteArrayToHex(it._remote_network_id) + "\",";
       channelObject += "\"user_id\":" + it._user_id;
       channelObject += "}";
@@ -572,7 +543,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       channelObject += "\"inbound_capacity_msat\":" + it._inbound_capacity_msat + ",";
       channelObject += "\"outbound_capacity_msat\":" + it._outbound_capacity_msat + ",";
       channelObject += "\"short_channel_id\":" + "\"" + short_channel_id + "\",";
-      channelObject += "\"is_live\":" + it._is_live + ",";
+      channelObject += "\"is_usable\":" + it._is_usable + ",";
       channelObject += "\"remote_network_id\":" + "\"" + byteArrayToHex(it._remote_network_id) + "\",";
       channelObject += "\"user_id\":" + it._user_id;
       channelObject += "}";
