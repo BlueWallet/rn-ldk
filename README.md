@@ -4,6 +4,7 @@ rn-ldk
 
 ## TODO
 
+* [ ] fix setFeerate
 * [ ] Add AES encryption to synced-storage
 * [ ] figure smth out for methods that convert address<->script (requires bitcoinjs)
 * [ ] setter for refund address script
