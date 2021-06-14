@@ -2,6 +2,15 @@ import * as React from 'react';
 import { TextInput, Alert, StyleSheet, View, Text, Button } from 'react-native';
 import RnLdk from 'rn-ldk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SyncedAsyncStorage from './synced-async-storage';
+
+const SHA256 = require('crypto-js/sha256');
+const ENCHEX = require('crypto-js/enc-hex');
+console.log(ENCHEX.stringify(SHA256('Message')));
+
+function hashIt(arg: string) {
+  return ENCHEX.stringify(SHA256(arg));
+}
 
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
@@ -16,10 +25,16 @@ export default function App() {
       <Text>ver {result}</Text>
 
       <Button
-        onPress={() => {
+        onPress={async () => {
           console.warn('starting...');
-          RnLdk.setStorage(AsyncStorage);
-          RnLdk.start('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff').then(console.warn);
+          const entropy = 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+
+          const namespace = hashIt(hashIt('namespace' + entropy));
+          const syncedStorage = new SyncedAsyncStorage(namespace);
+          await syncedStorage.synchronize();
+
+          RnLdk.setStorage(syncedStorage);
+          RnLdk.start(entropy).then(console.warn);
         }}
         title="Start"
         color="#841584"

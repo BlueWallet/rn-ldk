@@ -44,6 +44,7 @@ var peer_manager: PeerManager? = null;
 var chain_monitor: ChainMonitor? = null;
 var temporary_channel_id: ByteArray? = null;
 var keys_manager: KeysManager? = null;
+var channel_manager_constructor: ChannelManagerConstructor? = null;
 
 class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
@@ -53,7 +54,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun getVersion(promise: Promise) {
-    promise.resolve("0.0.18");
+    promise.resolve("0.0.98");
   }
 
   @ReactMethod
@@ -187,19 +188,20 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     if (serializedChannelManagerHex != "") {
       // loading from disk
-      val channel_manager_constructor = ChannelManagerConstructor(hexStringToByteArray(serializedChannelManagerHex), channelMonitors, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor, tx_filter, null, tx_broadcaster, logger);
-      channel_manager = channel_manager_constructor.channel_manager;
-      channel_manager_constructor.chain_sync_completed(channel_manager_persister);
-      peer_manager = channel_manager_constructor.peer_manager;
-      nio_peer_handler = channel_manager_constructor.nio_peer_handler;
+      channel_manager_constructor = ChannelManagerConstructor(hexStringToByteArray(serializedChannelManagerHex), channelMonitors, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor, tx_filter, null, tx_broadcaster, logger);
+      channel_manager = channel_manager_constructor!!.channel_manager;
+      channel_manager_constructor!!.chain_sync_completed(channel_manager_persister);
+      peer_manager = channel_manager_constructor!!.peer_manager;
+      nio_peer_handler = channel_manager_constructor!!.nio_peer_handler;
     } else {
       // fresh start
-      val channel_manager_constructor = ChannelManagerConstructor(Network.LDKNetwork_Bitcoin, UserConfig.with_default(), hexStringToByteArray(blockchainTipHashHex), blockchainTipHeight, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor, null, tx_broadcaster, logger);
-      channel_manager = channel_manager_constructor.channel_manager;
-      channel_manager_constructor.chain_sync_completed(channel_manager_persister);
-      peer_manager = channel_manager_constructor.peer_manager;
-      nio_peer_handler = channel_manager_constructor.nio_peer_handler;
+      channel_manager_constructor = ChannelManagerConstructor(Network.LDKNetwork_Bitcoin, UserConfig.with_default(), hexStringToByteArray(blockchainTipHashHex), blockchainTipHeight, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor, null, tx_broadcaster, logger);
+      channel_manager = channel_manager_constructor!!.channel_manager;
+      channel_manager_constructor!!.chain_sync_completed(channel_manager_persister);
+      peer_manager = channel_manager_constructor!!.peer_manager;
+      nio_peer_handler = channel_manager_constructor!!.nio_peer_handler;
     }
+    promise.resolve(true);
   }
 
   @ReactMethod

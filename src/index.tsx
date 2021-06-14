@@ -301,7 +301,7 @@ class RnLdkImplementation {
     this.fundingsReady = []; // reset it
     const result = await RnLdkNative.openChannelStep1(pubkey, sat);
     if (!result) return false;
-    let timer = 30;
+    let timer = 60;
     while (timer-- > 0) {
       await new Promise((resolve) => setTimeout(resolve, 500)); // sleep
       if (this.fundingsReady.length > 0) {
@@ -314,6 +314,7 @@ class RnLdkImplementation {
       }
     }
 
+    console.warn('timeout waiting for FundingGenerationReady event');
     return false;
   }
 

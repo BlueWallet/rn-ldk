@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.14.1",
+    "crypto-js": "^3.1.9-1",
     "react": "16.13.1",
     "react-native": "0.63.4"
   },
