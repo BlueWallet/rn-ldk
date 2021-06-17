@@ -2,6 +2,14 @@
 
 rn-ldk
 
+## TODO
+
+* [ ] fix setFeerate
+* [ ] Add AES encryption to synced-storage
+* [ ] figure smth out for methods that convert address<->script (requires bitcoinjs)
+* [ ] setter for refund address script
+* [ ] figure smth out for enforcing only one concurrent instance
+
 ## Installation
 
 ```sh
@@ -12,10 +20,7 @@ npm install rn-ldk
 
 ```js
 import RnLdk from "rn-ldk";
-
 // ...
-
-const result = await RnLdk.multiply(3, 7);
 ```
 
 ## Contributing
