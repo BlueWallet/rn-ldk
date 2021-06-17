@@ -4,14 +4,6 @@ import RnLdk from 'rn-ldk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SyncedAsyncStorage from './synced-async-storage';
 
-const SHA256 = require('crypto-js/sha256');
-const ENCHEX = require('crypto-js/enc-hex');
-console.log(ENCHEX.stringify(SHA256('Message')));
-
-function hashIt(arg: string) {
-  return ENCHEX.stringify(SHA256(arg));
-}
-
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
   const [text, onChangeText] = React.useState<string>('');
@@ -29,8 +21,9 @@ export default function App() {
           console.warn('starting...');
           const entropy = 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
-          const namespace = hashIt(hashIt('namespace' + entropy));
-          const syncedStorage = new SyncedAsyncStorage(namespace);
+          const syncedStorage = new SyncedAsyncStorage(entropy);
+          await syncedStorage.selftest();
+          console.warn('selftest passed');
           await syncedStorage.synchronize();
 
           RnLdk.setStorage(syncedStorage);
