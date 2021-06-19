@@ -6,8 +6,9 @@ rn-ldk
 
 * [x] fix setFeerate
 * [x] Add AES encryption to synced-storage
-* [ ] figure smth out for methods that convert address<->script (requires bitcoinjs)
-* [ ] setter for refund address script
+* [x] figure smth out for methods that convert address<->script (requires bitcoinjs)
+* [x] setter for refund address script
+* [ ] refactor all promises resolve(false) to reject(meaningful messsage)
 * [ ] figure smth out for enforcing only one concurrent instance
 
 ## Installation
