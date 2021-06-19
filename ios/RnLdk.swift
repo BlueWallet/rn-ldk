@@ -157,7 +157,8 @@ class RnLdk: NSObject {
                 channel_manager_constructor.chain_sync_completed(persister: channel_manager_persister);
                 peer_manager = channel_manager_constructor.peerManager;
             } catch {
-                resolve(false);
+                resolve("Unexpected error: \(error).");
+                
                 return;
             }
         } else {
@@ -180,7 +181,7 @@ class RnLdk: NSObject {
     @objc
     func getVersion(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
         resolve("0.0.18")
-    }
+    }	
     
     func getName() -> String {
         return "RnLdk"
@@ -496,13 +497,13 @@ class RnLdk: NSObject {
     
     @objc
     func setFeerate(_ newFeerateFast: NSNumber, newFeerateMedium: NSNumber, newFeerateSlow: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
-        if (Int(newFeerateFast) < 300) { return resolve(false); }
-        if (Int(newFeerateMedium) < 300) { return resolve(false); }
-        if (Int(newFeerateSlow) < 300) { return resolve(false); }
+        if (Int(truncating: newFeerateFast) < 300) { return reject("newFeerateFast is too small"); }
+        if (Int(truncating: newFeerateMedium) < 300) { return reject("newFeerateMedium is too small"); }
+        if (Int(truncating: newFeerateSlow) < 300) { return reject("newFeerateSlow is too small"); }
     
-        feerate_fast = Int(newFeerateFast);
-        feerate_medium = Int(newFeerateMedium);
-        feerate_slow = Int(newFeerateSlow);
+        feerate_fast = Int(truncating: newFeerateFast);
+        feerate_medium = Int(truncating: newFeerateMedium);
+        feerate_slow = Int(truncating: newFeerateSlow);
         resolve(true);
     }
     
