@@ -507,6 +507,10 @@ class RnLdkImplementation {
     return RnLdkNative.setFeerate(newFeerateFast * 250, newFeerateMedium * 250, newFeerateSlow * 250);
   }
 
+  setRefundAddressScript(refundAddressScriptHex: string) {
+    return RnLdkNative.setRefundAddressScript(refundAddressScriptHex);
+  }
+
   /**
    * Method to set storage that will handle persistance. Should conform to the spec
    * (have methods setItem, getItem & getAllKeys)

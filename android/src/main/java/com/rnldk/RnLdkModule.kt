@@ -37,6 +37,8 @@ var feerate_fast = 7500; // estimate fee rate in BTC/kB
 var feerate_medium = 7500; // estimate fee rate in BTC/kB
 var feerate_slow = 7500; // estimate fee rate in BTC/kB
 
+var refund_address_script = "76a91419129d53e6319baf19dba059bead166df90ab8f588ac";
+
 var nio_peer_handler: NioPeerHandler? = null;
 var channel_manager: ChannelManager? = null;
 var peer_manager: PeerManager? = null;
@@ -214,7 +216,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     val txarray = arrayOf(tx);
     channel_manager?.as_Confirm()?.transactions_confirmed(hexStringToByteArray(headerHex), txarray, height);
     chain_monitor?.as_Confirm()?.transactions_confirmed(hexStringToByteArray(headerHex), txarray, height);
-    // TODO: feed it to channel monitor / chain monitor as well
+
     promise.resolve(true);
   }
 
@@ -370,7 +372,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       val txResult = keys_manager?.spend_spendable_outputs(
         event.outputs,
         emptyArray<TxOut>(),
-        hexStringToByteArray("76a91419129d53e6319baf19dba059bead166df90ab8f588ac"), // TODO: unhardcode me (13HaCAB4jf7FYSZexJxoczyDDnutzZigjS)
+        hexStringToByteArray(refund_address_script),
         feerate_fast
       );
 
@@ -560,6 +562,12 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     }
     jsonArray += "]";
     promise.resolve(jsonArray);
+  }
+
+  @ReactMethod
+  fun setRefundAddressScript(refundAddressScriptHex: String, promise: Promise) {
+    refund_address_script = refundAddressScriptHex;
+    promise.resolve(true);
   }
 
   @ReactMethod
