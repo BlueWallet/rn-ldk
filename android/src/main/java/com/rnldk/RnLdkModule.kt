@@ -14,7 +14,6 @@ import org.ldk.structs.FeeEstimator
 import org.ldk.structs.Filter.FilterInterface
 import org.ldk.structs.Persist
 import org.ldk.structs.Persist.PersistInterface
-import org.ldk.structs.Result_InvoiceNoneZ.Result_InvoiceNoneZ_OK
 import org.ldk.structs.Result_NoneAPIErrorZ.Result_NoneAPIErrorZ_OK
 import org.ldk.util.TwoTuple
 import java.io.IOException
@@ -186,22 +185,27 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     // What it's used for: managing channel state
 
 
-    if (serializedChannelManagerHex != "") {
-      // loading from disk
-      channel_manager_constructor = ChannelManagerConstructor(hexStringToByteArray(serializedChannelManagerHex), channelMonitors, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor, tx_filter, null, tx_broadcaster, logger);
-      channel_manager = channel_manager_constructor!!.channel_manager;
-      channel_manager_constructor!!.chain_sync_completed(channel_manager_persister);
-      peer_manager = channel_manager_constructor!!.peer_manager;
-      nio_peer_handler = channel_manager_constructor!!.nio_peer_handler;
-    } else {
-      // fresh start
-      channel_manager_constructor = ChannelManagerConstructor(Network.LDKNetwork_Bitcoin, UserConfig.with_default(), hexStringToByteArray(blockchainTipHashHex), blockchainTipHeight, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor, null, tx_broadcaster, logger);
-      channel_manager = channel_manager_constructor!!.channel_manager;
-      channel_manager_constructor!!.chain_sync_completed(channel_manager_persister);
-      peer_manager = channel_manager_constructor!!.peer_manager;
-      nio_peer_handler = channel_manager_constructor!!.nio_peer_handler;
+    try {
+      if (serializedChannelManagerHex != "") {
+        // loading from disk
+        channel_manager_constructor = ChannelManagerConstructor(hexStringToByteArray(serializedChannelManagerHex), channelMonitors, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor, tx_filter, null, tx_broadcaster, logger);
+        channel_manager = channel_manager_constructor!!.channel_manager;
+        channel_manager_constructor!!.chain_sync_completed(channel_manager_persister);
+        peer_manager = channel_manager_constructor!!.peer_manager;
+        nio_peer_handler = channel_manager_constructor!!.nio_peer_handler;
+      } else {
+        // fresh start
+        channel_manager_constructor = ChannelManagerConstructor(Network.LDKNetwork_Bitcoin, UserConfig.with_default(), hexStringToByteArray(blockchainTipHashHex), blockchainTipHeight, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor, null, tx_broadcaster, logger);
+        channel_manager = channel_manager_constructor!!.channel_manager;
+        channel_manager_constructor!!.chain_sync_completed(channel_manager_persister);
+        peer_manager = channel_manager_constructor!!.peer_manager;
+        nio_peer_handler = channel_manager_constructor!!.nio_peer_handler;
+      }
+      promise.resolve(true);
+    } catch (e: Exception) {
+      println("ReactNativeLDK: can't start, " + e.message);
+      promise.reject(e.message);
     }
-    promise.resolve(true);
   }
 
   @ReactMethod
@@ -560,9 +564,9 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun setFeerate(newFeerateFast: Int, newFeerateMedium: Int, newFeerateSlow: Int, promise: Promise) {
-    if (newFeerateFast < 300) return promise.resolve(false);
-    if (newFeerateMedium < 300) return promise.resolve(false);
-    if (newFeerateSlow < 300) return promise.resolve(false);
+    if (newFeerateFast < 300) return promise.reject("newFeerateFast is too small");
+    if (newFeerateMedium < 300) return promise.reject("newFeerateMedium is too small");
+    if (newFeerateSlow < 300) return promise.reject("newFeerateSlow is too small");
     feerate_fast = newFeerateFast;
     feerate_medium = newFeerateMedium;
     feerate_slow = newFeerateSlow;

@@ -192,10 +192,13 @@ class RnLdkImplementation {
     console.log('checkBlockchain() 1/x');
     await this.updateBestBlock();
 
+    console.log('checkBlockchain() 2/x');
+    await this.updateFeerate();
+
     const confirmedBlocks: any = {};
 
     // iterating all subscriptions for confirmed txid
-    console.log('checkBlockchain() 2/x');
+    console.log('checkBlockchain() 3/x');
     for (const regTx of this.registeredTxs) {
       let json;
       try {
@@ -220,7 +223,7 @@ class RnLdkImplementation {
     }
 
     // iterating all scripts for spends
-    console.log('checkBlockchain() 3/x');
+    console.log('checkBlockchain() 4/x');
     for (const regOut of this.registeredOutputs) {
       let txs: any[] = [];
       try {
@@ -252,14 +255,14 @@ class RnLdkImplementation {
 
     console.log('confirmedBlocks=', confirmedBlocks);
 
-    console.log('checkBlockchain() 4/x');
+    console.log('checkBlockchain() 5/x');
     for (const height of Object.keys(confirmedBlocks).sort((a, b) => parseInt(a, 10) - parseInt(b, 10))) {
       for (const pos of Object.keys(confirmedBlocks[height]).sort((a, b) => parseInt(a, 10) - parseInt(b, 10))) {
         await RnLdkNative.transactionConfirmed(await this.getHeaderHexByHeight(parseInt(height, 10)), parseInt(height, 10), parseInt(pos, 10), confirmedBlocks[height][pos]);
       }
     }
 
-    console.log('checkBlockchain() 5/x');
+    console.log('checkBlockchain() 6/x');
     let txidArr = [];
     try {
       const jsonString = await RnLdkNative.getRelevantTxids();
@@ -270,7 +273,7 @@ class RnLdkImplementation {
     }
 
     // we need to check if any of txidArr got unconfirmed, and then feed it back to LDK if they are unconf
-    console.log('checkBlockchain() 6/x');
+    console.log('checkBlockchain() 7/x');
     for (const txid of txidArr) {
       let confirmed = false;
       try {
@@ -377,12 +380,35 @@ class RnLdkImplementation {
     return parseInt(await response.text(), 10);
   }
 
+  private async updateFeerate() {
+    try {
+      const response = await fetch('https://blockstream.info/api/fee-estimates');
+      const json = await response.json();
+
+      const blockFast = '2'; // indexes in json object
+      const blockMedium = '6';
+      const blockSlow = '144';
+
+      if (json[blockFast] && json[blockMedium] && json[blockSlow]) {
+        const feerateFast = Math.round(json[blockFast]);
+        const feerateMedium = Math.round(json[blockMedium]);
+        const feerateSlow = Math.round(json[blockSlow]);
+        await this.setFeerate(Math.max(feerateFast, 2), Math.max(feerateMedium, 2), Math.max(feerateSlow, 2));
+      } else {
+        throw new Error('Invalid feerate data:' + JSON.stringify(json));
+      }
+    } catch (error) {
+      console.warn('updateFeerate() failed:', error);
+    }
+  }
+
   private async updateBestBlock() {
     const height = await this.getCurrentHeight();
     const response2 = await fetch('https://blockstream.info/api/block-height/' + height);
     const hash = await response2.text();
     const response3 = await fetch('https://blockstream.info/api/block/' + hash + '/header');
     const headerHex = await response3.text();
+    console.log('updateBestBlock():', { headerHex, height });
     return RnLdkNative.updateBestBlock(headerHex, height);
   }
 
@@ -457,12 +483,14 @@ class RnLdkImplementation {
   }
 
   /**
-   * Prodives LKD current feerate to use with all onchain transactions.
+   * Prodives LKD current feerate to use with all onchain transactions (like sweeps after forse-closures)
    *
-   * @param satByte
+   * @param newFeerateFast {number} Sat/b
+   * @param newFeerateMedium {number} Sat/b
+   * @param newFeerateSlow {number} Sat/b
    */
-  setFeerate(satByte: number): Promise<boolean> {
-    return RnLdkNative.setFeerate(satByte * 250);
+  setFeerate(newFeerateFast: number, newFeerateMedium: number, newFeerateSlow: number): Promise<boolean> {
+    return RnLdkNative.setFeerate(newFeerateFast * 250, newFeerateMedium * 250, newFeerateSlow * 250);
   }
 
   /**
