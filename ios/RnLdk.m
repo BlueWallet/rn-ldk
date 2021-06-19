@@ -63,6 +63,9 @@ RCT_EXTERN_METHOD(openChannelStep1:(NSString *)pubkey
                   resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 
+RCT_EXTERN_METHOD(setRefundAddressScript:(NSString *)refundAddressScriptHex
+                  resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(openChannelStep2:(NSString *)txhex
                   resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 

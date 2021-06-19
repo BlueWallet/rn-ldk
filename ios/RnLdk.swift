@@ -17,6 +17,8 @@ var feerate_fast = 7500; // estimate fee rate in BTC/kB
 var feerate_medium = 7500; // estimate fee rate in BTC/kB
 var feerate_slow = 7500; // estimate fee rate in BTC/kB
 
+var refund_address_script = "76a91419129d53e6319baf19dba059bead166df90ab8f588ac";
+
 var channel_manager: LDKFramework.ChannelManager?;
 var peer_manager: LDKFramework.PeerManager?;
 var keys_manager: LDKFramework.KeysManager?;
@@ -493,6 +495,12 @@ class RnLdk: NSObject {
         
         jsonArray += "]";
         resolve(jsonArray);
+    }    
+    
+    @objc
+    func setRefundAddressScript(_ refundAddressScriptHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+        refund_address_script = refundAddressScriptHex;
+        resolve(true);
     }
     
     @objc
@@ -518,7 +526,7 @@ func handleEvent(event: Event) {
     if let spendableOutputEvent = event.getValueAsSpendableOutputs() {
         print("ReactNativeLDK: trying to spend output");
         let outputs = spendableOutputEvent.getOutputs()
-        let destinationScript = hexStringToByteArray("76a91419129d53e6319baf19dba059bead166df90ab8f588ac"); // TODO unhardcode me
+        let destinationScript = hexStringToByteArray(refund_address_script);
         let result = keys_manager?.spend_spendable_outputs(descriptors: outputs, outputs: [], change_destination_script: destinationScript, feerate_sat_per_1000_weight: UInt32(feerate_fast))
         
         if result?.isOk() ?? false {
