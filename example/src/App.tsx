@@ -28,7 +28,7 @@ export default function App() {
           await syncedStorage.synchronize();
 
           RnLdk.setStorage(syncedStorage);
-          RnLdk.setRefundAddressScript('76a91419129d53e6319baf19dba059bead166df90ab8f588ac');
+          RnLdk.setRefundAddressScript('76a91419129d53e6319baf19dba059bead166df90ab8f588ac'); // 13HaCAB4jf7FYSZexJxoczyDDnutzZigjS
           RnLdk.start(entropy).then(console.warn);
         }}
         title="Start"
