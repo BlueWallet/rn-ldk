@@ -74,6 +74,17 @@ class RnLdkImplementation {
 
   private started = false;
 
+  private injectedScript2address: ((scriptHex: string) => Promise<string>) | null = null;
+  private injectedDecodeInvoice: ((bolt11: string) => Promise<object>) | null = null;
+
+  provideScript2addressFunc(func: (scriptHex: string) => Promise<string>) {
+    this.injectedScript2address = func;
+  }
+
+  provideDecodeInvoiceFunc(func: (bolt11: string) => Promise<object>) {
+    this.injectedDecodeInvoice = func;
+  }
+
   /**
    * Called by native code when LDK successfully sent payment.
    * Should not be called directly.
@@ -178,6 +189,10 @@ class RnLdkImplementation {
   }
 
   private async script2address(scriptHex: string): Promise<string> {
+    if (this.injectedScript2address) {
+      return await this.injectedScript2address(scriptHex);
+    }
+
     const response = await fetch('https://runkit.io/overtorment/output-script-to-address/branches/master/' + scriptHex);
     return response.text();
   }
@@ -310,8 +325,7 @@ class RnLdkImplementation {
       if (this.fundingsReady.length > 0) {
         const funding = this.fundingsReady.pop();
         if (funding) {
-          const response = await fetch('https://runkit.io/overtorment/output-script-to-address/branches/master/' + funding.output_script);
-          return response.text();
+          return await this.script2address(funding.output_script);
         }
         break;
       }
@@ -543,6 +557,15 @@ class RnLdkImplementation {
     return RnLdkNative.addInvoice(amtMsat, description);
   }
 
+  private async decodeInvoice(bolt11: string): Promise<any> {
+    if (this.injectedDecodeInvoice) {
+      return this.injectedDecodeInvoice(bolt11);
+    }
+
+    const response = await fetch('https://lambda-decode-bolt11.herokuapp.com/decode/' + bolt11);
+    return await response.json();
+  }
+
   async sendPayment(bolt11: string, numSatoshis: number = 666): Promise<boolean> {
     if (!this.started) throw new Error('LDK not yet started');
     await this.updateBestBlock();
@@ -550,8 +573,7 @@ class RnLdkImplementation {
     // const usableChannels = await this.listChannels(); // FIXME debug only
     if (usableChannels.length === 0) throw new Error('No usable channels');
 
-    const response = await fetch('https://lambda-decode-bolt11.herokuapp.com/decode/' + bolt11);
-    const decoded = await response.json();
+    const decoded = await this.decodeInvoice(bolt11);
     if (isNaN(parseInt(decoded.millisatoshis, 10))) {
       decoded.millisatoshis = numSatoshis * 1000; // free amount invoice
     }
@@ -634,6 +656,44 @@ class RnLdkImplementation {
       min_final_cltv_expiry /* not really needed in this scenario */,
       JSON.stringify(ldkRoute, null, 2)
     );
+  }
+
+  static assertEquals(a: any, b: any) {
+    if (a !== b) throw new Error('Assertion failed that ' + a + ' equals ' + b);
+  }
+
+  static assertNotEquals(a: any, b: any) {
+    if (a === b) throw new Error('Assertion failed that ' + a + ' NOT equals ' + b);
+  }
+
+  /**
+   * self test function that is supposed to run in RN runtime to verify everything is set up correctly
+   */
+  async selftest(): Promise<boolean> {
+    const decoded = await this.decodeInvoice(
+      'lnbc2220n1psvm6rhpp53pxqkcq4j9hxjy5vtsll0rhykqzyjch2gkvlfv5mfdsyul5rnk5sdqqcqzpgsp5qwfm205gklcnf5jqnvpdl22p48adr4hkpscxedrltr7yc29tfv7s9qyyssqeff7chcx08ndxl3he8vgmy7up3z8drd7j0xn758gwkjyfk6ncqesa4hj36r26q68jfpvj0555fr77hhvhtczhh0h9rahdhgtcpj2fpgplfsqg0'
+    );
+    RnLdkImplementation.assertEquals(decoded.millisatoshis, '222000');
+    RnLdkImplementation.assertEquals(decoded.payeeNodeKey, '02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1');
+    let payment_hash = '';
+    let min_final_cltv_expiry = 0;
+    let payment_secret = '';
+    for (const tag of decoded.tags) {
+      if (tag.tagName === 'payment_hash') payment_hash = tag.data;
+      if (tag.tagName === 'min_final_cltv_expiry') min_final_cltv_expiry = parseInt(tag.data, 10);
+      if (tag.tagName === 'payment_secret') payment_secret = tag.data;
+      if (tag.tagName === 'min_final_cltv_expiry') min_final_cltv_expiry = parseInt(tag.data, 10);
+    }
+    RnLdkImplementation.assertEquals(payment_hash, '884c0b6015916e69128c5c3ff78ee4b0044962ea4599f4b29b4b604e7e839da9');
+    RnLdkImplementation.assertEquals(payment_secret, '0393b53e88b7f134d2409b02dfa941a9fad1d6f60c306cb47f58fc4c28ab4b3d');
+    RnLdkImplementation.assertEquals(min_final_cltv_expiry, 40);
+
+    //
+
+    RnLdkImplementation.assertEquals(await this.script2address('0020ff3eee58d5a55baa44dc10862ebd50bc16e4aade5501a0339c5c20c64478dc0f'), 'bc1qlulwukx454d653xuzzrza02shstwf2k725q6qvuutssvv3rcms8sarxvad');
+    RnLdkImplementation.assertEquals(await this.script2address('00143ada446d4196f67e4a83a9168dd751f9c69c2f94'), 'bc1q8tdygm2pjmm8uj5r4ytgm463l8rfctu5d50yyu');
+
+    return true;
   }
 }
 

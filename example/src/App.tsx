@@ -23,6 +23,7 @@ export default function App() {
 
           const syncedStorage = new SyncedAsyncStorage(entropy);
           await syncedStorage.selftest();
+          await RnLdk.selftest();
           console.warn('selftest passed');
           await syncedStorage.synchronize();
 

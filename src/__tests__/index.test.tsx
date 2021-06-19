@@ -1,5 +1,15 @@
 const assert = require('assert');
 import utils from '../util';
+import RnLdk from '../index';
+
+require('jest-fetch-mock');
+
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 15 * 1000;
+
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter.js', () => {
+  const { EventEmitter } = require('events');
+  return EventEmitter;
+});
 
 it('can construct 3 hops single (non-mpp) route', () => {
   const lndRoute = {
@@ -170,4 +180,8 @@ it('can construct 5 hops single (non-mpp) route v2', () => {
   ];
 
   assert.deepEqual(utils.lndRoutetoLdkRoute(lndRoute, hopFees, firstChanId, minFinalCLTVExpiryFromTheInvoice), expectedHops);
+});
+
+it('RnLdk selftest passes', async () => {
+  assert.ok(await RnLdk.selftest());
 });
