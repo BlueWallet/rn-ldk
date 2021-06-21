@@ -57,7 +57,7 @@ class MyBroadcasterInterface: BroadcasterInterface {
 class MyPersister: Persist {
     override func persist_new_channel(id: OutPoint, data: ChannelMonitor) -> Result_NoneChannelMonitorUpdateErrZ {
         print("ReactNativeLDK: persist_new_channel")
-        let idBytes: [UInt8] = id.write(obj: id)
+        let idBytes: [UInt8] = id.to_channel_id()
         let monitorBytes: [UInt8] = data.write(obj: data)
         _sendEvent(eventName: MARKER_PERSIST, eventBody: ["id": bytesToHex(bytes: idBytes), "data": bytesToHex(bytes: monitorBytes)]);
         
@@ -67,7 +67,7 @@ class MyPersister: Persist {
     
     override func update_persisted_channel(id: OutPoint, update: ChannelMonitorUpdate, data: ChannelMonitor) -> Result_NoneChannelMonitorUpdateErrZ {
         print("ReactNativeLDK: update_persisted_channel");
-        let idBytes: [UInt8] = id.write(obj: id)
+        let idBytes: [UInt8] = id.to_channel_id()
         let monitorBytes: [UInt8] = data.write(obj: data)
         _sendEvent(eventName: MARKER_PERSIST, eventBody: ["id": bytesToHex(bytes: idBytes), "data": bytesToHex(bytes: monitorBytes)]);
         
