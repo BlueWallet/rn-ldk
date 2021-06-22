@@ -1,6 +1,6 @@
 {
   "name": "rn-ldk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "rn-ldk",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -36,7 +36,7 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/Overtorment/rn-ldk",
+  "repository": "https://github.com/BlueWallet/rn-ldk",
   "author": "Overtorment <overtorment@gmail.com> (https://github.com/Overtorment)",
   "license": "MIT",
   "bugs": {
