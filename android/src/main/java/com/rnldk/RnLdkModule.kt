@@ -203,7 +203,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         peer_manager = channel_manager_constructor!!.peer_manager;
         nio_peer_handler = channel_manager_constructor!!.nio_peer_handler;
       }
-      promise.resolve(true);
+      promise.resolve("hello ldk");
     } catch (e: Exception) {
       println("ReactNativeLDK: can't start, " + e.message);
       promise.reject(e.message);
@@ -230,7 +230,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   @ReactMethod
   fun getRelevantTxids(promise: Promise) {
     if (channel_manager === null) {
-      promise.resolve("[]");
+      promise.reject("Channel manager is not initted");
       return;
     }
     var first = true;
@@ -263,7 +263,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       nio_peer_handler?.connect(hexStringToByteArray(pubkeyHex), InetSocketAddress(hostname, port), 9000);
       promise.resolve(true)
     } catch (e: IOException) {
-      promise.resolve(false)
+      promise.reject("connectPeer exception: " + e.message);
     }
   }
 
@@ -321,7 +321,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     if (payment_res is Result_NonePaymentSendFailureZ.Result_NonePaymentSendFailureZ_OK) {
       promise.resolve(true);
     } else {
-      promise.resolve(false);
+      promise.reject("sendPayment failed");
     }
   }
 
@@ -344,14 +344,14 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       println("Got invoice: " + invoice.res.to_str())
       promise.resolve(invoice.res.to_str());
     } else {
-      promise.resolve(false);
+      promise.reject("addInvoice failed");
     }
   }
 
   @ReactMethod
   fun listPeers(promise: Promise) {
     if (peer_manager === null) {
-      promise.resolve("[]");
+      promise.reject("no peer manager inited");
       return;
     }
     val peer_node_ids: Array<ByteArray> = peer_manager!!.get_peer_node_ids()
@@ -434,7 +434,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     if (byteArr != null) {
       promise.resolve(byteArrayToHex(byteArr));
     } else {
-      promise.resolve("");
+      promise.reject("getNodeId failed");
     }
   }
 
@@ -444,7 +444,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     if (close_result is Result_NoneAPIErrorZ_OK) {
       promise.resolve(true);
     } else {
-      promise.resolve(false);
+      promise.reject("closeChannelCooperatively failed");
     }
   }
 
@@ -454,7 +454,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     if (close_result is Result_NoneAPIErrorZ_OK) {
       promise.resolve(true);
     } else {
-      promise.resolve(false);
+      promise.reject("closeChannelForce failed");
     }
   }
 
@@ -468,7 +468,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     if (create_channel_result !is Result_NoneAPIErrorZ.Result_NoneAPIErrorZ_OK) {
       println("ReactNativeLDK: " + "create_channel_result !is Result_NoneAPIErrorZ.Result_NoneAPIErrorZ_OK, = " + create_channel_result);
-      promise.resolve(false);
+      promise.reject("openChannelStep1 failed");
       return;
     }
 
@@ -477,7 +477,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun openChannelStep2(txhex: String, promise: Promise) {
-    if (temporary_channel_id == null) return promise.resolve(false);
+    if (temporary_channel_id == null) return promise.reject("openChannelStep2 failed: channel opening is not initiated..?");
 
     val funding_res = channel_manager?.funding_transaction_generated(temporary_channel_id, hexStringToByteArray(txhex));
     // funding_transaction_generated should only generate an error if the
@@ -485,7 +485,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     // closed the channel on us):
     if (funding_res !is Result_NoneAPIErrorZ_OK) {
       println("ReactNativeLDK: " + "funding_res !is Result_NoneAPIErrorZ_OK");
-      promise.resolve(false);
+      promise.reject("openChannelStep2 failed");
       return;
     }
 
