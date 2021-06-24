@@ -8,7 +8,8 @@ rn-ldk
 * [x] Add AES encryption to synced-storage
 * [x] figure smth out for methods that convert address<->script (requires bitcoinjs)
 * [x] setter for refund address script
-* [ ] refactor all promises resolve(false) to reject(meaningful messsage)
+* [x] refactor all promises resolve(false) to reject(meaningful messsage)
+* [ ] injected funcs that provide blockchain data
 * [ ] figure smth out for enforcing only one concurrent instance
 
 ## Installation
