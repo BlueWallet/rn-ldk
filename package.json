@@ -1,6 +1,6 @@
 {
   "name": "rn-ldk",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "rn-ldk",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -40,9 +40,9 @@
   "author": "Overtorment <overtorment@gmail.com> (https://github.com/Overtorment)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Overtorment/rn-ldk/issues"
+    "url": "https://github.com/BlueWallet/rn-ldk/issues"
   },
-  "homepage": "https://github.com/Overtorment/rn-ldk#readme",
+  "homepage": "https://github.com/BlueWallet/rn-ldk#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

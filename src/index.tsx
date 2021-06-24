@@ -3,6 +3,9 @@ import utils from './util';
 const { RnLdk: RnLdkNative } = NativeModules;
 
 const MARKER_LOG = 'log';
+interface LogMsg {
+  line: string;
+}
 
 const MARKER_REGISTER_OUTPUT = 'marker_register_output';
 interface RegisterOutputMsg {
@@ -71,6 +74,7 @@ class RnLdkImplementation {
   private sentPayments: PaymentSentMsg[] = [];
   private receivedPayments: PaymentReceivedMsg[] = [];
   private failedPayments: PaymentFailedMsg[] = [];
+  private logs: LogMsg[] = [];
 
   private started = false;
 
@@ -119,6 +123,17 @@ class RnLdkImplementation {
     // TODO: figure out what to do with it
     console.warn('payment failed:', event);
     this.failedPayments.push(event);
+  }
+
+  /**
+   * Caled by native code when LDK passes log message.
+   * Should not be called directly.
+   *
+   * @param event
+   */
+  _log(event: LogMsg) {
+    console.warn('log:', event);
+    this.logs.push(event);
   }
 
   /**
@@ -705,8 +720,8 @@ const RnLdk = new RnLdkImplementation();
 
 const eventEmitter = new NativeEventEmitter(NativeModules.EventEmitter);
 
-eventEmitter.addListener(MARKER_LOG, (event) => {
-  console.log('log: ' + JSON.stringify(event));
+eventEmitter.addListener(MARKER_LOG, (event: LogMsg) => {
+  RnLdk._log(event);
 });
 
 eventEmitter.addListener(MARKER_REGISTER_OUTPUT, (event: RegisterOutputMsg) => {
