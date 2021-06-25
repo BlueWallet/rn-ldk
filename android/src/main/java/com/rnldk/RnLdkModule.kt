@@ -500,6 +500,11 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun listUsableChannels(promise: Promise) {
+    if (channel_manager == null) {
+      promise.reject("Channel manager not inited");
+      return;
+    }
+
     val channels = channel_manager?.list_usable_channels();
 
     var jsonArray = "[";
@@ -536,6 +541,10 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun listChannels(promise: Promise) {
+    if (channel_manager == null) {
+      promise.reject("Channel manager not inited");
+      return;
+    }
     val channels = channel_manager?.list_channels();
     var jsonArray = "[";
     var first = true;
