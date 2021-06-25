@@ -405,6 +405,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       val params = Arguments.createMap();
       params.putString("payment_hash", byteArrayToHex(event.payment_hash));
       params.putString("payment_secret", byteArrayToHex(event.payment_secret));
+      params.putString("payment_preimage", byteArrayToHex(event.payment_preimage));
       params.putString("amt", event.amt.toString());
       this.sendEvent(MARKER_PAYMENT_RECEIVED, params);
     }
