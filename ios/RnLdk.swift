@@ -416,6 +416,11 @@ class RnLdk: NSObject {
     
     @objc
     func listUsableChannels(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+        if (channel_manager == nil) {
+            reject("Channel manager is not initted");
+            return;
+        }
+        
         let rawChannels = channel_manager?.list_usable_channels() ?? []
         var jsonArray = "[";
         var first = true;
@@ -446,6 +451,11 @@ class RnLdk: NSObject {
     
     @objc
     func listChannels(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+        if (channel_manager == nil) {
+            reject("Channel manager is not initted");
+            return;
+        }
+        
         let rawChannels = channel_manager?.list_channels() ?? []
         var jsonArray = "[";
         var first = true;
