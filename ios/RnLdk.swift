@@ -548,6 +548,7 @@ func handleEvent(event: Event) {
         _sendEvent(eventName: MARKER_PAYMENT_RECEIVED, eventBody: [
             "payment_hash": bytesToHex(bytes: paymentReceivedEvent.getPayment_hash()),
             "payment_secret": bytesToHex(bytes: paymentReceivedEvent.getPayment_secret()),
+            "payment_preimage": bytesToHex(bytes: paymentReceivedEvent.getPayment_preimage()),
             "amt": String(paymentReceivedEvent.getAmt()),
         ]);
         return;
