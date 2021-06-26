@@ -133,7 +133,7 @@ class RnLdkImplementation {
    * @param event
    */
   _log(event: LogMsg) {
-    console.warn('log:', event);
+    console.log('log:', event);
     this.logs.push(event);
   }
 

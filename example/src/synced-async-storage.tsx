@@ -86,7 +86,7 @@ export default class SyncedAsyncStorage {
 
   async setItem(key: string, value: string) {
     value = this.encrypt(value);
-    await AsyncStorage.setItem(key, value);
+    await AsyncStorage.setItem(this.namespace + '_' + key, value);
     const newSeqNum = await this.setItemRemote(key, value);
     const localSeqNum = await this.getLocalSeqNum();
     if (+localSeqNum > +newSeqNum) {
@@ -102,7 +102,7 @@ export default class SyncedAsyncStorage {
   }
 
   async getItem(key: string) {
-    return this.decrypt(await AsyncStorage.getItem(key));
+    return this.decrypt(await AsyncStorage.getItem(this.namespace + '_' + key));
   }
 
   async getAllKeysRemote(): Promise<string[]> {
@@ -112,7 +112,7 @@ export default class SyncedAsyncStorage {
   }
 
   async getAllKeys(): Promise<string[]> {
-    return AsyncStorage.getAllKeys();
+    return (await AsyncStorage.getAllKeys()).filter((key) => key.startsWith(this.namespace + '_')).map((key) => key.replace(this.namespace + '_', ''));
   }
 
   async getLocalSeqNum() {
@@ -132,7 +132,7 @@ export default class SyncedAsyncStorage {
 
       for (const key of await this.getAllKeysRemote()) {
         const value = await this.getItemRemote(key);
-        await AsyncStorage.setItem(key, value);
+        await AsyncStorage.setItem(this.namespace + '_' + key, value);
         console.log('synced', key, 'to', value);
       }
 
