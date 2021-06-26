@@ -434,7 +434,7 @@ class RnLdk: NSObject {
             channelObject += "\"inbound_capacity_msat\":" + String(it.get_inbound_capacity_msat()) + ",";
             channelObject += "\"outbound_capacity_msat\":" + String(it.get_outbound_capacity_msat()) + ",";
             channelObject += "\"short_channel_id\":" + "\"" + String(short_channel_id) + "\",";
-            channelObject += "\"is_live\":" + (it.get_is_usable() ? "true" : "false") + ",";
+            channelObject += "\"is_usable\":" + (it.get_is_usable() ? "true" : "false") + ",";
             channelObject += "\"remote_network_id\":" + "\"" + bytesToHex(bytes: it.get_remote_network_id()) + "\",";
             channelObject += "\"user_id\":" + String(it.get_user_id());
             channelObject += "}";
@@ -469,7 +469,7 @@ class RnLdk: NSObject {
             channelObject += "\"inbound_capacity_msat\":" + String(it.get_inbound_capacity_msat()) + ",";
             channelObject += "\"outbound_capacity_msat\":" + String(it.get_outbound_capacity_msat()) + ",";
             channelObject += "\"short_channel_id\":" + "\"" + String(short_channel_id) + "\",";
-            channelObject += "\"is_live\":" + (it.get_is_usable() ? "true" : "false") + ",";
+            channelObject += "\"is_usable\":" + (it.get_is_usable() ? "true" : "false") + ",";
             channelObject += "\"remote_network_id\":" + "\"" + bytesToHex(bytes: it.get_remote_network_id()) + "\",";
             channelObject += "\"user_id\":" + String(it.get_user_id());
             channelObject += "}";
