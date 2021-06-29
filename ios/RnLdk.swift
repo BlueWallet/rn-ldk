@@ -504,7 +504,7 @@ class RnLdk: NSObject {
     
     @objc
     func fireAnEvent(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
-        _sendEvent(eventName: "log", eventBody: ["txid": "this is", "script_pubkey": "a debug event"]);
+        _sendEvent(eventName: MARKER_LOG, eventBody: ["line": "test"]);
         resolve(true);
     }
 }
