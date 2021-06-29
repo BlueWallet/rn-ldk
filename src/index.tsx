@@ -72,10 +72,10 @@ class RnLdkImplementation {
   private registeredTxs: RegisterTxMsg[] = [];
   private fundingsReady: FundingGenerationReadyMsg[] = [];
 
-  private sentPayments: PaymentSentMsg[] = [];
-  private receivedPayments: PaymentReceivedMsg[] = [];
-  private failedPayments: PaymentFailedMsg[] = [];
-  private logs: LogMsg[] = [];
+  sentPayments: PaymentSentMsg[] = [];
+  receivedPayments: PaymentReceivedMsg[] = [];
+  failedPayments: PaymentFailedMsg[] = [];
+  logs: LogMsg[] = [];
 
   private started = false;
 
@@ -371,6 +371,11 @@ class RnLdkImplementation {
     return RnLdkNative.closeChannelCooperatively(channelIdHex);
   }
 
+  async closeChannelForce(channelIdHex: string) {
+    if (!this.started) throw new Error('LDK not yet started');
+    return RnLdkNative.closeChannelForce(channelIdHex);
+  }
+
   /**
    * @returns node pubkey
    */
@@ -538,6 +543,10 @@ class RnLdkImplementation {
     this.storage = storage;
   }
 
+  getStorage() {
+    return this.storage;
+  }
+
   /**
    * Wrapper for provided storage
    *
@@ -679,11 +688,7 @@ class RnLdkImplementation {
   }
 
   static assertEquals(a: any, b: any) {
-    if (a !== b) throw new Error('Assertion failed that ' + a + ' equals ' + b);
-  }
-
-  static assertNotEquals(a: any, b: any) {
-    if (a === b) throw new Error('Assertion failed that ' + a + ' NOT equals ' + b);
+    if (a !== b) throw new Error('RnLdk: Assertion failed that ' + a + ' equals ' + b);
   }
 
   /**

@@ -6,8 +6,8 @@ const ENCUTF8 = require('crypto-js/enc-utf8');
 const AES = require('crypto-js/aes');
 
 export default class SyncedAsyncStorage {
-  readonly defaultBaseUrl = 'https://bytes-store.herokuapp.com';
-  readonly encryptionMarker = 'encrypted://';
+  defaultBaseUrl = 'https://bytes-store.herokuapp.com';
+  encryptionMarker = 'encrypted://';
 
   namespace: string = '';
   encryptionKey: string = '';
@@ -35,11 +35,11 @@ export default class SyncedAsyncStorage {
   }
 
   static assertEquals(a: any, b: any) {
-    if (a !== b) throw new Error('Assertion failed that ' + a + ' equals ' + b);
+    if (a !== b) throw new Error('SyncedAsyncStorage: Assertion failed that ' + a + ' equals ' + b);
   }
 
   static assertNotEquals(a: any, b: any) {
-    if (a === b) throw new Error('Assertion failed that ' + a + ' NOT equals ' + b);
+    if (a === b) throw new Error('SyncedAsyncStorage: Assertion failed that ' + a + ' NOT equals ' + b);
   }
 
   async selftest(): Promise<boolean> {
