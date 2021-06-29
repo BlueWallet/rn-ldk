@@ -9,9 +9,9 @@
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
 
-@interface EventEmitter : RCTEventEmitter <RCTBridgeModule>
+@interface ReactEventEmitter : RCTEventEmitter <RCTBridgeModule>
 
-+ (EventEmitter *)sharedInstance;
++ (ReactEventEmitter *)sharedInstance;
 - (void)sendNotification:(NSDictionary *)userInfo;
 - (void)openSettings;
 
