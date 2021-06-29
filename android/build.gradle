@@ -127,6 +127,5 @@ dependencies {
   // noinspection GradleDynamicVersion
   api 'com.facebook.react:react-native:+'
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-//  compileOnly files('libs/LDK-release.aar')
-  implementation fileTree(include: ['*.aar'], dir: 'libs')
+  compileOnly files('libs/LDK-release.aar')
 }
