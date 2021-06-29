@@ -724,7 +724,7 @@ class RnLdkImplementation {
 
 const RnLdk = new RnLdkImplementation();
 
-const eventEmitter = new NativeEventEmitter(NativeModules.EventEmitter);
+const eventEmitter = new NativeEventEmitter(NativeModules.ReactEventEmitter);
 
 eventEmitter.addListener(MARKER_LOG, (event: LogMsg) => {
   RnLdk._log(event);
