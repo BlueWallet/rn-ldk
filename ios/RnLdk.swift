@@ -577,7 +577,7 @@ func handleEvent(event: Event) {
 
 
 func _sendEvent(eventName: String, eventBody: [String: String]) {
-    EventEmitter.sharedInstance()?.sendEvent(withName: eventName, body: eventBody);
+    ReactEventEmitter.sharedInstance()?.sendEvent(withName: eventName, body: eventBody);
 }
 
 

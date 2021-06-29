@@ -6,11 +6,11 @@
 //  Copyright © 2020 BlueWallet. All rights reserved.
 //
 
-#import "EventEmitter.h"
+#import "ReactEventEmitter.h"
 
-static EventEmitter *sharedInstance;
+static ReactEventEmitter *sharedInstance;
 
-@implementation EventEmitter
+@implementation ReactEventEmitter
 
 
 RCT_EXPORT_MODULE();
@@ -19,7 +19,7 @@ RCT_EXPORT_MODULE();
     return YES;
 }
 
-+ (EventEmitter *)sharedInstance {
++ (ReactEventEmitter *)sharedInstance {
     return sharedInstance;
 }
 

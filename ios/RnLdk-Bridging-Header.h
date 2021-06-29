@@ -1,3 +1,1 @@
-#import <React/RCTBridgeModule.h>
-#import <React/RCTViewManager.h>
-#import <EventEmitter.h>
+#import <ReactEventEmitter.h>
