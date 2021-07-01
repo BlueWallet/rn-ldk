@@ -83,6 +83,8 @@ RCT_EXTERN_METHOD(setFeerate:(nonnull NSNumber)newFeerateFast
 
 RCT_EXTERN_METHOD(fireAnEvent:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(stop:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 
 
 @end

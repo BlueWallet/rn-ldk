@@ -426,18 +426,7 @@ class RnLdk: NSObject {
         var first = true;
         rawChannels.map { (rawDetails: LDKChannelDetails) ->  ChannelDetails in
             let it = ChannelDetails(pointer: rawDetails)
-            let short_channel_id = it.get_short_channel_id().getValue() ?? 0;
-            
-            var channelObject = "{";
-            channelObject += "\"channel_id\":" + "\"" + bytesToHex(bytes: it.get_channel_id()) + "\",";
-            channelObject += "\"channel_value_satoshis\":" + String(it.get_channel_value_satoshis()) + ",";
-            channelObject += "\"inbound_capacity_msat\":" + String(it.get_inbound_capacity_msat()) + ",";
-            channelObject += "\"outbound_capacity_msat\":" + String(it.get_outbound_capacity_msat()) + ",";
-            channelObject += "\"short_channel_id\":" + "\"" + String(short_channel_id) + "\",";
-            channelObject += "\"is_usable\":" + (it.get_is_usable() ? "true" : "false") + ",";
-            channelObject += "\"remote_network_id\":" + "\"" + bytesToHex(bytes: it.get_remote_network_id()) + "\",";
-            channelObject += "\"user_id\":" + String(it.get_user_id());
-            channelObject += "}";
+            let channelObject = self.channel2ChannelObject(it: it)
             
             if (!first) { jsonArray += ","; }
             jsonArray += channelObject;
@@ -461,18 +450,7 @@ class RnLdk: NSObject {
         var first = true;
         rawChannels.map { (rawDetails: LDKChannelDetails) ->  ChannelDetails in
             let it = ChannelDetails(pointer: rawDetails)
-            let short_channel_id = it.get_short_channel_id().getValue() ?? 0;
-            
-            var channelObject = "{";
-            channelObject += "\"channel_id\":" + "\"" + bytesToHex(bytes: it.get_channel_id()) + "\",";
-            channelObject += "\"channel_value_satoshis\":" + String(it.get_channel_value_satoshis()) + ",";
-            channelObject += "\"inbound_capacity_msat\":" + String(it.get_inbound_capacity_msat()) + ",";
-            channelObject += "\"outbound_capacity_msat\":" + String(it.get_outbound_capacity_msat()) + ",";
-            channelObject += "\"short_channel_id\":" + "\"" + String(short_channel_id) + "\",";
-            channelObject += "\"is_usable\":" + (it.get_is_usable() ? "true" : "false") + ",";
-            channelObject += "\"remote_network_id\":" + "\"" + bytesToHex(bytes: it.get_remote_network_id()) + "\",";
-            channelObject += "\"user_id\":" + String(it.get_user_id());
-            channelObject += "}";
+            let channelObject = self.channel2ChannelObject(it: it)
             
             if (!first) { jsonArray += ","; }
             jsonArray += channelObject;
@@ -482,6 +460,26 @@ class RnLdk: NSObject {
         
         jsonArray += "]";
         resolve(jsonArray);
+    }
+    
+    func channel2ChannelObject(it: ChannelDetails) -> String {
+        let short_channel_id = it.get_short_channel_id().getValue() ?? 0;
+        
+        var channelObject = "{";
+        channelObject += "\"channel_id\":" + "\"" + bytesToHex(bytes: it.get_channel_id()) + "\",";
+        channelObject += "\"channel_value_satoshis\":" + String(it.get_channel_value_satoshis()) + ",";
+        channelObject += "\"inbound_capacity_msat\":" + String(it.get_inbound_capacity_msat()) + ",";
+        channelObject += "\"outbound_capacity_msat\":" + String(it.get_outbound_capacity_msat()) + ",";
+        channelObject += "\"short_channel_id\":" + "\"" + String(short_channel_id) + "\",";
+        channelObject += "\"is_usable\":" + (it.get_is_usable() ? "true" : "false") + ",";
+        channelObject += "\"is_funding_locked\":" + (it.get_is_funding_locked() ? "true" : "false") + ",";
+        channelObject += "\"is_outbound\":" + (it.get_is_outbound() ? "true" : "false") + ",";
+        channelObject += "\"is_public\":" + (it.get_is_public() ? "true" : "false") + ",";
+        channelObject += "\"remote_network_id\":" + "\"" + bytesToHex(bytes: it.get_remote_network_id()) + "\",";
+        channelObject += "\"user_id\":" + String(it.get_user_id());
+        channelObject += "}";
+        
+        return channelObject;
     }
     
     @objc
@@ -505,6 +503,22 @@ class RnLdk: NSObject {
     @objc
     func fireAnEvent(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
         _sendEvent(eventName: MARKER_LOG, eventBody: ["line": "test"]);
+        resolve(true);
+    }
+    
+    
+    @objc
+    func stop(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+        channel_manager_constructor?.interrupt();
+        
+        channel_manager = nil;
+        peer_manager = nil;
+        keys_manager = nil;
+        temporary_channel_id = nil;
+        peer_handler = nil;
+        chain_monitor = nil;
+        channel_manager_constructor = nil;
+        
         resolve(true);
     }
 }
