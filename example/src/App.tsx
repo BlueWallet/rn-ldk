@@ -20,7 +20,7 @@ export default function App() {
       <Button
         onPress={async () => {
           console.warn('starting...');
-          const entropy = 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+          const entropy = '8b626e47c75f0b6db440a25564ece9b00b2119484683ac2bffaeb2eb118712e8';
 
           const syncedStorage = new SyncedAsyncStorage(entropy);
           await syncedStorage.selftest();
@@ -33,6 +33,15 @@ export default function App() {
           RnLdk.start(entropy).then(console.warn);
         }}
         title="Start"
+        color="#841584"
+      />
+
+      <Button
+        onPress={async () => {
+          console.warn('stopping...');
+          await RnLdk.stop();
+        }}
+        title="Stop"
         color="#841584"
       />
 

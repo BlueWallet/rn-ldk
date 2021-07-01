@@ -512,22 +512,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     var first = true;
     channels?.iterator()?.forEach {
-      var short_channel_id: Long = 0;
-      if (it._short_channel_id is Option_u64Z.Some) {
-        short_channel_id = (it._short_channel_id as Option_u64Z.Some).some
-      }
-
-      var channelObject = "{";
-      channelObject += "\"channel_id\":" + "\"" + byteArrayToHex(it._channel_id) + "\",";
-      channelObject += "\"channel_value_satoshis\":" + it._channel_value_satoshis + ",";
-      channelObject += "\"inbound_capacity_msat\":" + it._inbound_capacity_msat + ",";
-      channelObject += "\"outbound_capacity_msat\":" + it._outbound_capacity_msat + ",";
-      channelObject += "\"short_channel_id\":" + "\"" + short_channel_id + "\",";
-      channelObject += "\"is_usable\":" + it._is_usable + ",";
-      channelObject += "\"remote_network_id\":" + "\"" + byteArrayToHex(it._remote_network_id) + "\",";
-      channelObject += "\"user_id\":" + it._user_id;
-      channelObject += "}";
-
+      val channelObject = this.channel2channelObject(it);
 
       if (!first) jsonArray += ",";
       jsonArray += channelObject;
@@ -550,21 +535,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     var jsonArray = "[";
     var first = true;
     channels?.iterator()?.forEach {
-      var short_channel_id: Long = 0;
-      if (it._short_channel_id is Option_u64Z.Some) {
-        short_channel_id = (it._short_channel_id as Option_u64Z.Some).some
-      }
-
-      var channelObject = "{";
-      channelObject += "\"channel_id\":" + "\"" + byteArrayToHex(it._channel_id) + "\",";
-      channelObject += "\"channel_value_satoshis\":" + it._channel_value_satoshis + ",";
-      channelObject += "\"inbound_capacity_msat\":" + it._inbound_capacity_msat + ",";
-      channelObject += "\"outbound_capacity_msat\":" + it._outbound_capacity_msat + ",";
-      channelObject += "\"short_channel_id\":" + "\"" + short_channel_id + "\",";
-      channelObject += "\"is_usable\":" + it._is_usable + ",";
-      channelObject += "\"remote_network_id\":" + "\"" + byteArrayToHex(it._remote_network_id) + "\",";
-      channelObject += "\"user_id\":" + it._user_id;
-      channelObject += "}";
+      val channelObject = this.channel2channelObject(it);
 
       if (!first) jsonArray += ",";
       jsonArray += channelObject;
@@ -572,6 +543,29 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     }
     jsonArray += "]";
     promise.resolve(jsonArray);
+  }
+
+  private fun channel2channelObject(it: ChannelDetails): String {
+    var short_channel_id: Long = 0;
+    if (it._short_channel_id is Option_u64Z.Some) {
+      short_channel_id = (it._short_channel_id as Option_u64Z.Some).some
+    }
+
+    var channelObject = "{";
+    channelObject += "\"channel_id\":" + "\"" + byteArrayToHex(it._channel_id) + "\",";
+    channelObject += "\"channel_value_satoshis\":" + it._channel_value_satoshis + ",";
+    channelObject += "\"inbound_capacity_msat\":" + it._inbound_capacity_msat + ",";
+    channelObject += "\"outbound_capacity_msat\":" + it._outbound_capacity_msat + ",";
+    channelObject += "\"short_channel_id\":" + "\"" + short_channel_id + "\",";
+    channelObject += "\"is_usable\":" + it._is_usable + ",";
+    channelObject += "\"is_funding_locked\":" + it._is_funding_locked + ",";
+    channelObject += "\"is_outbound\":" + it._is_outbound + ",";
+    channelObject += "\"is_public\":" + it._is_public + ",";
+    channelObject += "\"remote_network_id\":" + "\"" + byteArrayToHex(it._remote_network_id) + "\",";
+    channelObject += "\"user_id\":" + it._user_id;
+    channelObject += "}";
+
+    return channelObject;
   }
 
   @ReactMethod
@@ -598,6 +592,22 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     val params = Arguments.createMap()
     params.putString("line", "test");
     this.sendEvent(MARKER_LOG, params);
+    promise.resolve(true);
+  }
+
+  @ReactMethod
+  fun stop(promise: Promise) {
+    println("ReactNativeLDK: stop")
+    channel_manager_constructor?.interrupt();
+
+    nio_peer_handler = null;
+    channel_manager = null;
+    peer_manager = null;
+    chain_monitor = null;
+    temporary_channel_id = null;
+    keys_manager = null;
+    channel_manager_constructor = null;
+
     promise.resolve(true);
   }
 

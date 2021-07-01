@@ -390,7 +390,6 @@ class RnLdkImplementation {
   async listUsableChannels() {
     if (!this.started) throw new Error('LDK not yet started');
     const str = await RnLdkNative.listUsableChannels();
-    console.log(str);
     return JSON.parse(str);
   }
 
@@ -584,6 +583,10 @@ class RnLdkImplementation {
 
   async addInvoice(amtMsat: number, description: string = '') {
     return RnLdkNative.addInvoice(amtMsat, description);
+  }
+
+  async stop() {
+    return RnLdkNative.stop();
   }
 
   private async decodeInvoice(bolt11: string): Promise<any> {
