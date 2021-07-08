@@ -189,10 +189,12 @@ class RnLdkImplementation {
    * @param event
    */
   async _broadcast(event: BroadcastMsg) {
-    return fetch('https://blockstream.info/api/tx', {
+    const response = await fetch('https://blockstream.info/api/tx', {
       method: 'POST',
       body: event.txhex,
     });
+
+    return await response.text();
   }
 
   private reverseTxid(hex: string): string {
@@ -743,7 +745,7 @@ eventEmitter.addListener(MARKER_REGISTER_TX, (event: RegisterTxMsg) => {
 
 eventEmitter.addListener(MARKER_BROADCAST, (event: BroadcastMsg) => {
   console.warn('broadcast: ' + event.txhex);
-  RnLdk._broadcast(event);
+  RnLdk._broadcast(event).then(console.log);
 });
 
 eventEmitter.addListener(MARKER_PERSIST, (event: PersistMsg) => {
