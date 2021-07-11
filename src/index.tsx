@@ -631,13 +631,13 @@ class RnLdkImplementation {
     for (const channel of usableChannels) {
       console.log('parseInt(decoded.millisatoshis, 10) = ', parseInt(decoded.millisatoshis, 10));
       if (parseInt(channel.outbound_capacity_msat, 10) >= parseInt(decoded.millisatoshis, 10)) {
-        if (channel.remote_network_id === decoded.payeeNodeKey) {
+        if (channel.remote_node_id === decoded.payeeNodeKey) {
           // we are paying to our direct neighbor
           return RnLdkNative.sendPayment(decoded.payeeNodeKey, payment_hash, payment_secret, channel.short_channel_id, parseInt(decoded.millisatoshis, 10), min_final_cltv_expiry, '');
         }
 
         shortChannelId = channel.short_channel_id;
-        weAreGonaRouteThrough = channel.remote_network_id;
+        weAreGonaRouteThrough = channel.remote_node_id;
         break;
       }
     }
