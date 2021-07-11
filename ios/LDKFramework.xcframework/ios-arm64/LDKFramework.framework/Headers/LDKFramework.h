@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "lightning.h"
+#import "ldk_net.h"
 
 //! Project version number for LDKFramework.
 FOUNDATION_EXPORT double LDKFrameworkVersionNumber;

@@ -8,6 +8,7 @@ framework module LDKFramework {
     header "ldk_rust_types.h"
     header "lightning.h"
     header "ldk_ver.h"
+    header "ldk_net.h"
     link "libldk.a"
     export *
   }

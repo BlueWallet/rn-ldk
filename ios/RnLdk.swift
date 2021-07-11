@@ -173,7 +173,7 @@ class RnLdk: NSObject {
     
     @objc
     func getVersion(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
-        resolve("0.0.18")
+        resolve("0.0.99.2")
     }	
     
     func getName() -> String {
@@ -475,7 +475,7 @@ class RnLdk: NSObject {
         channelObject += "\"is_funding_locked\":" + (it.get_is_funding_locked() ? "true" : "false") + ",";
         channelObject += "\"is_outbound\":" + (it.get_is_outbound() ? "true" : "false") + ",";
         channelObject += "\"is_public\":" + (it.get_is_public() ? "true" : "false") + ",";
-        channelObject += "\"remote_network_id\":" + "\"" + bytesToHex(bytes: it.get_remote_network_id()) + "\",";
+        channelObject += "\"remote_node_id\":" + "\"" + bytesToHex(bytes: it.get_counterparty().get_node_id()) + "\",";
         channelObject += "\"user_id\":" + String(it.get_user_id());
         channelObject += "}";
         
