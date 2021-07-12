@@ -55,7 +55,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun getVersion(promise: Promise) {
-    promise.resolve("0.0.98.4");
+    promise.resolve("0.0.99.1");
   }
 
   @ReactMethod
@@ -561,7 +561,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     channelObject += "\"is_funding_locked\":" + it._is_funding_locked + ",";
     channelObject += "\"is_outbound\":" + it._is_outbound + ",";
     channelObject += "\"is_public\":" + it._is_public + ",";
-    channelObject += "\"remote_network_id\":" + "\"" + byteArrayToHex(it._remote_network_id) + "\",";
+    channelObject += "\"remote_node_id\":" + "\"" + byteArrayToHex(it._counterparty._node_id) + "\",";
     channelObject += "\"user_id\":" + it._user_id;
     channelObject += "}";
 
