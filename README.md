@@ -2,7 +2,6 @@
 
 Lightweight lightning node for React Native
 
-
 ### Introducing brand-new Lightning implementation running on mobile, both iOS and Android!
 
 Powered by **Lightning Dev Kit**, a flexible lightning implementation written in Rust.
@@ -24,7 +23,14 @@ Binaries come from:
 
 A thin wrapper layer is implemented in Kotlin & Swift to provide convenient better-abstracted methods to Javascript.
 Javascript part itself has *zero dependencies*, as a drawback some functions have to be provided externally (optional,
-as rn-ldk is shipped with api-based fallback)
+as rn-ldk is shipped with API-based fallback)
+
+Data is stored on the side of RN, for this purpose we provide AsyncStorage to RnLdk, but anything conforming
+to AsyncStorage interface will work.
+
+Mainnet only.
+
+Example React Native project is bundled with this repo (as a playground for testing).
 
 ## Installation
 
@@ -39,12 +45,12 @@ import RnLdk from "rn-ldk";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // start the node!
-const entropy = 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+const entropy = 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'; // change that
 RnLdk.setStorage(AsyncStorage);
 RnLdk.setRefundAddressScript('76a91419129d53e6319baf19dba059bead166df90ab8f588ac'); // 13HaCAB4jf7FYSZexJxoczyDDnutzZigjS
 RnLdk.start(entropy).then(console.warn);
 
-// lets create a channel.
+// lets create a channel
 
 // connect to a peer first:
 RnLdk.connectPeer('02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1', '165.227.95.104', 9735).then(console.warn); // lnd1.bluewallet.io
@@ -55,7 +61,7 @@ const address = await RnLdk.openChannelStep1('02e89ca9e8da72b33d896bae51d20e7e66
 // provide txhex to finalizing method:
 RnLdk.openChannelStep2(text).then(console.warn);
 
-// if all goes well, txhex is broadcasted and after tx get enough confirmations channel will be usable!
+// if all goes well, txhex is broadcasted and after tx gets enough confirmations channel will be usable!
 
 // make sure your peer is connected:
 RnLdk.listPeers().then(console.warn);
