@@ -374,7 +374,7 @@ class RnLdk: NSObject {
     }
     
     @objc
-    func openChannelStep1(_ pubkey: String, channelValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func openChannelStep1(_ pubkey: String, channelValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         temporary_channel_id = nil;
         let peer_node_pubkey = hexStringToByteArray(pubkey);
         let userConfig = UserConfig.init();
@@ -387,7 +387,8 @@ class RnLdk: NSObject {
             resolve(true);
         } else {
             print("ReactNativeLDK: create_channel_result = false");
-            reject("openChannelStep1 failed");
+            let error = NSError(domain: "openChannelStep1", code: 1, userInfo: nil)
+            reject("openChannelStep1", "failed",  error);
         }
     }
     
