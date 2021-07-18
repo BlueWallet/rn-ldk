@@ -125,7 +125,7 @@ let channel_manager_persister = MyChannelManagerPersister();
 class RnLdk: NSObject {
     
     @objc
-    func start(_ entropyHex: String, blockchainTipHeight: NSNumber, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func start(_ entropyHex: String, blockchainTipHeight: NSNumber, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         
         chain_monitor = ChainMonitor.init(chain_source: filter, broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister);
         
@@ -150,7 +150,7 @@ class RnLdk: NSObject {
             do {
                 channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: serializedChannelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chain_monitor!, filter: filter, router: nil, tx_broadcaster: broadcaster, logger: logger)
             } catch {
-                reject("\(error)");
+                reject("start", "Failed",  error);
                 return;
             }
         } else {
@@ -172,7 +172,7 @@ class RnLdk: NSObject {
     
     
     @objc
-    func getVersion(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func getVersion(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         resolve("0.0.99.2")
     }	
     
@@ -181,9 +181,10 @@ class RnLdk: NSObject {
     }
     
     @objc
-    func getRelevantTxids(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func getRelevantTxids(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         if (channel_manager == nil) {
-            reject("Channel manager is not initted");
+            let error = NSError(domain: "Channel manager", code: 1, userInfo: nil)
+            reject("Channel manager", "Not Initialized",  error);
             return;
         }
         
@@ -205,14 +206,14 @@ class RnLdk: NSObject {
     }
     
     @objc
-    func transactionUnconfirmed(_ txidHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func transactionUnconfirmed(_ txidHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         channel_manager!.as_Confirm().transaction_unconfirmed(txid: hexStringToByteArray(txidHex));
         chain_monitor!.as_Confirm().transaction_unconfirmed(txid: hexStringToByteArray(txidHex));
         resolve(true);
     }
     
     @objc
-    func transactionConfirmed(_ headerHex: String, height: NSNumber, txPos: NSNumber, transactionHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func transactionConfirmed(_ headerHex: String, height: NSNumber, txPos: NSNumber, transactionHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         let txData = LDKC2Tuple_usizeTransactionZ(a: UInt(truncating: txPos), b: Bindings.new_LDKTransaction(array: hexStringToByteArray(transactionHex)))
         let txarray = [txData];
         channel_manager!.as_Confirm().transactions_confirmed(header: hexStringToByteArray(headerHex), txdata: txarray, height: UInt32(truncating: height))
@@ -221,25 +222,26 @@ class RnLdk: NSObject {
     }
     
     @objc
-    func updateBestBlock(_ headerHex: String, height: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func updateBestBlock(_ headerHex: String, height: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         channel_manager!.as_Confirm().best_block_updated(header: hexStringToByteArray(headerHex), height: UInt32(truncating: height));
         chain_monitor!.as_Confirm().best_block_updated(header: hexStringToByteArray(headerHex), height: UInt32(truncating: height));
         resolve(true);
     }
     
     @objc
-    func connectPeer(_ pubkeyHex: String, hostname: String, port: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func connectPeer(_ pubkeyHex: String, hostname: String, port: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         print("ReactNativeLDK: connecting to peer " + pubkeyHex);
         let result = peer_handler!.connect(address: hostname, port: Int32(truncating: port),  theirNodeId: hexStringToByteArray(pubkeyHex));
         if result == nil {
-            reject("connectPeer exception");
+            let error = NSError(domain: "connectPeer", code: 1, userInfo: nil)
+            reject("connectPeer", "Exception",  error);
         } else {
             resolve(true);
         }
     }
     
     @objc
-    func sendPayment(_ destPubkeyHex: String, paymentHashHex: String, paymentSecretHex: String, shortChannelId: String, paymentValueMsat: NSNumber, finalCltvValue: NSNumber, LdkRoutesJsonArrayString: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func sendPayment(_ destPubkeyHex: String, paymentHashHex: String, paymentSecretHex: String, shortChannelId: String, paymentValueMsat: NSNumber, finalCltvValue: NSNumber, LdkRoutesJsonArrayString: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         print("ReactNativeLDK: destPubkeyHex " + destPubkeyHex);
         print("ReactNativeLDK: paymentHashHex " + paymentHashHex);
         print("ReactNativeLDK: paymentSecretHex " + paymentSecretHex);
@@ -290,7 +292,8 @@ class RnLdk: NSObject {
                     }
                 }
             } catch let error as NSError {
-                reject("Failed to load: \(error.localizedDescription)")
+                let error = NSError(domain: "sendPayment", code: 1, userInfo: nil)
+                reject("sendPayment", "Failed to load",  error);
             }
         }
         
@@ -306,25 +309,28 @@ class RnLdk: NSObject {
         if payment_res.isOk() {
             resolve(true);
         } else {
-            reject("sendPayment failed");
+            let error = NSError(domain: "sendPayment", code: 1, userInfo: nil)
+            reject("sendPayment", "Failed",  error);
         }
     }
     
     @objc
-    func addInvoice(_ amtMsat: NSNumber, description: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func addInvoice(_ amtMsat: NSNumber, description: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         let invoiceResult = Bindings.createInvoiceFromChannelManager(channelManager: channel_manager!, keysManager: keys_manager!.as_KeysInterface(), network: LDKCurrency_Bitcoin, amountMsat: UInt64(truncating: amtMsat), description: description)
         
         if let invoice = invoiceResult.getValue() {
             resolve(invoice.to_str(o: invoice))
         } else {
-            reject("addInvoice failed");
+            let error = NSError(domain: "addInvoice", code: 1, userInfo: nil)
+            reject("addInvoice", "Failed", error);
         }
     }
     
     @objc
-    func listPeers(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func listPeers(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         if peer_manager == nil {
-            reject("no peer manager inited");
+            let error = NSError(domain: "listPeers", code: 1, userInfo: nil)
+            reject("lostPeers", "No peer manager initialized",  error);
             return;
         }
         
@@ -345,31 +351,34 @@ class RnLdk: NSObject {
     
     
     @objc
-    func getNodeId(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func getNodeId(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         if let nodeId = channel_manager?.get_our_node_id() {
             resolve(bytesToHex(bytes: nodeId))
         } else {
-            reject("getNodeId failed");
+            let error = NSError(domain: "getNodeId", code: 1, userInfo: nil)
+            reject("getNodeId", "Exception",  error)
         }
     }
     
     @objc
-    func closeChannelCooperatively(_ channelIdHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func closeChannelCooperatively(_ channelIdHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         let close_result = channel_manager!.close_channel(channel_id: hexStringToByteArray(channelIdHex))
         if (close_result.isOk()) {
             resolve(true);
         } else {
-            reject("closeChannelCooperatively failed");
+            let error = NSError(domain: "closeChannelCooperatively", code: 1, userInfo: nil)
+            reject("closeChannelCooperatively", "Failed",  error);
         }
     }
     
     @objc
-    func closeChannelForce(_ channelIdHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func closeChannelForce(_ channelIdHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         let close_result = channel_manager!.force_close_channel(channel_id: hexStringToByteArray(channelIdHex));
         if (close_result.isOk()) {
             resolve(true);
         } else {
-            reject("closeChannelForce failed");
+            let error = NSError(domain: "closeChannelForce", code: 1, userInfo: nil)
+            reject("closeChannelForce", "Failed",  error);
         }
     }
     
@@ -388,13 +397,16 @@ class RnLdk: NSObject {
         } else {
             print("ReactNativeLDK: create_channel_result = false");
             let error = NSError(domain: "openChannelStep1", code: 1, userInfo: nil)
-            reject("openChannelStep1", "failed",  error);
+            reject("openChannelStep1", "Failed",  error);
         }
     }
     
     @objc
-    func openChannelStep2(_ txhex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
-        if (temporary_channel_id == nil) { return reject("openChannelStep2 failed: channel opening is not initiated..?"); }
+    func openChannelStep2(_ txhex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        if (temporary_channel_id == nil) {
+            let error = NSError(domain: "openChannelStep2", code: 1, userInfo: nil)
+            return reject("openChannelStep2", "Not initialized",  error);
+        }
         
         let funding_res = channel_manager!.funding_transaction_generated(temporary_channel_id: temporary_channel_id!, funding_transaction: hexStringToByteArray(txhex));
         // funding_transaction_generated should only generate an error if the
@@ -402,7 +414,8 @@ class RnLdk: NSObject {
         // closed the channel on us):
         if !funding_res.isOk() {
             print("ReactNativeLDK: funding_res = false");
-            reject("openChannelStep2 failed");
+            let error = NSError(domain: "openChannelStep2", code: 1, userInfo: nil)
+            reject("openChannelStep2", "Failed",  error);
             return;
         }
         
@@ -416,9 +429,10 @@ class RnLdk: NSObject {
     }
     
     @objc
-    func listUsableChannels(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func listUsableChannels(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         if (channel_manager == nil) {
-            reject("Channel manager is not initted");
+            let error = NSError(domain: "listUsableChannels", code: 1, userInfo: nil)
+            reject("listUsableChannels", "Channel manager not initialized",  error);
             return;
         }
         
@@ -440,9 +454,10 @@ class RnLdk: NSObject {
     }
     
     @objc
-    func listChannels(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func listChannels(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         if (channel_manager == nil) {
-            reject("Channel manager is not initted");
+            let error = NSError(domain: "listChannels", code: 1, userInfo: nil)
+            reject("listChannels", "Channel Manager not initialized",  error);
             return;
         }
         
@@ -484,17 +499,25 @@ class RnLdk: NSObject {
     }
     
     @objc
-    func setRefundAddressScript(_ refundAddressScriptHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func setRefundAddressScript(_ refundAddressScriptHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         refund_address_script = refundAddressScriptHex;
         resolve(true);
     }
     
     @objc
-    func setFeerate(_ newFeerateFast: NSNumber, newFeerateMedium: NSNumber, newFeerateSlow: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
-        if (Int(truncating: newFeerateFast) < 300) { return reject("newFeerateFast is too small"); }
-        if (Int(truncating: newFeerateMedium) < 300) { return reject("newFeerateMedium is too small"); }
-        if (Int(truncating: newFeerateSlow) < 300) { return reject("newFeerateSlow is too small"); }
-        
+    func setFeerate(_ newFeerateFast: NSNumber, newFeerateMedium: NSNumber, newFeerateSlow: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        if (Int(truncating: newFeerateFast) < 300) {
+            let error = NSError(domain: "newFeerateFast", code: 1, userInfo: nil)
+            return reject("newFeerateFast", "Too Small",  error);
+        }
+        if (Int(truncating: newFeerateMedium) < 300) {
+            let error = NSError(domain: "newFeerateMedium", code: 1, userInfo: nil)
+            return reject("newFeerateMedium", "Too Small",  error);
+        }
+        if (Int(truncating: newFeerateSlow) < 300) {
+            let error = NSError(domain: "newFeerateSlow", code: 1, userInfo: nil)
+            return reject("newFeerateSlow", "Too Small",  error);
+        }
         feerate_fast = Int(truncating: newFeerateFast);
         feerate_medium = Int(truncating: newFeerateMedium);
         feerate_slow = Int(truncating: newFeerateSlow);
@@ -502,14 +525,14 @@ class RnLdk: NSObject {
     }
     
     @objc
-    func fireAnEvent(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func fireAnEvent(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         _sendEvent(eventName: MARKER_LOG, eventBody: ["line": "test"]);
         resolve(true);
     }
     
     
     @objc
-    func stop(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseResolveBlock) {
+    func stop(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         channel_manager_constructor?.interrupt();
         
         channel_manager = nil;
