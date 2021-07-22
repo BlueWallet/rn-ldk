@@ -588,7 +588,6 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun fireAnEvent(promise: Promise) {
-    println("ReactNativeLDK: " + "broadcaster sends an event asking to broadcast some txhex...")
     val params = Arguments.createMap()
     params.putString("line", "test");
     this.sendEvent(MARKER_LOG, params);

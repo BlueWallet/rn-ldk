@@ -159,10 +159,6 @@ export default function App() {
             // that should also work when RnLdk is started: `await RnLdk.getStorage().selftest();`
 
             await RnLdk.selftest();
-            RnLdk.logs = [];
-            await RnLdk.fireAnEvent();
-            await new Promise((resolve) => setTimeout(resolve, 500)); // sleep
-            if (!RnLdk.logs.find((el) => el.line === 'test')) throw new Error('Cant find test log event: ' + JSON.stringify(RnLdk.logs));
             // @ts-ignore
             alert('ok');
           } catch (error) {
