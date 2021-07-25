@@ -99,6 +99,7 @@ class RnLdkImplementation {
   _paymentSent(event: PaymentSentMsg) {
     // TODO: figure out what to do with it
     console.warn('payment sent:', event);
+    this.logToGeneralLog('payment sent:', event);
     this.sentPayments.push(event);
   }
 
@@ -111,6 +112,7 @@ class RnLdkImplementation {
   _paymentReceived(event: PaymentReceivedMsg) {
     // TODO: figure out what to do with it
     console.warn('payment received:', event);
+    this.logToGeneralLog('payment received:', event);
     this.receivedPayments.push(event);
   }
 
@@ -123,6 +125,7 @@ class RnLdkImplementation {
   _paymentFailed(event: PaymentFailedMsg) {
     // TODO: figure out what to do with it
     console.warn('payment failed:', event);
+    this.logToGeneralLog('payment failed:', event);
     this.failedPayments.push(event);
   }
 
@@ -133,8 +136,18 @@ class RnLdkImplementation {
    * @param event
    */
   _log(event: LogMsg) {
-    console.log('log:', event);
+    console.log('ldk log:', event);
     this.logs.push(event);
+  }
+
+  logToGeneralLog(...args: any[]) {
+    const str = JSON.stringify(args);
+    console.log('js log:', str);
+    const msg: LogMsg = {
+      line: str,
+    };
+
+    this.logs.push(msg);
   }
 
   /**
@@ -145,7 +158,7 @@ class RnLdkImplementation {
    * @param event
    */
   _registerOutput(event: RegisterOutputMsg) {
-    console.log('registerOutput', event);
+    this.logToGeneralLog('registerOutput', event);
     this.registeredOutputs.push(event);
   }
 
@@ -158,12 +171,12 @@ class RnLdkImplementation {
    */
   _registerTx(event: RegisterTxMsg) {
     event.txid = this.reverseTxid(event.txid); // achtung, little-endian
-    console.log('registerTx', event);
+    this.logToGeneralLog('registerTx', event);
     this.registeredTxs.push(event);
   }
 
   _fundingGenerationReady(event: FundingGenerationReadyMsg) {
-    console.log('funding ready:', event);
+    this.logToGeneralLog('funding generation ready:', event);
     this.fundingsReady.push(event);
   }
 
@@ -189,6 +202,7 @@ class RnLdkImplementation {
    * @param event
    */
   async _broadcast(event: BroadcastMsg) {
+    this.logToGeneralLog('broadcasting', event);
     const response = await fetch('https://blockstream.info/api/tx', {
       method: 'POST',
       body: event.txhex,
@@ -220,18 +234,21 @@ class RnLdkImplementation {
    * and feeds this into to native code, if necessary.
    * Should be called periodically.
    */
-  async checkBlockchain() {
+  async checkBlockchain(progressCallback?: (progress: number) => void) {
     if (!this.started) throw new Error('LDK not yet started');
-    console.log('checkBlockchain() 1/x');
+    this.logToGeneralLog('checkBlockchain() 1/x');
+    if (progressCallback) progressCallback(1 / 8);
     await this.updateBestBlock();
 
-    console.log('checkBlockchain() 2/x');
+    this.logToGeneralLog('checkBlockchain() 2/x');
+    if (progressCallback) progressCallback(2 / 8);
     await this.updateFeerate();
 
     const confirmedBlocks: any = {};
 
     // iterating all subscriptions for confirmed txid
-    console.log('checkBlockchain() 3/x');
+    this.logToGeneralLog('checkBlockchain() 3/x');
+    if (progressCallback) progressCallback(3 / 8);
     for (const regTx of this.registeredTxs) {
       let json;
       try {
@@ -256,7 +273,8 @@ class RnLdkImplementation {
     }
 
     // iterating all scripts for spends
-    console.log('checkBlockchain() 4/x');
+    this.logToGeneralLog('checkBlockchain() 4/x');
+    if (progressCallback) progressCallback(4 / 8);
     for (const regOut of this.registeredOutputs) {
       let txs: any[] = [];
       try {
@@ -286,27 +304,31 @@ class RnLdkImplementation {
     // now, got all data packed in `confirmedBlocks[block_number][tx_position]`
     // lets feed it to LDK:
 
-    console.log('confirmedBlocks=', confirmedBlocks);
+    this.logToGeneralLog('confirmedBlocks=', confirmedBlocks);
 
-    console.log('checkBlockchain() 5/x');
+    this.logToGeneralLog('checkBlockchain() 5/x');
+    if (progressCallback) progressCallback(5 / 8);
     for (const height of Object.keys(confirmedBlocks).sort((a, b) => parseInt(a, 10) - parseInt(b, 10))) {
       for (const pos of Object.keys(confirmedBlocks[height]).sort((a, b) => parseInt(a, 10) - parseInt(b, 10))) {
         await RnLdkNative.transactionConfirmed(await this.getHeaderHexByHeight(parseInt(height, 10)), parseInt(height, 10), parseInt(pos, 10), confirmedBlocks[height][pos]);
       }
     }
 
-    console.log('checkBlockchain() 6/x');
+    this.logToGeneralLog('checkBlockchain() 6/x');
+    if (progressCallback) progressCallback(6 / 8);
     let txidArr = [];
     try {
       const jsonString = await RnLdkNative.getRelevantTxids();
-      console.warn('getRelevantTxids: jsonString=', jsonString);
+      this.logToGeneralLog('RnLdkNative.getRelevantTxids:', jsonString);
       txidArr = JSON.parse(jsonString);
     } catch (error) {
-      console.warn('getRelevantTxids:', error);
+      this.logToGeneralLog('getRelevantTxids:', error.message);
+      console.warn('getRelevantTxids:', error.message);
     }
 
     // we need to check if any of txidArr got unconfirmed, and then feed it back to LDK if they are unconf
-    console.log('checkBlockchain() 7/x');
+    this.logToGeneralLog('checkBlockchain() 7/x');
+    if (progressCallback) progressCallback(7 / 8);
     for (const txid of txidArr) {
       let confirmed = false;
       try {
@@ -320,7 +342,8 @@ class RnLdkImplementation {
       if (!confirmed) await RnLdkNative.transactionUnconfirmed(txid);
     }
 
-    console.log('checkBlockchain() done');
+    this.logToGeneralLog('checkBlockchain() done');
+    if (progressCallback) progressCallback(8 / 8);
 
     return true;
   }
@@ -350,6 +373,8 @@ class RnLdkImplementation {
     }
 
     console.warn('timeout waiting for FundingGenerationReady event');
+    this.logToGeneralLog('checkBlockchain() done');
+    ('timeout waiting for FundingGenerationReady event');
     return false;
   }
 
@@ -365,6 +390,7 @@ class RnLdkImplementation {
   async openChannelStep2(txhex: string) {
     if (!this.started) throw new Error('LDK not yet started');
     console.warn('submitting to ldk', { txhex });
+    this.logToGeneralLog('submitting to ldk', { txhex });
     return RnLdkNative.openChannelStep2(txhex);
   }
 
@@ -435,6 +461,7 @@ class RnLdkImplementation {
       }
     } catch (error) {
       console.warn('updateFeerate() failed:', error);
+      this.logToGeneralLog('updateFeerate() failed:', error);
     }
   }
 
@@ -445,6 +472,7 @@ class RnLdkImplementation {
     const response3 = await fetch('https://blockstream.info/api/block/' + hash + '/header');
     const headerHex = await response3.text();
     console.log('updateBestBlock():', { headerHex, height });
+    this.logToGeneralLog('updateBestBlock():', { headerHex, height });
     return RnLdkNative.updateBestBlock(headerHex, height);
   }
 
@@ -457,17 +485,17 @@ class RnLdkImplementation {
    * Assumes storage is provided.
    *
    * @param entropyHex 256 bit entropy, basically a private key for a node, e.g. 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-   * @param blockchainTipHeight
-   * @param blockchainTipHashHex
    *
    * @returns boolean TRUE if all went well
    */
   async start(entropyHex: string): Promise<boolean> {
     if (!this.storage) throw new Error('Storage is not yet set');
+    if (this.started) throw new Error('LDK already started');
+    this.logToGeneralLog('LDK starting...');
     this.started = true;
     const keys4monitors = (await this.getAllKeys()).filter((key: string) => key.startsWith(RnLdkImplementation.CHANNEL_PREFIX));
     const monitorHexes = [];
-    console.warn('keys4monitors=', keys4monitors);
+    this.logToGeneralLog('keys4monitors=', keys4monitors);
     for (const key of keys4monitors) {
       const hex = await this.getItem(key);
       if (hex) monitorHexes.push(hex);
@@ -479,7 +507,7 @@ class RnLdkImplementation {
     const blockchainTipHashHex = await response2.text();
 
     const serializedChannelManagerHex = (await this.getItem(RnLdkImplementation.CHANNEL_MANAGER_PREFIX)) || '';
-    console.warn('starting with', { blockchainTipHeight, blockchainTipHashHex, serializedChannelManagerHex, monitorHexes: monitorHexes.join(',') });
+    this.logToGeneralLog('starting with', { blockchainTipHeight, blockchainTipHashHex, serializedChannelManagerHex, monitorHexes: monitorHexes.join(',') });
     return RnLdkNative.start(entropyHex, blockchainTipHeight, blockchainTipHashHex, serializedChannelManagerHex, monitorHexes.join(','));
   }
 
@@ -508,12 +536,16 @@ class RnLdkImplementation {
     try {
       return JSON.parse(jsonString);
     } catch (error) {
-      console.warn(error);
+      this.logToGeneralLog(error.message);
+      console.warn(error.message);
     }
 
     return [];
   }
 
+  /**
+   * Asks native code to emit test log event, which is supposed to land in this.logs
+   */
   fireAnEvent(): Promise<boolean> {
     return RnLdkNative.fireAnEvent();
   }
@@ -584,11 +616,13 @@ class RnLdkImplementation {
   }
 
   async addInvoice(amtMsat: number, description: string = '') {
+    if (!this.started) throw new Error('LDK not yet started');
     return RnLdkNative.addInvoice(amtMsat, description);
   }
 
   async stop() {
-    return RnLdkNative.stop();
+    await RnLdkNative.stop();
+    this.started = false;
   }
 
   private async decodeInvoice(bolt11: string): Promise<any> {
@@ -602,6 +636,7 @@ class RnLdkImplementation {
 
   async sendPayment(bolt11: string, numSatoshis: number = 666): Promise<boolean> {
     if (!this.started) throw new Error('LDK not yet started');
+    this.logToGeneralLog('sendPayment():', { bolt11, numSatoshis });
     await this.updateBestBlock();
     const usableChannels = await this.listUsableChannels();
     // const usableChannels = await this.listChannels(); // FIXME debug only
@@ -616,7 +651,6 @@ class RnLdkImplementation {
     let payment_secret = '';
     let shortChannelId = '';
     let weAreGonaRouteThrough = '';
-    // console.log(decoded) ; return true;
 
     for (const tag of decoded.tags) {
       if (tag.tagName === 'payment_hash') payment_hash = tag.data;
@@ -629,7 +663,6 @@ class RnLdkImplementation {
     if (!payment_secret) throw new Error('No payment_secret');
 
     for (const channel of usableChannels) {
-      console.log('parseInt(decoded.millisatoshis, 10) = ', parseInt(decoded.millisatoshis, 10));
       if (parseInt(channel.outbound_capacity_msat, 10) >= parseInt(decoded.millisatoshis, 10)) {
         if (channel.remote_node_id === decoded.payeeNodeKey) {
           // we are paying to our direct neighbor
@@ -656,14 +689,14 @@ class RnLdkImplementation {
     try {
       const amtSat = Math.round(parseInt(decoded.millisatoshis, 10) / 1000);
       url = `http://lndhub.herokuapp.com/queryroutes/${from}/${to}/${amtSat}`;
-      console.warn('querying route via', url);
+      this.logToGeneralLog('querying route via', url);
       let responseRoute = await fetch(url);
       jsonRoutes = await responseRoute.json();
       if (jsonRoutes && jsonRoutes.routes && jsonRoutes.routes[0] && jsonRoutes.routes[0].hops) {
         for (let hop of jsonRoutes.routes[0].hops) {
           const url2 = `https://lndhub.herokuapp.com/getchaninfo/${hop.chan_id}`;
           hopFees = await (await fetch(url2)).json();
-          console.log('hopFees=', hopFees, { url2 });
+          this.logToGeneralLog('hopFees=', hopFees, { url2 });
           break;
           // breaking because we assume that outgoing chan for our routing node gona have the same fee policy
           // as our own channel with this routing node
@@ -675,11 +708,8 @@ class RnLdkImplementation {
 
     const ldkRoute = utils.lndRoutetoLdkRoute(jsonRoutes, hopFees, shortChannelId, min_final_cltv_expiry);
 
-    console.log('got route:', JSON.stringify(jsonRoutes, null, 2));
-    console.log('got LDK route:', JSON.stringify(ldkRoute, null, 2));
-
-    // return false;
-    // TODO: pass route
+    this.logToGeneralLog('got route:', JSON.stringify(jsonRoutes, null, 2));
+    this.logToGeneralLog('got LDK route:', JSON.stringify(ldkRoute, null, 2));
 
     return RnLdkNative.sendPayment(
       decoded.payeeNodeKey /* not really needed in this scenario */,
@@ -723,6 +753,13 @@ class RnLdkImplementation {
     RnLdkImplementation.assertEquals(await this.script2address('0020ff3eee58d5a55baa44dc10862ebd50bc16e4aade5501a0339c5c20c64478dc0f'), 'bc1qlulwukx454d653xuzzrza02shstwf2k725q6qvuutssvv3rcms8sarxvad');
     RnLdkImplementation.assertEquals(await this.script2address('00143ada446d4196f67e4a83a9168dd751f9c69c2f94'), 'bc1q8tdygm2pjmm8uj5r4ytgm463l8rfctu5d50yyu');
 
+    //
+
+    this.logs = [];
+    await RnLdk.fireAnEvent();
+    await new Promise((resolve) => setTimeout(resolve, 200)); // sleep
+    if (!this.logs.find((el) => el.line === 'test')) throw new Error('Cant find test log event: ' + JSON.stringify(RnLdk.logs));
+
     return true;
   }
 }
@@ -744,7 +781,6 @@ eventEmitter.addListener(MARKER_REGISTER_TX, (event: RegisterTxMsg) => {
 });
 
 eventEmitter.addListener(MARKER_BROADCAST, (event: BroadcastMsg) => {
-  console.warn('broadcast: ' + event.txhex);
   RnLdk._broadcast(event).then(console.log);
 });
 
