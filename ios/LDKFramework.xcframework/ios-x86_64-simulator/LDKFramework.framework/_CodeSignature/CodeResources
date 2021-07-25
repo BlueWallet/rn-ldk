@@ -38,11 +38,11 @@
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		NfS4DpkvIVMxAYQZKr7rytcGTiU=
+		+yoq7ojTXu4Y5PJrdu3Hy8sjBbU=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		ed+M01w3ecCJBmtLNsa5/N3wqIk=
+		/n/6ejHh3E3m0SV8mx8tNmI2Y3I=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftdoc</key>
 		<data>
@@ -50,15 +50,15 @@
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftinterface</key>
 		<data>
-		NfS4DpkvIVMxAYQZKr7rytcGTiU=
+		+yoq7ojTXu4Y5PJrdu3Hy8sjBbU=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftmodule</key>
 		<data>
-		ed+M01w3ecCJBmtLNsa5/N3wqIk=
+		/n/6ejHh3E3m0SV8mx8tNmI2Y3I=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
-		MLlCx0Wu1FpH0fSCW9RITgBPSr0=
+		ysRfaZ1XquyQTpHoNSH94McSFck=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -116,14 +116,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			8zqsNOlHNAVNDRN8a9+oMGs5dpFQ0HobyJjMonrMqfo=
+			RNLlAjM/muYFDH2FBm/HSvpg/2jK6QixK/hHHuTQoEQ=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			qx19q+BFliaQaWJhebJOKVzJOzJ6nLvBH2AsyWTe7W8=
+			sX/EycsZzrzsqdIxbABFc3xy72lcbONiiFMV951pJns=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftdoc</key>
@@ -137,21 +137,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			8zqsNOlHNAVNDRN8a9+oMGs5dpFQ0HobyJjMonrMqfo=
+			RNLlAjM/muYFDH2FBm/HSvpg/2jK6QixK/hHHuTQoEQ=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			qx19q+BFliaQaWJhebJOKVzJOzJ6nLvBH2AsyWTe7W8=
+			sX/EycsZzrzsqdIxbABFc3xy72lcbONiiFMV951pJns=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			eSKfie+1ESJgvP4dfsfHltWUBhbPmjJU6CKgXxsNSVg=
+			ynKwyaLB+TGkriFWUXYtuN3Tt7QTcF4l1EXH7RDXPVM=
 			</data>
 		</dict>
 	</dict>

@@ -1611,10 +1611,9 @@ public class Result_UnsignedChannelAnnouncementDecodeErrorZ {
   public func getValue() -> LDKFramework.UnsignedChannelAnnouncement?
   @objc deinit
 }
-public class TCPPeerHandler {
-  public init(peerManager: LDKFramework.PeerManager)
-  public func bind(address: Swift.String, port: Swift.UInt16) -> Swift.Bool
-  public func connect(address: Swift.String, port: Swift.UInt16, theirNodeId: [Swift.UInt8]) -> Swift.Bool
+@_hasMissingDesignatedInitializers public class TCPPeerHandler {
+  public func bind(address: Swift.String, port: Swift.UInt16)
+  public func connect(address: Swift.String, port: Swift.UInt16, theirNodeId: [Swift.UInt8])
   public func interrupt()
   @objc deinit
 }
