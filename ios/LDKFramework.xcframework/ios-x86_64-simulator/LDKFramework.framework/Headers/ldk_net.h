@@ -4,12 +4,13 @@
  * Initializes socket handling and spawns a background thread to handle socket
  * events and pass them to the given LDKPeerManager.
  *
- * Returns NULL on error.
+ * Returns NULL on error, otherwise an opaque pointer which should be passed as
+ * `handler` in the remaining functions.
  */
 void* init_socket_handling(const struct LDKPeerManager *NONNULL_PTR ldk_peer_manger);
 /**
  * Stop the socket handling thread and free socket handling resources for the
- * given handler, as returned by init_socket_handling.`
+ * given handler, as returned by init_socket_handling.
  */
 void interrupt_socket_handling(void* handler);
 /**
