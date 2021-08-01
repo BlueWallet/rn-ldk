@@ -551,6 +551,21 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       short_channel_id = (it._short_channel_id as Option_u64Z.Some).some
     }
 
+    var confirmations_required = 0;
+    if (it._confirmations_required is Option_u32Z.Some) {
+      confirmations_required = (it._confirmations_required as Option_u32Z.Some).some;
+    }
+
+    var force_close_spend_delay: Short = 0;
+    if (it._force_close_spend_delay is Option_u16Z.Some) {
+      force_close_spend_delay = (it._force_close_spend_delay as Option_u16Z.Some).some;
+    }
+
+    var unspendable_punishment_reserve: Long = 0;
+    if (it._unspendable_punishment_reserve is Option_u64Z.Some) {
+      unspendable_punishment_reserve = (it._unspendable_punishment_reserve as Option_u64Z.Some).some;
+    }
+
     var channelObject = "{";
     channelObject += "\"channel_id\":" + "\"" + byteArrayToHex(it._channel_id) + "\",";
     channelObject += "\"channel_value_satoshis\":" + it._channel_value_satoshis + ",";
@@ -561,7 +576,14 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     channelObject += "\"is_funding_locked\":" + it._is_funding_locked + ",";
     channelObject += "\"is_outbound\":" + it._is_outbound + ",";
     channelObject += "\"is_public\":" + it._is_public + ",";
-    channelObject += "\"remote_node_id\":" + "\"" + byteArrayToHex(it._counterparty._node_id) + "\",";
+    channelObject += "\"remote_node_id\":" + "\"" + byteArrayToHex(it._counterparty._node_id) + "\","; // @deprecated fixme
+    channelObject += "\"funding_txo_txid\":" + "\"" + byteArrayToHex(it._funding_txo._txid) + "\",";
+    channelObject += "\"funding_txo_index\":" + it._funding_txo._index + ",";
+    channelObject += "\"counterparty_unspendable_punishment_reserve\":" + it._counterparty._unspendable_punishment_reserve + ",";
+    channelObject += "\"counterparty_node_id\":" + "\"" + byteArrayToHex(it._counterparty._node_id) + "\",";
+    channelObject += "\"unspendable_punishment_reserve\":" + unspendable_punishment_reserve + ",";
+    channelObject += "\"confirmations_required\":" + confirmations_required + ",";
+    channelObject += "\"force_close_spend_delay\":" + force_close_spend_delay + ",";
     channelObject += "\"user_id\":" + it._user_id;
     channelObject += "}";
 
