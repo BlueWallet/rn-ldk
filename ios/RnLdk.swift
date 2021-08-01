@@ -530,6 +530,9 @@ class RnLdk: NSObject {
     
     func channel2ChannelObject(it: ChannelDetails) -> String {
         let short_channel_id = it.get_short_channel_id().getValue() ?? 0
+        let confirmations_required = it.get_confirmations_required().getValue() ?? 0;
+        let force_close_spend_delay = it.get_force_close_spend_delay().getValue() ?? 0;
+        let unspendable_punishment_reserve = it.get_unspendable_punishment_reserve().getValue() ?? 0;
         
         var channelObject = "{"
         channelObject += "\"channel_id\":" + "\"" + bytesToHex(bytes: it.get_channel_id()) + "\","
@@ -541,7 +544,14 @@ class RnLdk: NSObject {
         channelObject += "\"is_funding_locked\":" + (it.get_is_funding_locked() ? "true" : "false") + ","
         channelObject += "\"is_outbound\":" + (it.get_is_outbound() ? "true" : "false") + ","
         channelObject += "\"is_public\":" + (it.get_is_public() ? "true" : "false") + ","
-        channelObject += "\"remote_node_id\":" + "\"" + bytesToHex(bytes: it.get_counterparty().get_node_id()) + "\","
+        channelObject += "\"remote_node_id\":" + "\"" + bytesToHex(bytes: it.get_counterparty().get_node_id()) + "\"," // @deprecated fixme
+        channelObject += "\"funding_txo_txid\":" + "\"" + bytesToHex(bytes: it.get_funding_txo().get_txid()) + "\","
+        channelObject += "\"funding_txo_index\":" + String(it.get_funding_txo().get_index()) + ","
+        channelObject += "\"counterparty_unspendable_punishment_reserve\":" + String(it.get_counterparty().get_unspendable_punishment_reserve()) + ","
+        channelObject += "\"counterparty_node_id\":" + "\"" + bytesToHex(bytes: it.get_counterparty().get_node_id()) + "\","
+        channelObject += "\"unspendable_punishment_reserve\":" + String(unspendable_punishment_reserve) + ","
+        channelObject += "\"confirmations_required\":" + String(confirmations_required) + ","
+        channelObject += "\"force_close_spend_delay\":" + String(force_close_spend_delay) + ","
         channelObject += "\"user_id\":" + String(it.get_user_id())
         channelObject += "}"
         
