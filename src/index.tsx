@@ -525,6 +525,11 @@ class RnLdkImplementation {
     return RnLdkNative.connectPeer(pubkeyHex, hostname, port);
   }
 
+  disconnectByNodeId(pubkeyHex: string): Promise<boolean> {
+    if (!this.started) throw new Error('LDK not yet started');
+    return RnLdkNative.disconnectByNodeId(pubkeyHex);
+  }
+
   /**
    * Returns list of other lightning nodes we are connected to
    *

@@ -268,6 +268,17 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
+  fun disconnectByNodeId(pubkeyHex: String, promise: Promise) {
+    println("ReactNativeLDK: disconnecting peer " + pubkeyHex);
+    try {
+      peer_manager?.disconnect_by_node_id(hexStringToByteArray(pubkeyHex), false);
+      promise.resolve(true);
+    } catch (e: IOException) {
+      promise.reject("disconnect_by_node_id exception: " + e.message);
+    }
+  }
+
+  @ReactMethod
   fun sendPayment(destPubkeyHex: String, paymentHashHex: String, paymentSecretHex: String, shortChannelId: String, paymentValueMsat: Int, finalCltvValue: Int, LdkRoutesJsonArrayString: String, promise: Promise) {
     println("ReactNativeLDK: destPubkeyHex " + destPubkeyHex);
     println("ReactNativeLDK: paymentHashHex " + paymentHashHex);
