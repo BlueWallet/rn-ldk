@@ -276,6 +276,18 @@ class RnLdk: NSObject {
         resolve(true)
     }
     
+    
+    @objc
+    func disconnectByNodeId(_ pubkeyHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        print("ReactNativeLDK: connecting to peer " + pubkeyHex)
+        guard let peerManager = peer_manager else {
+            let error = NSError(domain: "disconnectByNodeId", code: 1, userInfo: nil)
+            return reject("disconnectByNodeId", "No peer manager",  error)
+        }
+        peerManager.disconnect_by_node_id(node_id: hexStringToByteArray(pubkeyHex), no_connection_possible: false)
+        resolve(true)
+    }
+    
     @objc
     func sendPayment(_ destPubkeyHex: String, paymentHashHex: String, paymentSecretHex: String, shortChannelId: String, paymentValueMsat: NSNumber, finalCltvValue: NSNumber, LdkRoutesJsonArrayString: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         print("ReactNativeLDK: destPubkeyHex " + destPubkeyHex)

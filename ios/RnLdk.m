@@ -28,8 +28,11 @@ RCT_EXTERN_METHOD(updateBestBlock:(NSString *)headerHex
                   resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(connectPeer:(NSString *)pubkeyHex
-                  hostname:(NSString *)pubkeyHex
+                  hostname:(NSString *)hostname
                   port:(nonnull NSNumber)port
+                  resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(disconnectByNodeId:(NSString *)pubkeyHex
                   resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 
