@@ -183,5 +183,5 @@ it('can construct 5 hops single (non-mpp) route v2', () => {
 });
 
 it('RnLdk selftest passes', async () => {
-  assert.ok(await RnLdk.selftest());
+  assert.ok(await RnLdk.selftest(true));
 });

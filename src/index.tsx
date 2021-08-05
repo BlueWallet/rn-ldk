@@ -734,7 +734,7 @@ class RnLdkImplementation {
   /**
    * self test function that is supposed to run in RN runtime to verify everything is set up correctly
    */
-  async selftest(): Promise<boolean> {
+  async selftest(skipTestEvents = false): Promise<boolean> {
     const decoded = await this.decodeInvoice(
       'lnbc2220n1psvm6rhpp53pxqkcq4j9hxjy5vtsll0rhykqzyjch2gkvlfv5mfdsyul5rnk5sdqqcqzpgsp5qwfm205gklcnf5jqnvpdl22p48adr4hkpscxedrltr7yc29tfv7s9qyyssqeff7chcx08ndxl3he8vgmy7up3z8drd7j0xn758gwkjyfk6ncqesa4hj36r26q68jfpvj0555fr77hhvhtczhh0h9rahdhgtcpj2fpgplfsqg0'
     );
@@ -759,6 +759,7 @@ class RnLdkImplementation {
     RnLdkImplementation.assertEquals(await this.script2address('00143ada446d4196f67e4a83a9168dd751f9c69c2f94'), 'bc1q8tdygm2pjmm8uj5r4ytgm463l8rfctu5d50yyu');
 
     //
+    if (skipTestEvents) return true;
 
     this.logs = [];
     await RnLdk.fireAnEvent();
