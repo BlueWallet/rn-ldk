@@ -357,6 +357,7 @@ class RnLdkImplementation {
    */
   async openChannelStep1(pubkey: string, sat: number): Promise<string | false> {
     if (!this.started) throw new Error('LDK not yet started');
+    this.logToGeneralLog(`opening channel with ${pubkey} for ${sat} sat`);
     this.fundingsReady = []; // reset it
     const result = await RnLdkNative.openChannelStep1(pubkey, sat);
     if (!result) return false;
@@ -396,11 +397,13 @@ class RnLdkImplementation {
 
   async closeChannelCooperatively(channelIdHex: string) {
     if (!this.started) throw new Error('LDK not yet started');
+    this.logToGeneralLog(`closing channel cooperatively, channel id: ${channelIdHex}`);
     return RnLdkNative.closeChannelCooperatively(channelIdHex);
   }
 
   async closeChannelForce(channelIdHex: string) {
     if (!this.started) throw new Error('LDK not yet started');
+    this.logToGeneralLog(`force-closing channel, channel id: ${channelIdHex}`);
     return RnLdkNative.closeChannelForce(channelIdHex);
   }
 
@@ -409,6 +412,7 @@ class RnLdkImplementation {
    */
   async getNodeId(): Promise<string> {
     if (!this.started) throw new Error('LDK not yet started');
+    this.logToGeneralLog('getting node id');
     return RnLdkNative.getNodeId();
   }
 
@@ -417,6 +421,7 @@ class RnLdkImplementation {
    */
   async listUsableChannels() {
     if (!this.started) throw new Error('LDK not yet started');
+    this.logToGeneralLog('listing usable channels');
     const str = await RnLdkNative.listUsableChannels();
     return JSON.parse(str);
   }
@@ -426,6 +431,7 @@ class RnLdkImplementation {
    */
   async listChannels() {
     if (!this.started) throw new Error('LDK not yet started');
+    this.logToGeneralLog('listing channels');
     const str = await RnLdkNative.listChannels();
     return JSON.parse(str);
   }
@@ -443,6 +449,7 @@ class RnLdkImplementation {
   }
 
   private async updateFeerate() {
+    this.logToGeneralLog('updating feerate');
     try {
       const response = await fetch('https://blockstream.info/api/fee-estimates');
       const json = await response.json();
@@ -466,6 +473,7 @@ class RnLdkImplementation {
   }
 
   private async updateBestBlock() {
+    this.logToGeneralLog('updating best block');
     const height = await this.getCurrentHeight();
     const response2 = await fetch('https://blockstream.info/api/block-height/' + height);
     const hash = await response2.text();
@@ -477,6 +485,7 @@ class RnLdkImplementation {
   }
 
   getVersion(): Promise<number> {
+    this.logToGeneralLog('getting version');
     return RnLdkNative.getVersion();
   }
 
@@ -522,11 +531,13 @@ class RnLdkImplementation {
    */
   connectPeer(pubkeyHex: string, hostname: string, port: number): Promise<boolean> {
     if (!this.started) throw new Error('LDK not yet started');
+    this.logToGeneralLog(`connecting to peer ${pubkeyHex}@${hostname}:${port}`);
     return RnLdkNative.connectPeer(pubkeyHex, hostname, port);
   }
 
   disconnectByNodeId(pubkeyHex: string): Promise<boolean> {
     if (!this.started) throw new Error('LDK not yet started');
+    this.logToGeneralLog(`disconnecting peer ${pubkeyHex}`);
     return RnLdkNative.disconnectByNodeId(pubkeyHex);
   }
 
@@ -537,6 +548,7 @@ class RnLdkImplementation {
    */
   async listPeers(): Promise<string[]> {
     if (!this.started) throw new Error('LDK not yet started');
+    this.logToGeneralLog(`listing peers`);
     const jsonString = await RnLdkNative.listPeers();
     try {
       return JSON.parse(jsonString);
@@ -563,10 +575,12 @@ class RnLdkImplementation {
    * @param newFeerateSlow {number} Sat/b
    */
   setFeerate(newFeerateFast: number, newFeerateMedium: number, newFeerateSlow: number): Promise<boolean> {
+    this.logToGeneralLog('setting feerate', { newFeerateFast, newFeerateMedium, newFeerateSlow });
     return RnLdkNative.setFeerate(newFeerateFast * 250, newFeerateMedium * 250, newFeerateSlow * 250);
   }
 
   setRefundAddressScript(refundAddressScriptHex: string) {
+    this.logToGeneralLog(`setting refund script hex to ${refundAddressScriptHex}`);
     return RnLdkNative.setRefundAddressScript(refundAddressScriptHex);
   }
 
@@ -593,6 +607,7 @@ class RnLdkImplementation {
    */
   async setItem(key: string, value: string) {
     if (!this.storage) throw new Error('No storage');
+    this.logToGeneralLog(`persisting ${key}`);
     console.log('::::::::::::::::: saving to disk', key, '=', value);
     return this.storage.setItem(key, value);
   }
@@ -604,6 +619,7 @@ class RnLdkImplementation {
    */
   async getItem(key: string) {
     if (!this.storage) throw new Error('No storage');
+    this.logToGeneralLog(`reading from storage ${key}`);
     console.log('::::::::::::::::: reading from disk', key);
     const ret = await this.storage.getItem(key);
     console.log('::::::::::::::::: --------------->>', JSON.stringify(ret));
@@ -622,10 +638,12 @@ class RnLdkImplementation {
 
   async addInvoice(amtMsat: number, description: string = '') {
     if (!this.started) throw new Error('LDK not yet started');
+    this.logToGeneralLog(`adding invoice for ${amtMsat} msat, decription=${description}`);
     return RnLdkNative.addInvoice(amtMsat, description);
   }
 
   async stop() {
+    this.logToGeneralLog(`stopping LDK`);
     await RnLdkNative.stop();
     this.started = false;
   }
