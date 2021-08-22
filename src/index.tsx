@@ -45,8 +45,8 @@ interface PaymentFailedMsg {
 const MARKER_PAYMENT_RECEIVED = 'payment_received';
 interface PaymentReceivedMsg {
   payment_hash: string;
-  payment_secret: string;
-  payment_preimage: string;
+  payment_secret?: string;
+  payment_preimage?: string;
   amt: string;
 }
 
