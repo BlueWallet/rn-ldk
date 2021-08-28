@@ -55,7 +55,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun getVersion(promise: Promise) {
-    promise.resolve("0.0.99.1");
+    promise.resolve("0.0.100.1");
   }
 
   @ReactMethod
@@ -151,7 +151,10 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       override fun register_output(output: WatchedOutput): Option_C2Tuple_usizeTransactionZZ {
         println("ReactNativeLDK: register_output");
         val params = Arguments.createMap()
-        params.putString("block_hash", byteArrayToHex(output._block_hash))
+        val blockHash = output._block_hash;
+        if (blockHash is ByteArray) {
+          params.putString("block_hash", byteArrayToHex(blockHash))
+        }
         params.putString("index", output._outpoint._index.toString())
         params.putString("script_pubkey", byteArrayToHex(output._script_pubkey))
         that.sendEvent(MARKER_REGISTER_OUTPUT, params);
@@ -412,11 +415,26 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     if (event is Event.PaymentReceived) {
       println("ReactNativeLDK: " + "payment received, payment_hash: " + byteArrayToHex(event.payment_hash));
-      channel_manager?.claim_funds(event.payment_preimage);
+      var paymentPreimage: ByteArray? = null;
+      var paymentSecret: ByteArray? = null;
+
+      if (event.purpose is PaymentPurpose.InvoicePayment) {
+        paymentPreimage = (event.purpose as PaymentPurpose.InvoicePayment).payment_preimage;
+        paymentSecret = (event.purpose as PaymentPurpose.InvoicePayment).payment_secret;
+        channel_manager?.claim_funds(paymentPreimage);
+      } else if (event.purpose is PaymentPurpose.SpontaneousPayment) {
+        paymentPreimage = (event.purpose as PaymentPurpose.SpontaneousPayment).spontaneous_payment;
+        channel_manager?.claim_funds(paymentPreimage);
+      }
+
       val params = Arguments.createMap();
       params.putString("payment_hash", byteArrayToHex(event.payment_hash));
-      params.putString("payment_secret", byteArrayToHex(event.payment_secret));
-      params.putString("payment_preimage", byteArrayToHex(event.payment_preimage));
+      if (paymentSecret != null) {
+        params.putString("payment_secret", byteArrayToHex(paymentSecret));
+      }
+      if (paymentPreimage != null) {
+        params.putString("payment_preimage", byteArrayToHex(paymentPreimage));
+      }
       params.putString("amt", event.amt.toString());
       this.sendEvent(MARKER_PAYMENT_RECEIVED, params);
     }
@@ -588,8 +606,14 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     channelObject += "\"is_outbound\":" + it._is_outbound + ",";
     channelObject += "\"is_public\":" + it._is_public + ",";
     channelObject += "\"remote_node_id\":" + "\"" + byteArrayToHex(it._counterparty._node_id) + "\","; // @deprecated fixme
-    channelObject += "\"funding_txo_txid\":" + "\"" + byteArrayToHex(it._funding_txo._txid) + "\",";
-    channelObject += "\"funding_txo_index\":" + it._funding_txo._index + ",";
+    val fundingTxoTxid = it._funding_txo?._txid;
+    if (fundingTxoTxid is ByteArray) {
+      channelObject += "\"funding_txo_txid\":" + "\"" + byteArrayToHex(fundingTxoTxid) + "\",";
+    }
+    val fundingTxoIndex = it._funding_txo?._index;
+    if (fundingTxoIndex != null) {
+      channelObject += "\"funding_txo_index\":" + fundingTxoIndex + ",";
+    }
     channelObject += "\"counterparty_unspendable_punishment_reserve\":" + it._counterparty._unspendable_punishment_reserve + ",";
     channelObject += "\"counterparty_node_id\":" + "\"" + byteArrayToHex(it._counterparty._node_id) + "\",";
     channelObject += "\"unspendable_punishment_reserve\":" + unspendable_punishment_reserve + ",";
