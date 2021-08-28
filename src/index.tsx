@@ -321,7 +321,7 @@ class RnLdkImplementation {
       const jsonString = await RnLdkNative.getRelevantTxids();
       this.logToGeneralLog('RnLdkNative.getRelevantTxids:', jsonString);
       txidArr = JSON.parse(jsonString);
-    } catch (error) {
+    } catch (error: any) {
       this.logToGeneralLog('getRelevantTxids:', error.message);
       console.warn('getRelevantTxids:', error.message);
     }
@@ -552,7 +552,7 @@ class RnLdkImplementation {
     const jsonString = await RnLdkNative.listPeers();
     try {
       return JSON.parse(jsonString);
-    } catch (error) {
+    } catch (error: any) {
       this.logToGeneralLog(error.message);
       console.warn(error.message);
     }
