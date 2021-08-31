@@ -23,7 +23,7 @@ var channel_manager: LDKFramework.ChannelManager?
 var peer_manager: LDKFramework.PeerManager?
 var keys_manager: LDKFramework.KeysManager?
 var temporary_channel_id: [UInt8]? = nil
-var peer_handler: SwiftSocketPeerHandler?
+var peer_handler: TCPPeerHandler?
 var chain_monitor: ChainMonitor?
 var channel_manager_constructor: ChannelManagerConstructor?
 
@@ -59,21 +59,21 @@ class MyPersister: Persist {
     override func persist_new_channel(id: OutPoint, data: ChannelMonitor) -> Result_NoneChannelMonitorUpdateErrZ {
         print("ReactNativeLDK: persist_new_channel")
         let idBytes: [UInt8] = id.to_channel_id()
-        let monitorBytes: [UInt8] = data.write(obj: data)
+        let monitorBytes: [UInt8] = data.write()
         sendEvent(eventName: MARKER_PERSIST, eventBody: ["id": bytesToHex(bytes: idBytes), "data": bytesToHex(bytes: monitorBytes)])
         
         // simplified result instantiation calls coming shortly!
-        return Result_NoneChannelMonitorUpdateErrZ()
+        return Result_NoneChannelMonitorUpdateErrZ.ok()
     }
     
     override func update_persisted_channel(id: OutPoint, update: ChannelMonitorUpdate, data: ChannelMonitor) -> Result_NoneChannelMonitorUpdateErrZ {
         print("ReactNativeLDK: update_persisted_channel")
         let idBytes: [UInt8] = id.to_channel_id()
-        let monitorBytes: [UInt8] = data.write(obj: data)
+        let monitorBytes: [UInt8] = data.write()
         sendEvent(eventName: MARKER_PERSIST, eventBody: ["id": bytesToHex(bytes: idBytes), "data": bytesToHex(bytes: monitorBytes)])
         
         // simplified result instantiation calls coming shortly!
-        return Result_NoneChannelMonitorUpdateErrZ()
+        return Result_NoneChannelMonitorUpdateErrZ.ok()
     }
 }
 
@@ -83,9 +83,9 @@ class MyChannelManagerPersister : ChannelManagerPersister, ExtendedChannelManage
     }
     
     override func persist_manager(channel_manager: ChannelManager) -> Result_NoneErrorZ {
-        let channel_manager_bytes = channel_manager.write(obj: channel_manager)
+        let channel_manager_bytes = channel_manager.write()
         sendEvent(eventName: "persist_manager", eventBody: ["channel_manager_bytes": bytesToHex(bytes: channel_manager_bytes)])
-        return Result_NoneErrorZ()
+        return Result_NoneErrorZ.ok()
     }
 }
 
@@ -108,7 +108,7 @@ class MyFilter: Filter {
         
         sendEvent(eventName: MARKER_REGISTER_OUTPUT, eventBody: ["block_hash": bytesToHex(bytes: blockHashBytes), "index": String(outputIndex), "script_pubkey": bytesToHex(bytes: scriptPubkeyBytes)])
         
-        return Option_C2Tuple_usizeTransactionZZ(value: nil)
+        return Option_C2Tuple_usizeTransactionZZ.none()
     }
 }
 
@@ -183,7 +183,7 @@ class RnLdk: NSObject {
             let error = NSError(domain: "peerManager failed", code: 1, userInfo: nil)
             return reject("start", "peerManager failed",  error)
         }
-        peer_handler = SwiftSocketPeerHandler(peerManager: peerManager)
+        peer_handler = TCPPeerHandler(peerManager: peerManager)
         
         resolve("hello ldk")
     }
@@ -191,7 +191,7 @@ class RnLdk: NSObject {
     
     @objc
     func getVersion(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        resolve("0.0.99.4")
+        resolve("0.0.100.1a")
     }	
     
     func getName() -> String {
@@ -239,8 +239,11 @@ class RnLdk: NSObject {
             let error = NSError(domain: "Channel manager", code: 1, userInfo: nil)
             return reject("Channel manager", "Not Initialized",  error)
         }
-        let txData = LDKC2Tuple_usizeTransactionZ(a: UInt(truncating: txPos), b: Bindings.new_LDKTransaction(array: hexStringToByteArray(transactionHex)))
+        let _b = Bindings.new_LDKTransactionWrapper(array: hexStringToByteArray(transactionHex)).cOpaqueStruct!
+        let txData = LDKC2Tuple_usizeTransactionZ(a: UInt(truncating: txPos), b: _b)
         let txarray = [txData]
+        // let txData = [C2Tuple_usizeTransactionZ.new(a: UInt(truncating: txPos), b: hexStringToByteArray(transactionHex)).cOpaqueStruct!]
+        
         channel_manager.as_Confirm().transactions_confirmed(header: hexStringToByteArray(headerHex), txdata: txarray, height: UInt32(truncating: height))
         chain_monitor.as_Confirm().transactions_confirmed(header: hexStringToByteArray(headerHex), txdata: txarray, height: UInt32(truncating: height))
         resolve(true)
@@ -269,7 +272,7 @@ class RnLdk: NSObject {
             let error = NSError(domain: "connectPeer", code: 1, userInfo: nil)
             return reject("connectPeer", "No connect peer",  error)
         }
-        guard let _ = peer_handler.connect(address: hostname, port: Int32(truncating: port),  theirNodeId: hexStringToByteArray(pubkeyHex)) else {
+        if (!peer_handler.connect(address: hostname, port: UInt16(truncating: port),  theirNodeId: hexStringToByteArray(pubkeyHex))) {
             let error = NSError(domain: "connectPeer", code: 1, userInfo: nil)
             return reject("connectPeer", "Exception",  error)
         }
@@ -374,7 +377,7 @@ class RnLdk: NSObject {
         let invoiceResult = Bindings.createInvoiceFromChannelManager(channelManager: channel_manager, keysManager: keys_manager.as_KeysInterface(), network: LDKCurrency_Bitcoin, amountMsat: UInt64(truncating: amtMsat), description: description)
         
         if let invoice = invoiceResult.getValue() {
-            resolve(invoice.to_str(o: invoice))
+            resolve(invoice.to_str())
         } else {
             let error = NSError(domain: "addInvoice", code: 1, userInfo: nil)
             reject("addInvoice", "Failed", error)
@@ -658,14 +661,38 @@ func handleEvent(event: Event) {
     
     if let paymentReceivedEvent = event.getValueAsPaymentReceived() {
         print("ReactNativeLDK: payment received")
-        let _ = channel_manager?.claim_funds(payment_preimage: paymentReceivedEvent.getPayment_preimage())
-        sendEvent(eventName: MARKER_PAYMENT_RECEIVED, eventBody: [
-            "payment_hash": bytesToHex(bytes: paymentReceivedEvent.getPayment_hash()),
-            "payment_secret": bytesToHex(bytes: paymentReceivedEvent.getPayment_secret()),
-            "payment_preimage": bytesToHex(bytes: paymentReceivedEvent.getPayment_preimage()),
-            "amt": String(paymentReceivedEvent.getAmt()),
-        ])
-        return
+        
+        
+        if paymentReceivedEvent.getPurpose().getValueType()! == .InvoicePayment {
+            let paymentPreimage = paymentReceivedEvent.getPurpose().getValueAsInvoicePayment()?.getPayment_preimage()
+            let paymentSecret = paymentReceivedEvent.getPurpose().getValueAsInvoicePayment()?.getPayment_secret()
+            
+            if (paymentPreimage == nil) { return }
+            if (paymentSecret == nil) { return }
+            
+            let _ = channel_manager?.claim_funds(payment_preimage: paymentPreimage!)
+            sendEvent(eventName: MARKER_PAYMENT_RECEIVED, eventBody: [
+                "payment_hash": bytesToHex(bytes: paymentReceivedEvent.getPayment_hash()),
+                "payment_secret": bytesToHex(bytes: paymentSecret!),
+                "payment_preimage": bytesToHex(bytes: paymentPreimage!),
+                "amt": String(paymentReceivedEvent.getAmt()),
+            ])
+            return
+        }
+        
+        if paymentReceivedEvent.getPurpose().getValueType()! == .SpontaneousPayment {
+            let paymentPreimage = paymentReceivedEvent.getPurpose().getValueAsSpontaneousPayment()
+        
+            if (paymentPreimage == nil) { return }
+            
+            let _ = channel_manager?.claim_funds(payment_preimage: paymentPreimage!)
+            sendEvent(eventName: MARKER_PAYMENT_RECEIVED, eventBody: [
+                "payment_hash": bytesToHex(bytes: paymentReceivedEvent.getPayment_hash()),
+                "payment_preimage": bytesToHex(bytes: paymentPreimage!),
+                "amt": String(paymentReceivedEvent.getAmt()),
+            ])
+            return
+        }
     }
     
     //

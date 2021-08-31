@@ -413,12 +413,10 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-RnLdkExample/Pods-RnLdkExample-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/LDKFramework/LDKFramework.framework/LDKFramework",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/SwiftSocket/SwiftSocket.framework/SwiftSocket",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LDKFramework.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftSocket.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
