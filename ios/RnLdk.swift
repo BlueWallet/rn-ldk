@@ -307,13 +307,13 @@ class RnLdk: NSObject {
             channel_features_arg: ChannelFeatures(),
             fee_msat_arg: UInt64(truncating: paymentValueMsat),
             cltv_expiry_delta_arg: UInt32(truncating: finalCltvValue)
-        ).cOpaqueStruct, let channel_manager = channel_manager else {
+        ), let channel_manager = channel_manager else {
             let error = NSError(domain: "sendPayment", code: 1, userInfo: nil)
             return reject("sendPayment", "cOpaqueStruct failed",  error)
         }
         // first hop:
         // (also the last one of no route provided - assuming paying to neighbor node)
-        var path: [LDKRouteHop] = [cOpaqueStruct]
+        var path: [RouteHop] = [cOpaqueStruct]
         //
         if (!LdkRoutesJsonArrayString.isEmpty) {
             // full route was provided
@@ -625,7 +625,7 @@ class RnLdk: NSObject {
 func handleEvent(event: Event) {
     if let spendableOutputEvent = event.getValueAsSpendableOutputs() {
         print("ReactNativeLDK: trying to spend output")
-        let outputs = spendableOutputEvent.getOutputs()
+        let cOutputs = spendableOutputEvent.getOutputs()
         let destinationScript = hexStringToByteArray(refund_address_script)
         guard let result = keys_manager?.spend_spendable_outputs(descriptors: outputs, outputs: [], change_destination_script: destinationScript, feerate_sat_per_1000_weight: UInt32(feerate_fast)) else {
             return
