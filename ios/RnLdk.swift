@@ -626,6 +626,7 @@ func handleEvent(event: Event) {
     if let spendableOutputEvent = event.getValueAsSpendableOutputs() {
         print("ReactNativeLDK: trying to spend output")
         let cOutputs = spendableOutputEvent.getOutputs()
+        let outputs = cOutputs.map { (o) in SpendableOutputDescriptor(pointer: o) }
         let destinationScript = hexStringToByteArray(refund_address_script)
         guard let result = keys_manager?.spend_spendable_outputs(descriptors: outputs, outputs: [], change_destination_script: destinationScript, feerate_sat_per_1000_weight: UInt32(feerate_fast)) else {
             return
