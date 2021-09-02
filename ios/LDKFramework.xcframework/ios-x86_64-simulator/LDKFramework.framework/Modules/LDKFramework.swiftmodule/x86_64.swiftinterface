@@ -64,8 +64,8 @@ import Swift
   public init(pointer: LDKFramework.LDKKeysManager)
   public init(pointer: LDKFramework.LDKKeysManager, anchor: LDKFramework.NativeTypeWrapper)
   public func derive_channel_keys(channel_value_satoshis: Swift.UInt64, params: [Swift.UInt8]) -> LDKFramework.InMemorySigner
-  public func spend_spendable_outputs(descriptors: [LDKFramework.LDKSpendableOutputDescriptor], outputs: [LDKFramework.LDKTxOut], change_destination_script: [Swift.UInt8], feerate_sat_per_1000_weight: Swift.UInt32) -> LDKFramework.Result_TransactionNoneZ
-  public func as_KeysInterface() -> LDKFramework.KeysInterface
+  public func spend_spendable_outputs(descriptors: [LDKFramework.SpendableOutputDescriptor], outputs: [LDKFramework.TxOut], change_destination_script: [Swift.UInt8], feerate_sat_per_1000_weight: Swift.UInt32) -> LDKFramework.Result_TransactionNoneZ
+  public func as_KeysInterface() -> LDKFramework.NativelyImplementedKeysInterface
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class FundingSigned : LDKFramework.NativeTypeWrapper {
@@ -239,6 +239,8 @@ import Swift
   public func getError() -> LDKFramework.LDKSecp256k1Error?
   public func getValue() -> [Swift.UInt8]?
   public class func ok(o: [Swift.UInt8]) -> LDKFramework.Result_SecretKeyErrorZ
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public class func err(e: LDKFramework.LDKSecp256k1Error) -> LDKFramework.Result_SecretKeyErrorZ
   @objc deinit
 }
@@ -253,6 +255,8 @@ import Swift
   public func getError() -> LDKFramework.InvalidShutdownScript?
   public func getValue() -> LDKFramework.ShutdownScript?
   public class func ok(o: LDKFramework.ShutdownScript) -> LDKFramework.Result_ShutdownScriptInvalidShutdownScriptZ
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public class func err(e: LDKFramework.InvalidShutdownScript) -> LDKFramework.Result_ShutdownScriptInvalidShutdownScriptZ
   @objc deinit
 }
@@ -376,9 +380,9 @@ import Swift
   public var cOpaqueStruct: LDKFramework.LDKNodeAnnouncementInfo? {
     get
   }
-  public init(features_arg: LDKFramework.NodeFeatures, last_update_arg: Swift.UInt32, rgb_arg: [Swift.UInt8], alias_arg: [Swift.UInt8], addresses_arg: [LDKFramework.LDKNetAddress], announcement_message_arg: LDKFramework.NodeAnnouncement)
   public init(pointer: LDKFramework.LDKNodeAnnouncementInfo)
   public init(pointer: LDKFramework.LDKNodeAnnouncementInfo, anchor: LDKFramework.NativeTypeWrapper)
+  convenience public init(features_arg: LDKFramework.NodeFeatures, last_update_arg: Swift.UInt32, rgb_arg: [Swift.UInt8], alias_arg: [Swift.UInt8], addresses_arg: [LDKFramework.NetAddress], announcement_message_arg: LDKFramework.NodeAnnouncement)
   public func get_features() -> LDKFramework.NodeFeatures
   public func set_features(val: LDKFramework.NodeFeatures)
   public func get_last_update() -> Swift.UInt32
@@ -387,7 +391,7 @@ import Swift
   public func set_rgb(val: [Swift.UInt8])
   public func get_alias() -> [Swift.UInt8]
   public func set_alias(val: [Swift.UInt8])
-  public func set_addresses(val: [LDKFramework.LDKNetAddress])
+  public func set_addresses(val: [LDKFramework.NetAddress])
   public func get_announcement_message() -> LDKFramework.NodeAnnouncement
   public func set_announcement_message(val: LDKFramework.NodeAnnouncement)
   public func clone() -> LDKFramework.NodeAnnouncementInfo
@@ -476,7 +480,7 @@ import Swift
   public func get_data_dir() -> Swift.String
   public class func persist_manager(data_dir: Swift.String, manager: LDKFramework.ChannelManager) -> LDKFramework.Result_NoneErrorZ
   public func read_channelmonitors(keys_manager: LDKFramework.KeysInterface) -> LDKFramework.Result_CVec_C2Tuple_BlockHashChannelMonitorZZErrorZ
-  public func as_Persist() -> LDKFramework.Persist
+  public func as_Persist() -> LDKFramework.NativelyImplementedPersist
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Event : LDKFramework.NativeTypeWrapper {
@@ -508,7 +512,7 @@ import Swift
   public class func payment_sent(payment_preimage: [Swift.UInt8]) -> LDKFramework.Event
   public class func payment_failed(payment_hash: [Swift.UInt8], rejected_by_dest: Swift.Bool) -> LDKFramework.Event
   public class func pending_htlcs_forwardable(time_forwardable: Swift.UInt64) -> LDKFramework.Event
-  public class func spendable_outputs(outputs: [LDKFramework.LDKSpendableOutputDescriptor]) -> LDKFramework.Event
+  public class func spendable_outputs(outputs: [LDKFramework.SpendableOutputDescriptor]) -> LDKFramework.Event
   public class func payment_forwarded(fee_earned_msat: LDKFramework.Option_u64Z, claim_from_onchain_tx: Swift.Bool) -> LDKFramework.Event
   public func write() -> [Swift.UInt8]
   @_hasMissingDesignatedInitializers public class FundingGenerationReady : LDKFramework.NativeTypeWrapper {
@@ -664,6 +668,8 @@ import Swift
   public func isOk() -> Swift.Bool
   public func getError() -> LDKFramework.DecodeError?
   public func getValue() -> LDKFramework.C2Tuple_BlockHashChannelManagerZ?
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public class func ok(o: LDKFramework.C2Tuple_BlockHashChannelManagerZ) -> LDKFramework.Result_C2Tuple_BlockHashChannelManagerZDecodeErrorZ
   public class func err(e: LDKFramework.DecodeError) -> LDKFramework.Result_C2Tuple_BlockHashChannelManagerZDecodeErrorZ
   @objc deinit
@@ -834,7 +840,7 @@ import Swift
   public func set_rgb(val: [Swift.UInt8])
   public func get_alias() -> [Swift.UInt8]
   public func set_alias(val: [Swift.UInt8])
-  public func set_addresses(val: [LDKFramework.LDKNetAddress])
+  public func set_addresses(val: [LDKFramework.NetAddress])
   public func clone() -> LDKFramework.UnsignedNodeAnnouncement
   public func write() -> [Swift.UInt8]
   public class func read(ser: [Swift.UInt8]) -> LDKFramework.Result_UnsignedNodeAnnouncementDecodeErrorZ
@@ -946,6 +952,8 @@ import Swift
   }
   public init(pointer: LDKFramework.LDKC2Tuple_BlockHashChannelManagerZ)
   public init(pointer: LDKFramework.LDKC2Tuple_BlockHashChannelManagerZ, anchor: LDKFramework.NativeTypeWrapper)
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public class func new(a: [Swift.UInt8], b: LDKFramework.ChannelManager) -> LDKFramework.C2Tuple_BlockHashChannelManagerZ
   @objc deinit
 }
@@ -953,18 +961,18 @@ import Swift
   public var cOpaqueStruct: LDKFramework.LDKChannelManagerReadArgs? {
     get
   }
-  public init(keys_manager: LDKFramework.KeysInterface, fee_estimator: LDKFramework.FeeEstimator, chain_monitor: LDKFramework.Watch, tx_broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger, default_config: LDKFramework.UserConfig, channel_monitors: [LDKFramework.LDKChannelMonitor])
   public init(pointer: LDKFramework.LDKChannelManagerReadArgs)
   public init(pointer: LDKFramework.LDKChannelManagerReadArgs, anchor: LDKFramework.NativeTypeWrapper)
-  public func get_keys_manager() -> LDKFramework.KeysInterface
+  convenience public init(keys_manager: LDKFramework.KeysInterface, fee_estimator: LDKFramework.FeeEstimator, chain_monitor: LDKFramework.Watch, tx_broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger, default_config: LDKFramework.UserConfig, channel_monitors: [LDKFramework.ChannelMonitor])
+  public func get_keys_manager() -> LDKFramework.NativelyImplementedKeysInterface
   public func set_keys_manager(val: LDKFramework.KeysInterface)
-  public func get_fee_estimator() -> LDKFramework.FeeEstimator
+  public func get_fee_estimator() -> LDKFramework.NativelyImplementedFeeEstimator
   public func set_fee_estimator(val: LDKFramework.FeeEstimator)
-  public func get_chain_monitor() -> LDKFramework.Watch
+  public func get_chain_monitor() -> LDKFramework.NativelyImplementedWatch
   public func set_chain_monitor(val: LDKFramework.Watch)
-  public func get_tx_broadcaster() -> LDKFramework.BroadcasterInterface
+  public func get_tx_broadcaster() -> LDKFramework.NativelyImplementedBroadcasterInterface
   public func set_tx_broadcaster(val: LDKFramework.BroadcasterInterface)
-  public func get_logger() -> LDKFramework.Logger
+  public func get_logger() -> LDKFramework.NativelyImplementedLogger
   public func set_logger(val: LDKFramework.Logger)
   public func get_default_config() -> LDKFramework.UserConfig
   public func set_default_config(val: LDKFramework.UserConfig)
@@ -1037,6 +1045,8 @@ import Swift
   public func getError() -> LDKFramework.LDKSecp256k1Error?
   public func getValue() -> LDKFramework.PayeePubKey?
   public class func ok(o: LDKFramework.PayeePubKey) -> LDKFramework.Result_PayeePubKeyErrorZ
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public class func err(e: LDKFramework.LDKSecp256k1Error) -> LDKFramework.Result_PayeePubKeyErrorZ
   @objc deinit
   public func clone() -> LDKFramework.Result_PayeePubKeyErrorZ
@@ -1143,8 +1153,8 @@ import Swift
   public init(pointer: LDKFramework.LDKNetGraphMsgHandler, anchor: LDKFramework.NativeTypeWrapper)
   public func add_chain_access(chain_access: LDKFramework.Access?)
   public func read_locked_graph() -> LDKFramework.LockedNetworkGraph
-  public func as_RoutingMessageHandler() -> LDKFramework.RoutingMessageHandler
-  public func as_MessageSendEventsProvider() -> LDKFramework.MessageSendEventsProvider
+  public func as_RoutingMessageHandler() -> LDKFramework.NativelyImplementedRoutingMessageHandler
+  public func as_MessageSendEventsProvider() -> LDKFramework.NativelyImplementedMessageSendEventsProvider
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class InitFeatures : LDKFramework.NativeTypeWrapper {
@@ -1477,8 +1487,8 @@ import Swift
   public func get_channel_parameters() -> LDKFramework.ChannelTransactionParameters
   public func sign_counterparty_payment_input(spend_tx: [Swift.UInt8], input_idx: Swift.UInt, descriptor: LDKFramework.StaticPaymentOutputDescriptor) -> LDKFramework.Result_CVec_CVec_u8ZZNoneZ
   public func sign_dynamic_p2wsh_input(spend_tx: [Swift.UInt8], input_idx: Swift.UInt, descriptor: LDKFramework.DelayedPaymentOutputDescriptor) -> LDKFramework.Result_CVec_CVec_u8ZZNoneZ
-  public func as_BaseSign() -> LDKFramework.BaseSign
-  public func as_Sign() -> LDKFramework.Sign
+  public func as_BaseSign() -> LDKFramework.NativelyImplementedBaseSign
+  public func as_Sign() -> LDKFramework.NativelyImplementedSign
   public func write() -> [Swift.UInt8]
   public class func read(ser: [Swift.UInt8]) -> LDKFramework.Result_InMemorySignerDecodeErrorZ
   @objc deinit
@@ -1684,6 +1694,8 @@ import Swift
   public init(pointer: LDKFramework.LDKCResult_TrustedCommitmentTransactionNoneZ, anchor: LDKFramework.NativeTypeWrapper)
   public func isOk() -> Swift.Bool
   public func getValue() -> LDKFramework.TrustedCommitmentTransaction?
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public class func ok(o: LDKFramework.TrustedCommitmentTransaction) -> LDKFramework.Result_TrustedCommitmentTransactionNoneZ
   public class func err() -> LDKFramework.Result_TrustedCommitmentTransactionNoneZ
   @objc deinit
@@ -1755,6 +1767,8 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func getError() -> LDKFramework.LDKSecp256k1Error?
   public func getValue() -> Swift.String?
   public class func ok(o: Swift.String) -> LDKFramework.Result_StringErrorZ
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public class func err(e: LDKFramework.LDKSecp256k1Error) -> LDKFramework.Result_StringErrorZ
   @objc deinit
 }
@@ -2550,6 +2564,8 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   open func free()
 }
 @_inheritsConvenienceInitializers public class NativelyImplementedConfirm : LDKFramework.Confirm {
+  public func transactions_confirmed(header: [Swift.UInt8]?, txdata: [LDKFramework.C2Tuple_usizeTransactionZ], height: Swift.UInt32)
+  @available(*, deprecated, message: "Use method taking Swift object array type instead.")
   override public func transactions_confirmed(header: [Swift.UInt8]?, txdata: [LDKFramework.LDKC2Tuple_usizeTransactionZ], height: Swift.UInt32)
   override public func transaction_unconfirmed(txid: [Swift.UInt8]?)
   override public func best_block_updated(header: [Swift.UInt8]?, height: Swift.UInt32)
@@ -2667,9 +2683,9 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public init(chan_handler_arg: LDKFramework.ChannelMessageHandler, route_handler_arg: LDKFramework.RoutingMessageHandler)
   public init(pointer: LDKFramework.LDKMessageHandler)
   public init(pointer: LDKFramework.LDKMessageHandler, anchor: LDKFramework.NativeTypeWrapper)
-  public func get_chan_handler() -> LDKFramework.ChannelMessageHandler
+  public func get_chan_handler() -> LDKFramework.NativelyImplementedChannelMessageHandler
   public func set_chan_handler(val: LDKFramework.ChannelMessageHandler)
-  public func get_route_handler() -> LDKFramework.RoutingMessageHandler
+  public func get_route_handler() -> LDKFramework.NativelyImplementedRoutingMessageHandler
   public func set_route_handler(val: LDKFramework.RoutingMessageHandler)
   @objc deinit
 }
@@ -2757,10 +2773,10 @@ public class TCPPeerHandler {
   public init(chain_source: LDKFramework.Filter?, broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger, feeest: LDKFramework.FeeEstimator, persister: LDKFramework.Persist)
   public init(pointer: LDKFramework.LDKChainMonitor)
   public init(pointer: LDKFramework.LDKChainMonitor, anchor: LDKFramework.NativeTypeWrapper)
-  public func as_Listen() -> LDKFramework.Listen
-  public func as_Confirm() -> LDKFramework.Confirm
-  public func as_Watch() -> LDKFramework.Watch
-  public func as_EventsProvider() -> LDKFramework.EventsProvider
+  public func as_Listen() -> LDKFramework.NativelyImplementedListen
+  public func as_Confirm() -> LDKFramework.NativelyImplementedConfirm
+  public func as_Watch() -> LDKFramework.NativelyImplementedWatch
+  public func as_EventsProvider() -> LDKFramework.NativelyImplementedEventsProvider
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_NetAddressu8Z : LDKFramework.NativeTypeWrapper {
@@ -2832,7 +2848,7 @@ public class TCPPeerHandler {
   public init(pointer: LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ)
   public init(pointer: LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ
-  public class func new(a: [Swift.UInt8], b: [LDKFramework.LDKC2Tuple_u32ScriptZ]) -> LDKFramework.C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ
+  public class func new(a: [Swift.UInt8], b: [LDKFramework.C2Tuple_u32ScriptZ]) -> LDKFramework.C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_RouteLightningErrorZ : LDKFramework.NativeTypeWrapper {
@@ -2877,6 +2893,8 @@ public class TCPPeerHandler {
   public func getError() -> LDKFramework.LDKSecp256k1Error?
   public func getValue() -> LDKFramework.TxCreationKeys?
   public class func ok(o: LDKFramework.TxCreationKeys) -> LDKFramework.Result_TxCreationKeysErrorZ
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public class func err(e: LDKFramework.LDKSecp256k1Error) -> LDKFramework.Result_TxCreationKeysErrorZ
   @objc deinit
   public func clone() -> LDKFramework.Result_TxCreationKeysErrorZ
@@ -2916,8 +2934,8 @@ public class TCPPeerHandler {
   public init()
   public init(pointer: LDKFramework.LDKErroringMessageHandler)
   public init(pointer: LDKFramework.LDKErroringMessageHandler, anchor: LDKFramework.NativeTypeWrapper)
-  public func as_MessageSendEventsProvider() -> LDKFramework.MessageSendEventsProvider
-  public func as_ChannelMessageHandler() -> LDKFramework.ChannelMessageHandler
+  public func as_MessageSendEventsProvider() -> LDKFramework.NativelyImplementedMessageSendEventsProvider
+  public func as_ChannelMessageHandler() -> LDKFramework.NativelyImplementedChannelMessageHandler
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_SiPrefixNoneZ : LDKFramework.NativeTypeWrapper {
@@ -3102,9 +3120,9 @@ public class TCPPeerHandler {
   @objc deinit
   public func clone() -> LDKFramework.PaymentSendFailure
   public class func parameter_error(a: LDKFramework.APIError) -> LDKFramework.PaymentSendFailure
-  public class func path_parameter_error(a: [LDKFramework.LDKCResult_NoneAPIErrorZ]) -> LDKFramework.PaymentSendFailure
-  public class func all_failed_retry_safe(a: [LDKFramework.LDKAPIError]) -> LDKFramework.PaymentSendFailure
-  public class func partial_failure(a: [LDKFramework.LDKCResult_NoneAPIErrorZ]) -> LDKFramework.PaymentSendFailure
+  public class func path_parameter_error(a: [LDKFramework.Result_NoneAPIErrorZ]) -> LDKFramework.PaymentSendFailure
+  public class func all_failed_retry_safe(a: [LDKFramework.APIError]) -> LDKFramework.PaymentSendFailure
+  public class func partial_failure(a: [LDKFramework.Result_NoneAPIErrorZ]) -> LDKFramework.PaymentSendFailure
 }
 @_hasMissingDesignatedInitializers public class Result_ReplyChannelRangeDecodeErrorZ : LDKFramework.NativeTypeWrapper {
   public var cOpaqueStruct: LDKFramework.LDKCResult_ReplyChannelRangeDecodeErrorZ? {
@@ -3216,7 +3234,7 @@ public class TCPPeerHandler {
   public init(pointer: LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ)
   public init(pointer: LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.C2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ
-  public class func new(a: [Swift.UInt8], b: [LDKFramework.LDKC2Tuple_u32TxOutZ]) -> LDKFramework.C2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ
+  public class func new(a: [Swift.UInt8], b: [LDKFramework.C2Tuple_u32TxOutZ]) -> LDKFramework.C2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class NetAddress : LDKFramework.NativeTypeWrapper {
@@ -3436,8 +3454,14 @@ public class TCPPeerHandler {
   public var cOpaqueStruct: LDKFramework.LDKPeerManager? {
     get
   }
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public init(message_handler: LDKFramework.MessageHandler, our_node_secret: [Swift.UInt8], ephemeral_random_data: [Swift.UInt8], logger: LDKFramework.Logger)
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public init(pointer: LDKFramework.LDKPeerManager)
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public init(pointer: LDKFramework.LDKPeerManager, anchor: LDKFramework.NativeTypeWrapper)
   public func get_peer_node_ids() -> [[Swift.UInt8]]
   public func new_outbound_connection(their_node_id: [Swift.UInt8], descriptor: LDKFramework.SocketDescriptor) -> LDKFramework.Result_CVec_u8ZPeerHandleErrorZ
@@ -3596,6 +3620,8 @@ public class TCPPeerHandler {
   public func isOk() -> Swift.Bool
   public func getError() -> LDKFramework.DecodeError?
   public func getValue() -> LDKFramework.C2Tuple_BlockHashChannelMonitorZ?
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public class func ok(o: LDKFramework.C2Tuple_BlockHashChannelMonitorZ) -> LDKFramework.Result_C2Tuple_BlockHashChannelMonitorZDecodeErrorZ
   public class func err(e: LDKFramework.DecodeError) -> LDKFramework.Result_C2Tuple_BlockHashChannelMonitorZDecodeErrorZ
   @objc deinit
@@ -3604,10 +3630,10 @@ public class TCPPeerHandler {
   public var cOpaqueStruct: LDKFramework.LDKRoute? {
     get
   }
-  public init(paths_arg: [[LDKFramework.LDKRouteHop]])
   public init(pointer: LDKFramework.LDKRoute)
   public init(pointer: LDKFramework.LDKRoute, anchor: LDKFramework.NativeTypeWrapper)
-  public func set_paths(val: [[LDKFramework.LDKRouteHop]])
+  convenience public init(paths_arg: [[LDKFramework.RouteHop]])
+  public func set_paths(val: [[LDKFramework.RouteHop]])
   public func clone() -> LDKFramework.Route
   public func write() -> [Swift.UInt8]
   public class func read(ser: [Swift.UInt8]) -> LDKFramework.Result_RouteDecodeErrorZ
@@ -3736,6 +3762,8 @@ public class TCPPeerHandler {
   public func getError() -> LDKFramework.LDKSecp256k1Error?
   public func getValue() -> [Swift.UInt8]?
   public class func ok(o: [Swift.UInt8]) -> LDKFramework.Result_PublicKeyErrorZ
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public class func err(e: LDKFramework.LDKSecp256k1Error) -> LDKFramework.Result_PublicKeyErrorZ
   @objc deinit
   public func clone() -> LDKFramework.Result_PublicKeyErrorZ
@@ -3826,7 +3854,7 @@ public class TCPPeerHandler {
   public func send_payment(route: LDKFramework.Route, payment_hash: [Swift.UInt8], payment_secret: [Swift.UInt8]) -> LDKFramework.Result_NonePaymentSendFailureZ
   public func send_spontaneous_payment(route: LDKFramework.Route, payment_preimage: [Swift.UInt8]) -> LDKFramework.Result_PaymentHashPaymentSendFailureZ
   public func funding_transaction_generated(temporary_channel_id: [Swift.UInt8], funding_transaction: [Swift.UInt8]) -> LDKFramework.Result_NoneAPIErrorZ
-  public func broadcast_node_announcement(rgb: [Swift.UInt8], alias: [Swift.UInt8], addresses: [LDKFramework.LDKNetAddress])
+  public func broadcast_node_announcement(rgb: [Swift.UInt8], alias: [Swift.UInt8], addresses: [LDKFramework.NetAddress])
   public func process_pending_htlc_forwards()
   public func timer_tick_occurred()
   public func fail_htlc_backwards(payment_hash: [Swift.UInt8]) -> Swift.Bool
@@ -3835,14 +3863,14 @@ public class TCPPeerHandler {
   public func channel_monitor_updated(funding_txo: LDKFramework.OutPoint, highest_applied_update_id: Swift.UInt64)
   public func create_inbound_payment(min_value_msat: LDKFramework.Option_u64Z, invoice_expiry_delta_secs: Swift.UInt32, user_payment_id: Swift.UInt64) -> LDKFramework.C2Tuple_PaymentHashPaymentSecretZ
   public func create_inbound_payment_for_hash(payment_hash: [Swift.UInt8], min_value_msat: LDKFramework.Option_u64Z, invoice_expiry_delta_secs: Swift.UInt32, user_payment_id: Swift.UInt64) -> LDKFramework.Result_PaymentSecretAPIErrorZ
-  public func as_MessageSendEventsProvider() -> LDKFramework.MessageSendEventsProvider
-  public func as_EventsProvider() -> LDKFramework.EventsProvider
-  public func as_Listen() -> LDKFramework.Listen
-  public func as_Confirm() -> LDKFramework.Confirm
+  public func as_MessageSendEventsProvider() -> LDKFramework.NativelyImplementedMessageSendEventsProvider
+  public func as_EventsProvider() -> LDKFramework.NativelyImplementedEventsProvider
+  public func as_Listen() -> LDKFramework.NativelyImplementedListen
+  public func as_Confirm() -> LDKFramework.NativelyImplementedConfirm
   public func await_persistable_update_timeout(max_wait: Swift.UInt64) -> Swift.Bool
   public func await_persistable_update()
   public func current_best_block() -> LDKFramework.BestBlock
-  public func as_ChannelMessageHandler() -> LDKFramework.ChannelMessageHandler
+  public func as_ChannelMessageHandler() -> LDKFramework.NativelyImplementedChannelMessageHandler
   public func write() -> [Swift.UInt8]
   @objc deinit
 }
@@ -3875,9 +3903,9 @@ public class TCPPeerHandler {
   public func get_and_clear_pending_monitor_events() -> [LDKFramework.LDKMonitorEvent]
   public func get_and_clear_pending_events() -> [LDKFramework.LDKEvent]
   public func get_latest_holder_commitment_txn(logger: LDKFramework.Logger) -> [[Swift.UInt8]]
-  public func block_connected(header: [Swift.UInt8], txdata: [LDKFramework.LDKC2Tuple_usizeTransactionZ], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.LDKTransactionOutputs]
+  public func block_connected(header: [Swift.UInt8], txdata: [LDKFramework.C2Tuple_usizeTransactionZ], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.LDKTransactionOutputs]
   public func block_disconnected(header: [Swift.UInt8], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger)
-  public func transactions_confirmed(header: [Swift.UInt8], txdata: [LDKFramework.LDKC2Tuple_usizeTransactionZ], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.LDKTransactionOutputs]
+  public func transactions_confirmed(header: [Swift.UInt8], txdata: [LDKFramework.C2Tuple_usizeTransactionZ], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.LDKTransactionOutputs]
   public func transaction_unconfirmed(txid: [Swift.UInt8], broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger)
   public func best_block_updated(header: [Swift.UInt8], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.LDKTransactionOutputs]
   public func get_relevant_txids() -> [LDKFramework.LDKTxid]
@@ -4111,8 +4139,8 @@ public class TCPPeerHandler {
   public init()
   public init(pointer: LDKFramework.LDKIgnoringMessageHandler)
   public init(pointer: LDKFramework.LDKIgnoringMessageHandler, anchor: LDKFramework.NativeTypeWrapper)
-  public func as_MessageSendEventsProvider() -> LDKFramework.MessageSendEventsProvider
-  public func as_RoutingMessageHandler() -> LDKFramework.RoutingMessageHandler
+  public func as_MessageSendEventsProvider() -> LDKFramework.NativelyImplementedMessageSendEventsProvider
+  public func as_RoutingMessageHandler() -> LDKFramework.NativelyImplementedRoutingMessageHandler
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_InMemorySignerDecodeErrorZ : LDKFramework.NativeTypeWrapper {
@@ -4529,6 +4557,8 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func swift_recover_pk(msg: [Swift.UInt8], sig: Swift.String) -> LDKFramework.Result_PublicKeyErrorZ
   public class func swift_verify(msg: [Swift.UInt8], sig: Swift.String, pk: [Swift.UInt8]) -> Swift.Bool
   public class func swift_C2Tuple_BlockHashChannelMonitorZ_read(ser: [Swift.UInt8], arg: LDKFramework.KeysInterface) -> LDKFramework.Result_C2Tuple_BlockHashChannelMonitorZDecodeErrorZ
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public class func swift_C2Tuple_BlockHashChannelManagerZ_read(ser: [Swift.UInt8], arg: LDKFramework.ChannelManagerReadArgs) -> LDKFramework.Result_C2Tuple_BlockHashChannelManagerZDecodeErrorZ
   public class func swift_Result_read(ser: [Swift.UInt8]) -> LDKFramework.Result_CResult_NetAddressu8ZDecodeErrorZ
   public class func swift_build_commitment_secret(commitment_seed: [Swift.UInt8], idx: Swift.UInt64) -> [Swift.UInt8]
@@ -4541,7 +4571,7 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func swift_make_funding_redeemscript(broadcaster: [Swift.UInt8], countersignatory: [Swift.UInt8]) -> [Swift.UInt8]
   public class func swift_build_htlc_transaction(commitment_txid: [Swift.UInt8], feerate_per_kw: Swift.UInt32, contest_delay: Swift.UInt16, htlc: LDKFramework.HTLCOutputInCommitment, broadcaster_delayed_payment_key: [Swift.UInt8], revocation_key: [Swift.UInt8]) -> [Swift.UInt8]
   public class func swift_get_commitment_transaction_number_obscure_factor(broadcaster_payment_basepoint: [Swift.UInt8], countersignatory_payment_basepoint: [Swift.UInt8], outbound_from_broadcaster: Swift.Bool) -> Swift.UInt64
-  public class func swift_get_keysend_route(our_node_id: [Swift.UInt8], network: LDKFramework.NetworkGraph, payee: [Swift.UInt8], first_hops: [LDKFramework.LDKChannelDetails]?, last_hops: [LDKFramework.LDKRouteHint], final_value_msat: Swift.UInt64, final_cltv: Swift.UInt32, logger: LDKFramework.Logger) -> LDKFramework.Result_RouteLightningErrorZ
+  public class func swift_get_keysend_route(our_node_id: [Swift.UInt8], network: LDKFramework.NetworkGraph, payee: [Swift.UInt8], first_hops: [LDKFramework.ChannelDetails]?, last_hops: [LDKFramework.RouteHint], final_value_msat: Swift.UInt64, final_cltv: Swift.UInt32, logger: LDKFramework.Logger) -> LDKFramework.Result_RouteLightningErrorZ
   public class func swift_check_platform()
   public class func swift_create_invoice_from_channelmanager(channelmanager: LDKFramework.ChannelManager, keys_manager: LDKFramework.KeysInterface, network: LDKFramework.LDKCurrency, amt_msat: LDKFramework.Option_u64Z, description: Swift.String) -> LDKFramework.Result_InvoiceSignOrCreationErrorZ
   public class func instanceToPointer(instance: LDKFramework.NativeTypeWrapper) -> Swift.UnsafeMutableRawPointer
@@ -4580,6 +4610,8 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public func isOk() -> Swift.Bool
   public func getError() -> LDKFramework.LDKIOError?
   public class func ok() -> LDKFramework.Result_NoneErrorZ
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public class func err(e: LDKFramework.LDKIOError) -> LDKFramework.Result_NoneErrorZ
   @objc deinit
   public func clone() -> LDKFramework.Result_NoneErrorZ
@@ -4588,8 +4620,14 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public var cOpaqueStruct: LDKFramework.LDKChainParameters? {
     get
   }
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public init(network_arg: LDKFramework.LDKNetwork, best_block_arg: LDKFramework.BestBlock)
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public init(pointer: LDKFramework.LDKChainParameters)
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public init(pointer: LDKFramework.LDKChainParameters, anchor: LDKFramework.NativeTypeWrapper)
   public func get_network() -> LDKFramework.LDKNetwork
   public func set_network(val: LDKFramework.LDKNetwork)
@@ -4811,7 +4849,9 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public func isOk() -> Swift.Bool
   public func getError() -> LDKFramework.LDKIOError?
   public func getValue() -> [LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ]?
-  public class func ok(o: [LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ]) -> LDKFramework.Result_CVec_C2Tuple_BlockHashChannelMonitorZZErrorZ
+  public class func ok(o: [LDKFramework.C2Tuple_BlockHashChannelMonitorZ]) -> LDKFramework.Result_CVec_C2Tuple_BlockHashChannelMonitorZZErrorZ
+  #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
+  @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public class func err(e: LDKFramework.LDKIOError) -> LDKFramework.Result_CVec_C2Tuple_BlockHashChannelMonitorZZErrorZ
   @objc deinit
 }
@@ -4844,13 +4884,13 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public var cOpaqueStruct: LDKFramework.LDKCommitmentUpdate? {
     get
   }
-  public init(update_add_htlcs_arg: [LDKFramework.LDKUpdateAddHTLC], update_fulfill_htlcs_arg: [LDKFramework.LDKUpdateFulfillHTLC], update_fail_htlcs_arg: [LDKFramework.LDKUpdateFailHTLC], update_fail_malformed_htlcs_arg: [LDKFramework.LDKUpdateFailMalformedHTLC], update_fee_arg: LDKFramework.UpdateFee, commitment_signed_arg: LDKFramework.CommitmentSigned)
   public init(pointer: LDKFramework.LDKCommitmentUpdate)
   public init(pointer: LDKFramework.LDKCommitmentUpdate, anchor: LDKFramework.NativeTypeWrapper)
-  public func set_update_add_htlcs(val: [LDKFramework.LDKUpdateAddHTLC])
-  public func set_update_fulfill_htlcs(val: [LDKFramework.LDKUpdateFulfillHTLC])
-  public func set_update_fail_htlcs(val: [LDKFramework.LDKUpdateFailHTLC])
-  public func set_update_fail_malformed_htlcs(val: [LDKFramework.LDKUpdateFailMalformedHTLC])
+  convenience public init(update_add_htlcs_arg: [LDKFramework.UpdateAddHTLC], update_fulfill_htlcs_arg: [LDKFramework.UpdateFulfillHTLC], update_fail_htlcs_arg: [LDKFramework.UpdateFailHTLC], update_fail_malformed_htlcs_arg: [LDKFramework.UpdateFailMalformedHTLC], update_fee_arg: LDKFramework.UpdateFee, commitment_signed_arg: LDKFramework.CommitmentSigned)
+  public func set_update_add_htlcs(val: [LDKFramework.UpdateAddHTLC])
+  public func set_update_fulfill_htlcs(val: [LDKFramework.UpdateFulfillHTLC])
+  public func set_update_fail_htlcs(val: [LDKFramework.UpdateFailHTLC])
+  public func set_update_fail_malformed_htlcs(val: [LDKFramework.UpdateFailMalformedHTLC])
   public func get_update_fee() -> LDKFramework.UpdateFee
   public func set_update_fee(val: LDKFramework.UpdateFee)
   public func get_commitment_signed() -> LDKFramework.CommitmentSigned
