@@ -300,20 +300,21 @@ class RnLdk: NSObject {
         print("ReactNativeLDK: paymentValueMsat " + paymentValueMsat.stringValue)
         print("ReactNativeLDK: finalCltvValue " + finalCltvValue.stringValue)
         
-        guard let short_channel_id_arg = UInt64(shortChannelId), let cOpaqueStruct = RouteHop(
+        guard let short_channel_id_arg = UInt64(shortChannelId), let channel_manager = channel_manager else {
+            let error = NSError(domain: "sendPayment", code: 1, userInfo: nil)
+            return reject("sendPayment", "cOpaqueStruct failed",  error)
+        }
+        let routeHop = RouteHop(
             pubkey_arg: hexStringToByteArray(destPubkeyHex),
             node_features_arg: NodeFeatures(),
             short_channel_id_arg: short_channel_id_arg,
             channel_features_arg: ChannelFeatures(),
             fee_msat_arg: UInt64(truncating: paymentValueMsat),
             cltv_expiry_delta_arg: UInt32(truncating: finalCltvValue)
-        ), let channel_manager = channel_manager else {
-            let error = NSError(domain: "sendPayment", code: 1, userInfo: nil)
-            return reject("sendPayment", "cOpaqueStruct failed",  error)
-        }
+        )
         // first hop:
         // (also the last one of no route provided - assuming paying to neighbor node)
-        var path: [RouteHop] = [cOpaqueStruct]
+        var path: [RouteHop] = [routeHop]
         //
         if (!LdkRoutesJsonArrayString.isEmpty) {
             // full route was provided
@@ -334,13 +335,14 @@ class RnLdk: NSObject {
                         print(hopJson["fee_msat"] as? NSNumber ?? "No fee_msat")
                         print(hopJson["cltv_expiry_delta"] as? NSNumber ?? "No cltv_expiry_delta")
                         //
-                        if let pubkey = hopJson["pubkey"] as? String, let short_channel_id_arg = hopJson["short_channel_id"] as? String, let shortChannelIdUInt64 = UInt64(short_channel_id_arg), let fee_msat_arg = hopJson["fee_msat"] as? NSNumber, let cltv_expiry_delta_arg = hopJson["cltv_expiry_delta"] as? NSNumber, let routeHop = RouteHop(pubkey_arg: hexStringToByteArray(pubkey),
-                                                                                                                                                                                                                                                                                                                                                      node_features_arg: NodeFeatures(),
-                                                                                                                                                                                                                                                                                                                                                      short_channel_id_arg: shortChannelIdUInt64,
-                                                                                                                                                                                                                                                                                                                                                      channel_features_arg: ChannelFeatures(),
-                                                                                                                                                                                                                                                                                                                                                      fee_msat_arg: UInt64(truncating: fee_msat_arg),
-                                                                                                                                                                                                                                                                                                                                                      cltv_expiry_delta_arg: UInt32(truncating: cltv_expiry_delta_arg)
-                        ).cOpaqueStruct {
+                        if let pubkey = hopJson["pubkey"] as? String, let short_channel_id_arg = hopJson["short_channel_id"] as? String, let shortChannelIdUInt64 = UInt64(short_channel_id_arg), let fee_msat_arg = hopJson["fee_msat"] as? NSNumber, let cltv_expiry_delta_arg = hopJson["cltv_expiry_delta"] as? NSNumber {
+                            let routeHop = RouteHop(pubkey_arg: hexStringToByteArray(pubkey),
+                                                                                                                                                                                                                                                                                                                                                          node_features_arg: NodeFeatures(),
+                                                                                                                                                                                                                                                                                                                                                          short_channel_id_arg: shortChannelIdUInt64,
+                                                                                                                                                                                                                                                                                                                                                          channel_features_arg: ChannelFeatures(),
+                                                                                                                                                                                                                                                                                                                                                          fee_msat_arg: UInt64(truncating: fee_msat_arg),
+                                                                                                                                                                                                                                                                                                                                                          cltv_expiry_delta_arg: UInt32(truncating: cltv_expiry_delta_arg)
+                            )
                             path.append(routeHop)
                         }
                         
