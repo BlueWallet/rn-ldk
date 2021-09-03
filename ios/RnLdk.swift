@@ -191,7 +191,7 @@ class RnLdk: NSObject {
     
     @objc
     func getVersion(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        resolve("0.0.100.1a")
+        resolve("0.0.100.1")
     }	
     
     func getName() -> String {
