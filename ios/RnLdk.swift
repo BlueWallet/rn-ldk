@@ -23,7 +23,7 @@ var channel_manager: LDKFramework.ChannelManager?
 var peer_manager: LDKFramework.PeerManager?
 var keys_manager: LDKFramework.KeysManager?
 var temporary_channel_id: [UInt8]? = nil
-var peer_handler: SwiftSocketPeerHandler?
+var peer_handler: TCPPeerHandler?
 var chain_monitor: ChainMonitor?
 var channel_manager_constructor: ChannelManagerConstructor?
 
@@ -59,21 +59,21 @@ class MyPersister: Persist {
     override func persist_new_channel(id: OutPoint, data: ChannelMonitor) -> Result_NoneChannelMonitorUpdateErrZ {
         print("ReactNativeLDK: persist_new_channel")
         let idBytes: [UInt8] = id.to_channel_id()
-        let monitorBytes: [UInt8] = data.write(obj: data)
+        let monitorBytes: [UInt8] = data.write()
         sendEvent(eventName: MARKER_PERSIST, eventBody: ["id": bytesToHex(bytes: idBytes), "data": bytesToHex(bytes: monitorBytes)])
         
         // simplified result instantiation calls coming shortly!
-        return Result_NoneChannelMonitorUpdateErrZ()
+        return Result_NoneChannelMonitorUpdateErrZ.ok()
     }
     
     override func update_persisted_channel(id: OutPoint, update: ChannelMonitorUpdate, data: ChannelMonitor) -> Result_NoneChannelMonitorUpdateErrZ {
         print("ReactNativeLDK: update_persisted_channel")
         let idBytes: [UInt8] = id.to_channel_id()
-        let monitorBytes: [UInt8] = data.write(obj: data)
+        let monitorBytes: [UInt8] = data.write()
         sendEvent(eventName: MARKER_PERSIST, eventBody: ["id": bytesToHex(bytes: idBytes), "data": bytesToHex(bytes: monitorBytes)])
         
         // simplified result instantiation calls coming shortly!
-        return Result_NoneChannelMonitorUpdateErrZ()
+        return Result_NoneChannelMonitorUpdateErrZ.ok()
     }
 }
 
@@ -83,9 +83,9 @@ class MyChannelManagerPersister : ChannelManagerPersister, ExtendedChannelManage
     }
     
     override func persist_manager(channel_manager: ChannelManager) -> Result_NoneErrorZ {
-        let channel_manager_bytes = channel_manager.write(obj: channel_manager)
+        let channel_manager_bytes = channel_manager.write()
         sendEvent(eventName: "persist_manager", eventBody: ["channel_manager_bytes": bytesToHex(bytes: channel_manager_bytes)])
-        return Result_NoneErrorZ()
+        return Result_NoneErrorZ.ok()
     }
 }
 
@@ -108,7 +108,7 @@ class MyFilter: Filter {
         
         sendEvent(eventName: MARKER_REGISTER_OUTPUT, eventBody: ["block_hash": bytesToHex(bytes: blockHashBytes), "index": String(outputIndex), "script_pubkey": bytesToHex(bytes: scriptPubkeyBytes)])
         
-        return Option_C2Tuple_usizeTransactionZZ(value: nil)
+        return Option_C2Tuple_usizeTransactionZZ.none()
     }
 }
 
@@ -183,7 +183,7 @@ class RnLdk: NSObject {
             let error = NSError(domain: "peerManager failed", code: 1, userInfo: nil)
             return reject("start", "peerManager failed",  error)
         }
-        peer_handler = SwiftSocketPeerHandler(peerManager: peerManager)
+        peer_handler = TCPPeerHandler(peerManager: peerManager)
         
         resolve("hello ldk")
     }
@@ -191,7 +191,7 @@ class RnLdk: NSObject {
     
     @objc
     func getVersion(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        resolve("0.0.99.4")
+        resolve("0.0.100.1a")
     }	
     
     func getName() -> String {
@@ -239,8 +239,11 @@ class RnLdk: NSObject {
             let error = NSError(domain: "Channel manager", code: 1, userInfo: nil)
             return reject("Channel manager", "Not Initialized",  error)
         }
-        let txData = LDKC2Tuple_usizeTransactionZ(a: UInt(truncating: txPos), b: Bindings.new_LDKTransaction(array: hexStringToByteArray(transactionHex)))
+        let _b = Bindings.new_LDKTransactionWrapper(array: hexStringToByteArray(transactionHex)).cOpaqueStruct!
+        let txData = LDKC2Tuple_usizeTransactionZ(a: UInt(truncating: txPos), b: _b)
         let txarray = [txData]
+        // let txData = [C2Tuple_usizeTransactionZ.new(a: UInt(truncating: txPos), b: hexStringToByteArray(transactionHex)).cOpaqueStruct!]
+        
         channel_manager.as_Confirm().transactions_confirmed(header: hexStringToByteArray(headerHex), txdata: txarray, height: UInt32(truncating: height))
         chain_monitor.as_Confirm().transactions_confirmed(header: hexStringToByteArray(headerHex), txdata: txarray, height: UInt32(truncating: height))
         resolve(true)
@@ -269,7 +272,7 @@ class RnLdk: NSObject {
             let error = NSError(domain: "connectPeer", code: 1, userInfo: nil)
             return reject("connectPeer", "No connect peer",  error)
         }
-        guard let _ = peer_handler.connect(address: hostname, port: Int32(truncating: port),  theirNodeId: hexStringToByteArray(pubkeyHex)) else {
+        if (!peer_handler.connect(address: hostname, port: UInt16(truncating: port),  theirNodeId: hexStringToByteArray(pubkeyHex))) {
             let error = NSError(domain: "connectPeer", code: 1, userInfo: nil)
             return reject("connectPeer", "Exception",  error)
         }
@@ -297,20 +300,21 @@ class RnLdk: NSObject {
         print("ReactNativeLDK: paymentValueMsat " + paymentValueMsat.stringValue)
         print("ReactNativeLDK: finalCltvValue " + finalCltvValue.stringValue)
         
-        guard let short_channel_id_arg = UInt64(shortChannelId), let cOpaqueStruct = RouteHop(
+        guard let short_channel_id_arg = UInt64(shortChannelId), let channel_manager = channel_manager else {
+            let error = NSError(domain: "sendPayment", code: 1, userInfo: nil)
+            return reject("sendPayment", "cOpaqueStruct failed",  error)
+        }
+        let routeHop = RouteHop(
             pubkey_arg: hexStringToByteArray(destPubkeyHex),
             node_features_arg: NodeFeatures(),
             short_channel_id_arg: short_channel_id_arg,
             channel_features_arg: ChannelFeatures(),
             fee_msat_arg: UInt64(truncating: paymentValueMsat),
             cltv_expiry_delta_arg: UInt32(truncating: finalCltvValue)
-        ).cOpaqueStruct, let channel_manager = channel_manager else {
-            let error = NSError(domain: "sendPayment", code: 1, userInfo: nil)
-            return reject("sendPayment", "cOpaqueStruct failed",  error)
-        }
+        )
         // first hop:
         // (also the last one of no route provided - assuming paying to neighbor node)
-        var path: [LDKRouteHop] = [cOpaqueStruct]
+        var path: [RouteHop] = [routeHop]
         //
         if (!LdkRoutesJsonArrayString.isEmpty) {
             // full route was provided
@@ -331,13 +335,14 @@ class RnLdk: NSObject {
                         print(hopJson["fee_msat"] as? NSNumber ?? "No fee_msat")
                         print(hopJson["cltv_expiry_delta"] as? NSNumber ?? "No cltv_expiry_delta")
                         //
-                        if let pubkey = hopJson["pubkey"] as? String, let short_channel_id_arg = hopJson["short_channel_id"] as? String, let shortChannelIdUInt64 = UInt64(short_channel_id_arg), let fee_msat_arg = hopJson["fee_msat"] as? NSNumber, let cltv_expiry_delta_arg = hopJson["cltv_expiry_delta"] as? NSNumber, let routeHop = RouteHop(pubkey_arg: hexStringToByteArray(pubkey),
-                                                                                                                                                                                                                                                                                                                                                      node_features_arg: NodeFeatures(),
-                                                                                                                                                                                                                                                                                                                                                      short_channel_id_arg: shortChannelIdUInt64,
-                                                                                                                                                                                                                                                                                                                                                      channel_features_arg: ChannelFeatures(),
-                                                                                                                                                                                                                                                                                                                                                      fee_msat_arg: UInt64(truncating: fee_msat_arg),
-                                                                                                                                                                                                                                                                                                                                                      cltv_expiry_delta_arg: UInt32(truncating: cltv_expiry_delta_arg)
-                        ).cOpaqueStruct {
+                        if let pubkey = hopJson["pubkey"] as? String, let short_channel_id_arg = hopJson["short_channel_id"] as? String, let shortChannelIdUInt64 = UInt64(short_channel_id_arg), let fee_msat_arg = hopJson["fee_msat"] as? NSNumber, let cltv_expiry_delta_arg = hopJson["cltv_expiry_delta"] as? NSNumber {
+                            let routeHop = RouteHop(pubkey_arg: hexStringToByteArray(pubkey),
+                                                                                                                                                                                                                                                                                                                                                          node_features_arg: NodeFeatures(),
+                                                                                                                                                                                                                                                                                                                                                          short_channel_id_arg: shortChannelIdUInt64,
+                                                                                                                                                                                                                                                                                                                                                          channel_features_arg: ChannelFeatures(),
+                                                                                                                                                                                                                                                                                                                                                          fee_msat_arg: UInt64(truncating: fee_msat_arg),
+                                                                                                                                                                                                                                                                                                                                                          cltv_expiry_delta_arg: UInt32(truncating: cltv_expiry_delta_arg)
+                            )
                             path.append(routeHop)
                         }
                         
@@ -374,7 +379,7 @@ class RnLdk: NSObject {
         let invoiceResult = Bindings.createInvoiceFromChannelManager(channelManager: channel_manager, keysManager: keys_manager.as_KeysInterface(), network: LDKCurrency_Bitcoin, amountMsat: UInt64(truncating: amtMsat), description: description)
         
         if let invoice = invoiceResult.getValue() {
-            resolve(invoice.to_str(o: invoice))
+            resolve(invoice.to_str())
         } else {
             let error = NSError(domain: "addInvoice", code: 1, userInfo: nil)
             reject("addInvoice", "Failed", error)
@@ -622,7 +627,8 @@ class RnLdk: NSObject {
 func handleEvent(event: Event) {
     if let spendableOutputEvent = event.getValueAsSpendableOutputs() {
         print("ReactNativeLDK: trying to spend output")
-        let outputs = spendableOutputEvent.getOutputs()
+        let cOutputs = spendableOutputEvent.getOutputs()
+        let outputs = cOutputs.map { (o) in SpendableOutputDescriptor(pointer: o) }
         let destinationScript = hexStringToByteArray(refund_address_script)
         guard let result = keys_manager?.spend_spendable_outputs(descriptors: outputs, outputs: [], change_destination_script: destinationScript, feerate_sat_per_1000_weight: UInt32(feerate_fast)) else {
             return
@@ -658,14 +664,38 @@ func handleEvent(event: Event) {
     
     if let paymentReceivedEvent = event.getValueAsPaymentReceived() {
         print("ReactNativeLDK: payment received")
-        let _ = channel_manager?.claim_funds(payment_preimage: paymentReceivedEvent.getPayment_preimage())
-        sendEvent(eventName: MARKER_PAYMENT_RECEIVED, eventBody: [
-            "payment_hash": bytesToHex(bytes: paymentReceivedEvent.getPayment_hash()),
-            "payment_secret": bytesToHex(bytes: paymentReceivedEvent.getPayment_secret()),
-            "payment_preimage": bytesToHex(bytes: paymentReceivedEvent.getPayment_preimage()),
-            "amt": String(paymentReceivedEvent.getAmt()),
-        ])
-        return
+        
+        
+        if paymentReceivedEvent.getPurpose().getValueType()! == .InvoicePayment {
+            let paymentPreimage = paymentReceivedEvent.getPurpose().getValueAsInvoicePayment()?.getPayment_preimage()
+            let paymentSecret = paymentReceivedEvent.getPurpose().getValueAsInvoicePayment()?.getPayment_secret()
+            
+            if (paymentPreimage == nil) { return }
+            if (paymentSecret == nil) { return }
+            
+            let _ = channel_manager?.claim_funds(payment_preimage: paymentPreimage!)
+            sendEvent(eventName: MARKER_PAYMENT_RECEIVED, eventBody: [
+                "payment_hash": bytesToHex(bytes: paymentReceivedEvent.getPayment_hash()),
+                "payment_secret": bytesToHex(bytes: paymentSecret!),
+                "payment_preimage": bytesToHex(bytes: paymentPreimage!),
+                "amt": String(paymentReceivedEvent.getAmt()),
+            ])
+            return
+        }
+        
+        if paymentReceivedEvent.getPurpose().getValueType()! == .SpontaneousPayment {
+            let paymentPreimage = paymentReceivedEvent.getPurpose().getValueAsSpontaneousPayment()
+        
+            if (paymentPreimage == nil) { return }
+            
+            let _ = channel_manager?.claim_funds(payment_preimage: paymentPreimage!)
+            sendEvent(eventName: MARKER_PAYMENT_RECEIVED, eventBody: [
+                "payment_hash": bytesToHex(bytes: paymentReceivedEvent.getPayment_hash()),
+                "payment_preimage": bytesToHex(bytes: paymentPreimage!),
+                "amt": String(paymentReceivedEvent.getAmt()),
+            ])
+            return
+        }
     }
     
     //
