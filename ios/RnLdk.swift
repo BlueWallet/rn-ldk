@@ -239,10 +239,9 @@ class RnLdk: NSObject {
             let error = NSError(domain: "Channel manager", code: 1, userInfo: nil)
             return reject("Channel manager", "Not Initialized",  error)
         }
-        let _b = Bindings.new_LDKTransactionWrapper(array: hexStringToByteArray(transactionHex)).cOpaqueStruct!
-        let txData = LDKC2Tuple_usizeTransactionZ(a: UInt(truncating: txPos), b: _b)
+        
+        let txData = C2Tuple_usizeTransactionZ.new(a: UInt(truncating: txPos), b: hexStringToByteArray(transactionHex))
         let txarray = [txData]
-        // let txData = [C2Tuple_usizeTransactionZ.new(a: UInt(truncating: txPos), b: hexStringToByteArray(transactionHex)).cOpaqueStruct!]
         
         channel_manager.as_Confirm().transactions_confirmed(header: hexStringToByteArray(headerHex), txdata: txarray, height: UInt32(truncating: height))
         chain_monitor.as_Confirm().transactions_confirmed(header: hexStringToByteArray(headerHex), txdata: txarray, height: UInt32(truncating: height))
