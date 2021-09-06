@@ -202,7 +202,7 @@ class RnLdk: NSObject {
     func getRelevantTxids(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let channel_manager = channel_manager, let chain_monitor = chain_monitor else {
             let error = NSError(domain: "Channel manager", code: 1, userInfo: nil)
-            return reject("Channel manager", "Not Initialized",  error)
+            return reject("Channel manager", "getRelevantTxids: Not Initialized",  error)
         }
         
         var first = true
@@ -226,7 +226,7 @@ class RnLdk: NSObject {
     func transactionUnconfirmed(_ txidHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let channel_manager = channel_manager, let chain_monitor = chain_monitor else {
             let error = NSError(domain: "Channel manager", code: 1, userInfo: nil)
-            return reject("Channel manager", "Not Initialized",  error)
+            return reject("Channel manager", "transactionUnconfirmed: Not Initialized",  error)
         }
         channel_manager.as_Confirm().transaction_unconfirmed(txid: hexStringToByteArray(txidHex))
         chain_monitor.as_Confirm().transaction_unconfirmed(txid: hexStringToByteArray(txidHex))
@@ -237,7 +237,7 @@ class RnLdk: NSObject {
     func transactionConfirmed(_ headerHex: String, height: NSNumber, txPos: NSNumber, transactionHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let channel_manager = channel_manager, let chain_monitor = chain_monitor else {
             let error = NSError(domain: "Channel manager", code: 1, userInfo: nil)
-            return reject("Channel manager", "Not Initialized",  error)
+            return reject("Channel manager", "transactionConfirmed: Not Initialized",  error)
         }
         
         let txData = C2Tuple_usizeTransactionZ.new(a: UInt(truncating: txPos), b: hexStringToByteArray(transactionHex))
@@ -252,13 +252,13 @@ class RnLdk: NSObject {
     func updateBestBlock(_ headerHex: String, height: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let channelManager = channel_manager else {
             let error = NSError(domain: "Channel manager", code: 1, userInfo: nil)
-            return reject("updateBestBlock", "channelManager guard failed",  error)
+            return reject("updateBestBlock", "updateBestBlock: channelManager guard failed",  error)
         }
         channelManager.as_Confirm().best_block_updated(header: hexStringToByteArray(headerHex), height: UInt32(truncating: height))
 
         guard let chainMonitor = chain_monitor else {
             let error = NSError(domain: "updateBestBlock", code: 1, userInfo: nil)
-            return reject("updateBestBlock", "chainMonitor guard failed",  error)
+            return reject("updateBestBlock", "updateBestBlock: chainMonitor guard failed",  error)
         }
         chainMonitor.as_Confirm().best_block_updated(header: hexStringToByteArray(headerHex), height: UInt32(truncating: height))
         resolve(true)
