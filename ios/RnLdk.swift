@@ -561,8 +561,9 @@ class RnLdk: NSObject {
         channelObject += "\"is_outbound\":" + (it.get_is_outbound() ? "true" : "false") + ","
         channelObject += "\"is_public\":" + (it.get_is_public() ? "true" : "false") + ","
         channelObject += "\"remote_node_id\":" + "\"" + bytesToHex(bytes: it.get_counterparty().get_node_id()) + "\"," // @deprecated fixme
-        channelObject += "\"funding_txo_txid\":" + "\"" + bytesToHex(bytes: it.get_funding_txo().get_txid()) + "\","
-        channelObject += "\"funding_txo_index\":" + String(it.get_funding_txo().get_index()) + ","
+        // fixme:
+        // channelObject += "\"funding_txo_txid\":" + "\"" + bytesToHex(bytes: it.get_funding_txo().get_txid()) + "\","
+        // channelObject += "\"funding_txo_index\":" + String(it.get_funding_txo().get_index()) + ","
         channelObject += "\"counterparty_unspendable_punishment_reserve\":" + String(it.get_counterparty().get_unspendable_punishment_reserve()) + ","
         channelObject += "\"counterparty_node_id\":" + "\"" + bytesToHex(bytes: it.get_counterparty().get_node_id()) + "\","
         channelObject += "\"unspendable_punishment_reserve\":" + String(unspendable_punishment_reserve) + ","
