@@ -634,13 +634,10 @@ func handleEvent(event: Event) {
             return
         }
         
-        if result.isOk() {
-            if let cOpaqueStruct = result.cOpaqueStruct {
-                // success building the transaction, passing it to outer code to broadcast
-                let transaction = Bindings.LDKTransaction_to_array(nativeType: cOpaqueStruct.contents.result.pointee)
-                sendEvent(eventName: MARKER_BROADCAST, eventBody: ["txhex": bytesToHex(bytes: transaction)])
-            }
+        if let transaction = result.getValue() {
+            sendEvent(eventName: MARKER_BROADCAST, eventBody: ["txhex": bytesToHex(bytes: transaction)])
         }
+        
         return
     }
     
