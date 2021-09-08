@@ -5,7 +5,6 @@ import Foundation
 @_exported import LDKFramework
 import Swift
 @_hasMissingDesignatedInitializers open class Listen : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKListen?
   public init()
   public init(pointer: LDKFramework.LDKListen)
   public init(pointer: LDKFramework.LDKListen, anchor: LDKFramework.NativeTypeWrapper)
@@ -24,9 +23,6 @@ import Swift
   override public init(pointer: LDKFramework.LDKListen, anchor: LDKFramework.NativeTypeWrapper)
 }
 @_hasMissingDesignatedInitializers public class Ping : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKPing? {
-    get
-  }
   public init(ponglen_arg: Swift.UInt16, byteslen_arg: Swift.UInt16)
   public init(pointer: LDKFramework.LDKPing)
   public init(pointer: LDKFramework.LDKPing, anchor: LDKFramework.NativeTypeWrapper)
@@ -40,9 +36,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class WatchedOutput : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKWatchedOutput? {
-    get
-  }
   public init(block_hash_arg: [Swift.UInt8], outpoint_arg: LDKFramework.OutPoint, script_pubkey_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKWatchedOutput)
   public init(pointer: LDKFramework.LDKWatchedOutput, anchor: LDKFramework.NativeTypeWrapper)
@@ -57,9 +50,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class KeysManager : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKKeysManager? {
-    get
-  }
   public init(seed: [Swift.UInt8], starting_time_secs: Swift.UInt64, starting_time_nanos: Swift.UInt32)
   public init(pointer: LDKFramework.LDKKeysManager)
   public init(pointer: LDKFramework.LDKKeysManager, anchor: LDKFramework.NativeTypeWrapper)
@@ -69,9 +59,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class FundingSigned : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKFundingSigned? {
-    get
-  }
   public init(channel_id_arg: [Swift.UInt8], signature_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKFundingSigned)
   public init(pointer: LDKFramework.LDKFundingSigned, anchor: LDKFramework.NativeTypeWrapper)
@@ -85,9 +72,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class InvoiceSignature : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKInvoiceSignature? {
-    get
-  }
   public init(pointer: LDKFramework.LDKInvoiceSignature)
   public init(pointer: LDKFramework.LDKInvoiceSignature, anchor: LDKFramework.NativeTypeWrapper)
   public class func eq(a: LDKFramework.InvoiceSignature, b: LDKFramework.InvoiceSignature) -> Swift.Bool
@@ -95,9 +79,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class RawInvoice : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKRawInvoice? {
-    get
-  }
   public init(pointer: LDKFramework.LDKRawInvoice)
   public init(pointer: LDKFramework.LDKRawInvoice, anchor: LDKFramework.NativeTypeWrapper)
   public func get_data() -> LDKFramework.RawDataPart
@@ -113,15 +94,12 @@ import Swift
   public func min_final_cltv_expiry() -> LDKFramework.MinFinalCltvExpiry
   public func payment_secret() -> [Swift.UInt8]
   public func features() -> LDKFramework.InvoiceFeatures
-  public func private_routes() -> [LDKFramework.LDKPrivateRoute]
+  public func private_routes() -> [LDKFramework.PrivateRoute]
   public func amount_pico_btc() -> LDKFramework.Option_u64Z
   public func currency() -> LDKFramework.LDKCurrency
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class ChannelFeatures : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelFeatures? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKChannelFeatures)
   public init(pointer: LDKFramework.LDKChannelFeatures, anchor: LDKFramework.NativeTypeWrapper)
@@ -132,9 +110,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_InvoiceSemanticErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_InvoiceSemanticErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_InvoiceSemanticErrorZ)
   public init(pointer: LDKFramework.LDKCResult_InvoiceSemanticErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -147,9 +122,6 @@ import Swift
   public func clone() -> LDKFramework.Result_InvoiceSemanticErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_NodeAnnouncementDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_NodeAnnouncementDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_NodeAnnouncementDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_NodeAnnouncementDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -162,9 +134,6 @@ import Swift
   public func clone() -> LDKFramework.Result_NodeAnnouncementDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_CommitmentSignedDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_CommitmentSignedDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_CommitmentSignedDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_CommitmentSignedDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -177,7 +146,6 @@ import Swift
   public func clone() -> LDKFramework.Result_CommitmentSignedDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers open class RoutingMessageHandler : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKRoutingMessageHandler?
   public init()
   public init(pointer: LDKFramework.LDKRoutingMessageHandler)
   public init(pointer: LDKFramework.LDKRoutingMessageHandler, anchor: LDKFramework.NativeTypeWrapper)
@@ -214,9 +182,6 @@ import Swift
   override public init(pointer: LDKFramework.LDKRoutingMessageHandler, anchor: LDKFramework.NativeTypeWrapper)
 }
 @_hasMissingDesignatedInitializers public class Result_RoutingFeesDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_RoutingFeesDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_RoutingFeesDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_RoutingFeesDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -229,9 +194,6 @@ import Swift
   public func clone() -> LDKFramework.Result_RoutingFeesDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_SecretKeyErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_SecretKeyErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_SecretKeyErrorZ)
   public init(pointer: LDKFramework.LDKCResult_SecretKeyErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -245,9 +207,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_ShutdownScriptInvalidShutdownScriptZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ShutdownScriptInvalidShutdownScriptZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ShutdownScriptInvalidShutdownScriptZ)
   public init(pointer: LDKFramework.LDKCResult_ShutdownScriptInvalidShutdownScriptZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -261,9 +220,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_CVec_u8ZPeerHandleErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_CVec_u8ZPeerHandleErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_CVec_u8ZPeerHandleErrorZ)
   public init(pointer: LDKFramework.LDKCResult_CVec_u8ZPeerHandleErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -276,9 +232,6 @@ import Swift
   public func clone() -> LDKFramework.Result_CVec_u8ZPeerHandleErrorZ
 }
 @_hasMissingDesignatedInitializers public class DelayedPaymentOutputDescriptor : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKDelayedPaymentOutputDescriptor? {
-    get
-  }
   public init(outpoint_arg: LDKFramework.OutPoint, per_commitment_point_arg: [Swift.UInt8], to_self_delay_arg: Swift.UInt16, output_arg: LDKFramework.LDKTxOut, revocation_pubkey_arg: [Swift.UInt8], channel_keys_id_arg: [Swift.UInt8], channel_value_satoshis_arg: Swift.UInt64)
   public init(pointer: LDKFramework.LDKDelayedPaymentOutputDescriptor)
   public init(pointer: LDKFramework.LDKDelayedPaymentOutputDescriptor, anchor: LDKFramework.NativeTypeWrapper)
@@ -301,9 +254,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class OpenChannel : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKOpenChannel? {
-    get
-  }
   public init(pointer: LDKFramework.LDKOpenChannel)
   public init(pointer: LDKFramework.LDKOpenChannel, anchor: LDKFramework.NativeTypeWrapper)
   public func get_chain_hash() -> [Swift.UInt8]
@@ -348,9 +298,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_InitDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_InitDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_InitDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_InitDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -363,9 +310,6 @@ import Swift
   public func clone() -> LDKFramework.Result_InitDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Init : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKInit? {
-    get
-  }
   public init(features_arg: LDKFramework.InitFeatures)
   public init(pointer: LDKFramework.LDKInit)
   public init(pointer: LDKFramework.LDKInit, anchor: LDKFramework.NativeTypeWrapper)
@@ -377,9 +321,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class NodeAnnouncementInfo : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKNodeAnnouncementInfo? {
-    get
-  }
   public init(pointer: LDKFramework.LDKNodeAnnouncementInfo)
   public init(pointer: LDKFramework.LDKNodeAnnouncementInfo, anchor: LDKFramework.NativeTypeWrapper)
   convenience public init(features_arg: LDKFramework.NodeFeatures, last_update_arg: Swift.UInt32, rgb_arg: [Swift.UInt8], alias_arg: [Swift.UInt8], addresses_arg: [LDKFramework.NetAddress], announcement_message_arg: LDKFramework.NodeAnnouncement)
@@ -400,9 +341,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_InvoiceFeaturesDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_InvoiceFeaturesDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_InvoiceFeaturesDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_InvoiceFeaturesDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -414,9 +352,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class PeerHandleError : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKPeerHandleError? {
-    get
-  }
   public init(no_connection_possible_arg: Swift.Bool)
   public init(pointer: LDKFramework.LDKPeerHandleError)
   public init(pointer: LDKFramework.LDKPeerHandleError, anchor: LDKFramework.NativeTypeWrapper)
@@ -426,9 +361,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_PingDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_PingDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_PingDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_PingDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -441,7 +373,6 @@ import Swift
   public func clone() -> LDKFramework.Result_PingDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers open class FeeEstimator : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKFeeEstimator?
   public init()
   public init(pointer: LDKFramework.LDKFeeEstimator)
   public init(pointer: LDKFramework.LDKFeeEstimator, anchor: LDKFramework.NativeTypeWrapper)
@@ -458,9 +389,6 @@ import Swift
   override public init(pointer: LDKFramework.LDKFeeEstimator, anchor: LDKFramework.NativeTypeWrapper)
 }
 @_hasMissingDesignatedInitializers public class ChannelMonitorUpdate : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelMonitorUpdate? {
-    get
-  }
   public init(pointer: LDKFramework.LDKChannelMonitorUpdate)
   public init(pointer: LDKFramework.LDKChannelMonitorUpdate, anchor: LDKFramework.NativeTypeWrapper)
   public func get_update_id() -> Swift.UInt64
@@ -471,9 +399,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class FilesystemPersister : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKFilesystemPersister? {
-    get
-  }
   public init(path_to_channel_data: Swift.String)
   public init(pointer: LDKFramework.LDKFilesystemPersister)
   public init(pointer: LDKFramework.LDKFilesystemPersister, anchor: LDKFramework.NativeTypeWrapper)
@@ -484,9 +409,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Event : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKEvent? {
-    get
-  }
   public init(pointer: LDKFramework.LDKEvent)
   public init(pointer: LDKFramework.LDKEvent, anchor: LDKFramework.NativeTypeWrapper)
   public enum EventValueType {
@@ -542,7 +464,7 @@ import Swift
     @objc deinit
   }
   @_hasMissingDesignatedInitializers public class SpendableOutputs : LDKFramework.NativeTypeWrapper {
-    public func getOutputs() -> [LDKFramework.LDKSpendableOutputDescriptor]
+    public func getOutputs() -> [LDKFramework.SpendableOutputDescriptor]
     @objc deinit
   }
   @_hasMissingDesignatedInitializers public class PaymentForwarded : LDKFramework.NativeTypeWrapper {
@@ -552,9 +474,6 @@ import Swift
   }
 }
 @_hasMissingDesignatedInitializers public class ChannelDetails : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelDetails? {
-    get
-  }
   public init(channel_id_arg: [Swift.UInt8], counterparty_arg: LDKFramework.ChannelCounterparty, funding_txo_arg: LDKFramework.OutPoint, short_channel_id_arg: LDKFramework.Option_u64Z, channel_value_satoshis_arg: Swift.UInt64, unspendable_punishment_reserve_arg: LDKFramework.Option_u64Z, user_id_arg: Swift.UInt64, outbound_capacity_msat_arg: Swift.UInt64, inbound_capacity_msat_arg: Swift.UInt64, confirmations_required_arg: LDKFramework.Option_u32Z, force_close_spend_delay_arg: LDKFramework.Option_u16Z, is_outbound_arg: Swift.Bool, is_funding_locked_arg: Swift.Bool, is_usable_arg: Swift.Bool, is_public_arg: Swift.Bool)
   public init(pointer: LDKFramework.LDKChannelDetails)
   public init(pointer: LDKFramework.LDKChannelDetails, anchor: LDKFramework.NativeTypeWrapper)
@@ -592,9 +511,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class HTLCFailChannelUpdate : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKHTLCFailChannelUpdate? {
-    get
-  }
   public init(pointer: LDKFramework.LDKHTLCFailChannelUpdate)
   public init(pointer: LDKFramework.LDKHTLCFailChannelUpdate, anchor: LDKFramework.NativeTypeWrapper)
   public enum HTLCFailChannelUpdateValueType {
@@ -630,9 +546,6 @@ import Swift
   }
 }
 @_hasMissingDesignatedInitializers public class Result_HTLCOutputInCommitmentDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_HTLCOutputInCommitmentDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_HTLCOutputInCommitmentDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_HTLCOutputInCommitmentDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -645,9 +558,6 @@ import Swift
   public func clone() -> LDKFramework.Result_HTLCOutputInCommitmentDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_NoneLightningErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_NoneLightningErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_NoneLightningErrorZ)
   public init(pointer: LDKFramework.LDKCResult_NoneLightningErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -659,9 +569,6 @@ import Swift
   public func clone() -> LDKFramework.Result_NoneLightningErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_C2Tuple_BlockHashChannelManagerZDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_C2Tuple_BlockHashChannelManagerZDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_C2Tuple_BlockHashChannelManagerZDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_C2Tuple_BlockHashChannelManagerZDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -675,7 +582,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers open class KeysInterface : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKKeysInterface?
   public init()
   public init(pointer: LDKFramework.LDKKeysInterface)
   public init(pointer: LDKFramework.LDKKeysInterface, anchor: LDKFramework.NativeTypeWrapper)
@@ -704,7 +610,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers open class ChannelMessageHandler : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelMessageHandler?
   public init()
   public init(pointer: LDKFramework.LDKChannelMessageHandler)
   public init(pointer: LDKFramework.LDKChannelMessageHandler, anchor: LDKFramework.NativeTypeWrapper)
@@ -759,9 +664,6 @@ import Swift
   override public init(pointer: LDKFramework.LDKChannelMessageHandler, anchor: LDKFramework.NativeTypeWrapper)
 }
 @_hasMissingDesignatedInitializers public class RouteHint : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKRouteHint? {
-    get
-  }
   public init(pointer: LDKFramework.LDKRouteHint)
   public init(pointer: LDKFramework.LDKRouteHint, anchor: LDKFramework.NativeTypeWrapper)
   public class func eq(a: LDKFramework.RouteHint, b: LDKFramework.RouteHint) -> Swift.Bool
@@ -769,18 +671,12 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class LockedNetworkGraph : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKLockedNetworkGraph? {
-    get
-  }
   public init(pointer: LDKFramework.LDKLockedNetworkGraph)
   public init(pointer: LDKFramework.LDKLockedNetworkGraph, anchor: LDKFramework.NativeTypeWrapper)
   public func graph() -> LDKFramework.NetworkGraph
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class UpdateFailMalformedHTLC : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKUpdateFailMalformedHTLC? {
-    get
-  }
   public init(pointer: LDKFramework.LDKUpdateFailMalformedHTLC)
   public init(pointer: LDKFramework.LDKUpdateFailMalformedHTLC, anchor: LDKFramework.NativeTypeWrapper)
   public func get_channel_id() -> [Swift.UInt8]
@@ -795,9 +691,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_FundingCreatedDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_FundingCreatedDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_FundingCreatedDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_FundingCreatedDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -810,9 +703,6 @@ import Swift
   public func clone() -> LDKFramework.Result_FundingCreatedDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_PaymentSecretAPIErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_PaymentSecretAPIErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_PaymentSecretAPIErrorZ)
   public init(pointer: LDKFramework.LDKCResult_PaymentSecretAPIErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -825,9 +715,6 @@ import Swift
   public func clone() -> LDKFramework.Result_PaymentSecretAPIErrorZ
 }
 @_hasMissingDesignatedInitializers public class UnsignedNodeAnnouncement : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKUnsignedNodeAnnouncement? {
-    get
-  }
   public init(pointer: LDKFramework.LDKUnsignedNodeAnnouncement)
   public init(pointer: LDKFramework.LDKUnsignedNodeAnnouncement, anchor: LDKFramework.NativeTypeWrapper)
   public func get_features() -> LDKFramework.NodeFeatures
@@ -847,9 +734,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class C2Tuple_u32TxOutZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKC2Tuple_u32TxOutZ? {
-    get
-  }
   public init(pointer: LDKFramework.LDKC2Tuple_u32TxOutZ)
   public init(pointer: LDKFramework.LDKC2Tuple_u32TxOutZ, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.C2Tuple_u32TxOutZ
@@ -857,9 +741,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_DescriptionCreationErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_DescriptionCreationErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_DescriptionCreationErrorZ)
   public init(pointer: LDKFramework.LDKCResult_DescriptionCreationErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -872,9 +753,6 @@ import Swift
   public func clone() -> LDKFramework.Result_DescriptionCreationErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_FundingLockedDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_FundingLockedDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_FundingLockedDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_FundingLockedDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -887,9 +765,6 @@ import Swift
   public func clone() -> LDKFramework.Result_FundingLockedDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_UnsignedChannelAnnouncementDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_UnsignedChannelAnnouncementDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_UnsignedChannelAnnouncementDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_UnsignedChannelAnnouncementDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -902,9 +777,6 @@ import Swift
   public func clone() -> LDKFramework.Result_UnsignedChannelAnnouncementDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_AnnouncementSignaturesDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_AnnouncementSignaturesDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_AnnouncementSignaturesDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_AnnouncementSignaturesDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -917,9 +789,6 @@ import Swift
   public func clone() -> LDKFramework.Result_AnnouncementSignaturesDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_StaticPaymentOutputDescriptorDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_StaticPaymentOutputDescriptorDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_StaticPaymentOutputDescriptorDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_StaticPaymentOutputDescriptorDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -932,9 +801,6 @@ import Swift
   public func clone() -> LDKFramework.Result_StaticPaymentOutputDescriptorDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_QueryShortChannelIdsDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_QueryShortChannelIdsDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_QueryShortChannelIdsDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_QueryShortChannelIdsDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -947,9 +813,6 @@ import Swift
   public func clone() -> LDKFramework.Result_QueryShortChannelIdsDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class C2Tuple_BlockHashChannelManagerZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKC2Tuple_BlockHashChannelManagerZ? {
-    get
-  }
   public init(pointer: LDKFramework.LDKC2Tuple_BlockHashChannelManagerZ)
   public init(pointer: LDKFramework.LDKC2Tuple_BlockHashChannelManagerZ, anchor: LDKFramework.NativeTypeWrapper)
   #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
@@ -958,9 +821,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class ChannelManagerReadArgs : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelManagerReadArgs? {
-    get
-  }
   public init(pointer: LDKFramework.LDKChannelManagerReadArgs)
   public init(pointer: LDKFramework.LDKChannelManagerReadArgs, anchor: LDKFramework.NativeTypeWrapper)
   convenience public init(keys_manager: LDKFramework.KeysInterface, fee_estimator: LDKFramework.FeeEstimator, chain_monitor: LDKFramework.Watch, tx_broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger, default_config: LDKFramework.UserConfig, channel_monitors: [LDKFramework.ChannelMonitor])
@@ -979,9 +839,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Fallback : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKFallback? {
-    get
-  }
   public init(pointer: LDKFramework.LDKFallback)
   public init(pointer: LDKFramework.LDKFallback, anchor: LDKFramework.NativeTypeWrapper)
   public enum FallbackValueType {
@@ -1009,9 +866,6 @@ import Swift
   }
 }
 @_hasMissingDesignatedInitializers public class ChannelInfo : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelInfo? {
-    get
-  }
   public init(features_arg: LDKFramework.ChannelFeatures, node_one_arg: [Swift.UInt8], one_to_two_arg: LDKFramework.DirectionalChannelInfo, node_two_arg: [Swift.UInt8], two_to_one_arg: LDKFramework.DirectionalChannelInfo, capacity_sats_arg: LDKFramework.Option_u64Z, announcement_message_arg: LDKFramework.ChannelAnnouncement)
   public init(pointer: LDKFramework.LDKChannelInfo)
   public init(pointer: LDKFramework.LDKChannelInfo, anchor: LDKFramework.NativeTypeWrapper)
@@ -1035,9 +889,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_PayeePubKeyErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_PayeePubKeyErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_PayeePubKeyErrorZ)
   public init(pointer: LDKFramework.LDKCResult_PayeePubKeyErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1052,9 +903,6 @@ import Swift
   public func clone() -> LDKFramework.Result_PayeePubKeyErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_CommitmentTransactionDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_CommitmentTransactionDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_CommitmentTransactionDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_CommitmentTransactionDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1067,9 +915,6 @@ import Swift
   public func clone() -> LDKFramework.Result_CommitmentTransactionDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class BuiltCommitmentTransaction : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKBuiltCommitmentTransaction? {
-    get
-  }
   public init(transaction_arg: [Swift.UInt8], txid_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKBuiltCommitmentTransaction)
   public init(pointer: LDKFramework.LDKBuiltCommitmentTransaction, anchor: LDKFramework.NativeTypeWrapper)
@@ -1085,9 +930,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_UpdateFeeDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_UpdateFeeDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_UpdateFeeDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_UpdateFeeDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1100,9 +942,6 @@ import Swift
   public func clone() -> LDKFramework.Result_UpdateFeeDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_CVec_CVec_u8ZZNoneZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_CVec_CVec_u8ZZNoneZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_CVec_CVec_u8ZZNoneZ)
   public init(pointer: LDKFramework.LDKCResult_CVec_CVec_u8ZZNoneZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1114,9 +953,6 @@ import Swift
   public func clone() -> LDKFramework.Result_CVec_CVec_u8ZZNoneZ
 }
 @_hasMissingDesignatedInitializers public class Result_RouteDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_RouteDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_RouteDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_RouteDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1129,9 +965,6 @@ import Swift
   public func clone() -> LDKFramework.Result_RouteDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class ChannelUpdate : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelUpdate? {
-    get
-  }
   public init(signature_arg: [Swift.UInt8], contents_arg: LDKFramework.UnsignedChannelUpdate)
   public init(pointer: LDKFramework.LDKChannelUpdate)
   public init(pointer: LDKFramework.LDKChannelUpdate, anchor: LDKFramework.NativeTypeWrapper)
@@ -1145,9 +978,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class NetGraphMsgHandler : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKNetGraphMsgHandler? {
-    get
-  }
   public init(chain_access: LDKFramework.Access?, logger: LDKFramework.Logger, network_graph: LDKFramework.NetworkGraph)
   public init(pointer: LDKFramework.LDKNetGraphMsgHandler)
   public init(pointer: LDKFramework.LDKNetGraphMsgHandler, anchor: LDKFramework.NativeTypeWrapper)
@@ -1158,9 +988,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class InitFeatures : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKInitFeatures? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKInitFeatures)
   public init(pointer: LDKFramework.LDKInitFeatures, anchor: LDKFramework.NativeTypeWrapper)
@@ -1172,18 +999,12 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class C2Tuple_BlockHashChannelMonitorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ? {
-    get
-  }
   public init(pointer: LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ)
   public init(pointer: LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ, anchor: LDKFramework.NativeTypeWrapper)
   public class func new(a: [Swift.UInt8], b: LDKFramework.ChannelMonitor) -> LDKFramework.C2Tuple_BlockHashChannelMonitorZ
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_NetworkGraphDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_NetworkGraphDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_NetworkGraphDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_NetworkGraphDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1196,9 +1017,6 @@ import Swift
   public func clone() -> LDKFramework.Result_NetworkGraphDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class RouteHintHop : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKRouteHintHop? {
-    get
-  }
   public init(src_node_id_arg: [Swift.UInt8], short_channel_id_arg: Swift.UInt64, fees_arg: LDKFramework.RoutingFees, cltv_expiry_delta_arg: Swift.UInt16, htlc_minimum_msat_arg: LDKFramework.Option_u64Z, htlc_maximum_msat_arg: LDKFramework.Option_u64Z)
   public init(pointer: LDKFramework.LDKRouteHintHop)
   public init(pointer: LDKFramework.LDKRouteHintHop, anchor: LDKFramework.NativeTypeWrapper)
@@ -1219,9 +1037,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class SignedRawInvoice : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKSignedRawInvoice? {
-    get
-  }
   public init(pointer: LDKFramework.LDKSignedRawInvoice)
   public init(pointer: LDKFramework.LDKSignedRawInvoice, anchor: LDKFramework.NativeTypeWrapper)
   public class func eq(a: LDKFramework.SignedRawInvoice, b: LDKFramework.SignedRawInvoice) -> Swift.Bool
@@ -1237,7 +1052,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers open class BroadcasterInterface : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKBroadcasterInterface?
   public init()
   public init(pointer: LDKFramework.LDKBroadcasterInterface)
   public init(pointer: LDKFramework.LDKBroadcasterInterface, anchor: LDKFramework.NativeTypeWrapper)
@@ -1254,9 +1068,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_InitFeaturesDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_InitFeaturesDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_InitFeaturesDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_InitFeaturesDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1268,9 +1079,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_DirectionalChannelInfoDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_DirectionalChannelInfoDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_DirectionalChannelInfoDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_DirectionalChannelInfoDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1283,9 +1091,6 @@ import Swift
   public func clone() -> LDKFramework.Result_DirectionalChannelInfoDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_ErrorMessageDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ErrorMessageDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ErrorMessageDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ErrorMessageDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1298,9 +1103,6 @@ import Swift
   public func clone() -> LDKFramework.Result_ErrorMessageDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Invoice : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKInvoice? {
-    get
-  }
   public init(pointer: LDKFramework.LDKInvoice)
   public init(pointer: LDKFramework.LDKInvoice, anchor: LDKFramework.NativeTypeWrapper)
   public class func eq(a: LDKFramework.Invoice, b: LDKFramework.Invoice) -> Swift.Bool
@@ -1316,8 +1118,8 @@ import Swift
   public func recover_payee_pub_key() -> [Swift.UInt8]
   public func expiry_time() -> Swift.UInt64
   public func min_final_cltv_expiry() -> Swift.UInt64
-  public func private_routes() -> [LDKFramework.LDKPrivateRoute]
-  public func route_hints() -> [LDKFramework.LDKRouteHint]
+  public func private_routes() -> [LDKFramework.PrivateRoute]
+  public func route_hints() -> [LDKFramework.RouteHint]
   public func currency() -> LDKFramework.LDKCurrency
   public func amount_pico_btc() -> LDKFramework.Option_u64Z
   public class func from_str(s: Swift.String) -> LDKFramework.Result_InvoiceNoneZ
@@ -1325,9 +1127,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class NetworkGraph : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKNetworkGraph? {
-    get
-  }
   public init(genesis_hash: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKNetworkGraph)
   public init(pointer: LDKFramework.LDKNetworkGraph, anchor: LDKFramework.NativeTypeWrapper)
@@ -1344,9 +1143,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class UpdateAddHTLC : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKUpdateAddHTLC? {
-    get
-  }
   public init(pointer: LDKFramework.LDKUpdateAddHTLC)
   public init(pointer: LDKFramework.LDKUpdateAddHTLC, anchor: LDKFramework.NativeTypeWrapper)
   public func get_channel_id() -> [Swift.UInt8]
@@ -1365,9 +1161,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class FundingCreated : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKFundingCreated? {
-    get
-  }
   public init(temporary_channel_id_arg: [Swift.UInt8], funding_txid_arg: [Swift.UInt8], funding_output_index_arg: Swift.UInt16, signature_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKFundingCreated)
   public init(pointer: LDKFramework.LDKFundingCreated, anchor: LDKFramework.NativeTypeWrapper)
@@ -1385,9 +1178,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_ChannelInfoDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ChannelInfoDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ChannelInfoDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ChannelInfoDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1400,9 +1190,6 @@ import Swift
   public func clone() -> LDKFramework.Result_ChannelInfoDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_ClosingSignedDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ClosingSignedDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ClosingSignedDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ClosingSignedDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1415,9 +1202,6 @@ import Swift
   public func clone() -> LDKFramework.Result_ClosingSignedDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class TxOut : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKTxOut? {
-    get
-  }
   public init(script_pubkey: [Swift.UInt8], value: Swift.UInt64)
   public init(pointer: LDKFramework.LDKTxOut)
   public init(pointer: LDKFramework.LDKTxOut, anchor: LDKFramework.NativeTypeWrapper)
@@ -1427,9 +1211,6 @@ import Swift
   public func get_value() -> Swift.UInt64
 }
 @_hasMissingDesignatedInitializers public class QueryChannelRange : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKQueryChannelRange? {
-    get
-  }
   public init(chain_hash_arg: [Swift.UInt8], first_blocknum_arg: Swift.UInt32, number_of_blocks_arg: Swift.UInt32)
   public init(pointer: LDKFramework.LDKQueryChannelRange)
   public init(pointer: LDKFramework.LDKQueryChannelRange, anchor: LDKFramework.NativeTypeWrapper)
@@ -1446,9 +1227,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_NoneChannelMonitorUpdateErrZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_NoneChannelMonitorUpdateErrZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_NoneChannelMonitorUpdateErrZ)
   public init(pointer: LDKFramework.LDKCResult_NoneChannelMonitorUpdateErrZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1460,9 +1238,6 @@ import Swift
   public func clone() -> LDKFramework.Result_NoneChannelMonitorUpdateErrZ
 }
 @_hasMissingDesignatedInitializers public class InMemorySigner : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKInMemorySigner? {
-    get
-  }
   public init(funding_key: [Swift.UInt8], revocation_base_key: [Swift.UInt8], payment_key: [Swift.UInt8], delayed_payment_base_key: [Swift.UInt8], htlc_base_key: [Swift.UInt8], commitment_seed: [Swift.UInt8], channel_value_satoshis: Swift.UInt64, channel_keys_id: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKInMemorySigner)
   public init(pointer: LDKFramework.LDKInMemorySigner, anchor: LDKFramework.NativeTypeWrapper)
@@ -1494,9 +1269,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_SignedRawInvoiceNoneZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_SignedRawInvoiceNoneZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_SignedRawInvoiceNoneZ)
   public init(pointer: LDKFramework.LDKCResult_SignedRawInvoiceNoneZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1508,9 +1280,6 @@ import Swift
   public func clone() -> LDKFramework.Result_SignedRawInvoiceNoneZ
 }
 @_hasMissingDesignatedInitializers public class UserConfig : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKUserConfig? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKUserConfig)
   public init(pointer: LDKFramework.LDKUserConfig, anchor: LDKFramework.NativeTypeWrapper)
@@ -1526,9 +1295,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_OutPointDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_OutPointDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_OutPointDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_OutPointDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1541,9 +1307,6 @@ import Swift
   public func clone() -> LDKFramework.Result_OutPointDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class PositiveTimestamp : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKPositiveTimestamp? {
-    get
-  }
   public init(pointer: LDKFramework.LDKPositiveTimestamp)
   public init(pointer: LDKFramework.LDKPositiveTimestamp, anchor: LDKFramework.NativeTypeWrapper)
   public class func eq(a: LDKFramework.PositiveTimestamp, b: LDKFramework.PositiveTimestamp) -> Swift.Bool
@@ -1555,9 +1318,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class ReplyChannelRange : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKReplyChannelRange? {
-    get
-  }
   public init(chain_hash_arg: [Swift.UInt8], first_blocknum_arg: Swift.UInt32, number_of_blocks_arg: Swift.UInt32, sync_complete_arg: Swift.Bool, short_channel_ids_arg: [Swift.UInt64])
   public init(pointer: LDKFramework.LDKReplyChannelRange)
   public init(pointer: LDKFramework.LDKReplyChannelRange, anchor: LDKFramework.NativeTypeWrapper)
@@ -1576,9 +1336,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_NonePeerHandleErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_NonePeerHandleErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_NonePeerHandleErrorZ)
   public init(pointer: LDKFramework.LDKCResult_NonePeerHandleErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1590,7 +1347,6 @@ import Swift
   public func clone() -> LDKFramework.Result_NonePeerHandleErrorZ
 }
 @_hasMissingDesignatedInitializers open class ChannelManagerPersister : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelManagerPersister?
   public init()
   public init(pointer: LDKFramework.LDKChannelManagerPersister)
   public init(pointer: LDKFramework.LDKChannelManagerPersister, anchor: LDKFramework.NativeTypeWrapper)
@@ -1607,9 +1363,6 @@ import Swift
   override public init(pointer: LDKFramework.LDKChannelManagerPersister, anchor: LDKFramework.NativeTypeWrapper)
 }
 @_hasMissingDesignatedInitializers public class InvalidShutdownScript : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKInvalidShutdownScript? {
-    get
-  }
   public init(script_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKInvalidShutdownScript)
   public init(pointer: LDKFramework.LDKInvalidShutdownScript, anchor: LDKFramework.NativeTypeWrapper)
@@ -1618,9 +1371,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ? {
-    get
-  }
   public init(pointer: LDKFramework.LDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ)
   public init(pointer: LDKFramework.LDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ
@@ -1628,9 +1378,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_HTLCUpdateDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_HTLCUpdateDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_HTLCUpdateDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_HTLCUpdateDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1643,9 +1390,6 @@ import Swift
   public func clone() -> LDKFramework.Result_HTLCUpdateDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_ChannelMonitorUpdateDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ChannelMonitorUpdateDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ChannelMonitorUpdateDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ChannelMonitorUpdateDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1658,9 +1402,6 @@ import Swift
   public func clone() -> LDKFramework.Result_ChannelMonitorUpdateDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_UnsignedChannelUpdateDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_UnsignedChannelUpdateDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_UnsignedChannelUpdateDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_UnsignedChannelUpdateDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1673,9 +1414,6 @@ import Swift
   public func clone() -> LDKFramework.Result_UnsignedChannelUpdateDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Option_u32Z : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCOption_u32Z? {
-    get
-  }
   public init(value: Swift.UInt32?)
   public init(pointer: LDKFramework.LDKCOption_u32Z)
   public init(pointer: LDKFramework.LDKCOption_u32Z, anchor: LDKFramework.NativeTypeWrapper)
@@ -1686,9 +1424,6 @@ import Swift
   public func clone() -> LDKFramework.Option_u32Z
 }
 @_hasMissingDesignatedInitializers public class Result_TrustedCommitmentTransactionNoneZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_TrustedCommitmentTransactionNoneZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_TrustedCommitmentTransactionNoneZ)
   public init(pointer: LDKFramework.LDKCResult_TrustedCommitmentTransactionNoneZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1701,9 +1436,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class UnsignedChannelAnnouncement : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKUnsignedChannelAnnouncement? {
-    get
-  }
   public init(pointer: LDKFramework.LDKUnsignedChannelAnnouncement)
   public init(pointer: LDKFramework.LDKUnsignedChannelAnnouncement, anchor: LDKFramework.NativeTypeWrapper)
   public func get_features() -> LDKFramework.ChannelFeatures
@@ -1726,9 +1458,6 @@ import Swift
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_boolPeerHandleErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_boolPeerHandleErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_boolPeerHandleErrorZ)
   public init(pointer: LDKFramework.LDKCResult_boolPeerHandleErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1750,16 +1479,13 @@ import Swift
   public init(channel_manager_serialized: [Swift.UInt8], channel_monitors_serialized: [[Swift.UInt8]], keys_interface: LDKFramework.KeysInterface, fee_estimator: LDKFramework.FeeEstimator, chain_monitor: LDKFramework.ChainMonitor, filter: LDKFramework.Filter?, router: LDKFramework.NetGraphMsgHandler?, tx_broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger) throws
   public init(network: LDKFramework.LDKNetwork, config: LDKFramework.UserConfig, current_blockchain_tip_hash: [Swift.UInt8], current_blockchain_tip_height: Swift.UInt32, keys_interface: LDKFramework.KeysInterface, fee_estimator: LDKFramework.FeeEstimator, chain_monitor: LDKFramework.ChainMonitor, router: LDKFramework.NetGraphMsgHandler?, tx_broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger)
   public func chain_sync_completed(persister: LDKFramework.ExtendedChannelManagerPersister)
-  public func interrupt()
+  public func interrupt(tcpPeerHandler: LDKFramework.TCPPeerHandler? = nil)
   @objc deinit
 }
 public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPersister {
   func handle_event(event: LDKFramework.Event)
 }
 @_hasMissingDesignatedInitializers public class Result_StringErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_StringErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_StringErrorZ)
   public init(pointer: LDKFramework.LDKCResult_StringErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1773,9 +1499,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_ShutdownScriptDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ShutdownScriptDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ShutdownScriptDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ShutdownScriptDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1788,7 +1511,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func clone() -> LDKFramework.Result_ShutdownScriptDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers open class EventsProvider : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKEventsProvider?
   public init()
   public init(pointer: LDKFramework.LDKEventsProvider)
   public init(pointer: LDKFramework.LDKEventsProvider, anchor: LDKFramework.NativeTypeWrapper)
@@ -1805,9 +1527,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   override public init(pointer: LDKFramework.LDKEventsProvider, anchor: LDKFramework.NativeTypeWrapper)
 }
 @_hasMissingDesignatedInitializers public class DirectedChannelTransactionParameters : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKDirectedChannelTransactionParameters? {
-    get
-  }
   public init(pointer: LDKFramework.LDKDirectedChannelTransactionParameters)
   public init(pointer: LDKFramework.LDKDirectedChannelTransactionParameters, anchor: LDKFramework.NativeTypeWrapper)
   public func broadcaster_pubkeys() -> LDKFramework.ChannelPublicKeys
@@ -1818,9 +1537,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class ExpiryTime : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKExpiryTime? {
-    get
-  }
   public init(pointer: LDKFramework.LDKExpiryTime)
   public init(pointer: LDKFramework.LDKExpiryTime, anchor: LDKFramework.NativeTypeWrapper)
   public class func eq(a: LDKFramework.ExpiryTime, b: LDKFramework.ExpiryTime) -> Swift.Bool
@@ -1832,9 +1548,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_ChannelTransactionParametersDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ChannelTransactionParametersDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ChannelTransactionParametersDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ChannelTransactionParametersDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1847,9 +1560,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func clone() -> LDKFramework.Result_ChannelTransactionParametersDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_C2Tuple_SignatureCVec_SignatureZZNoneZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_C2Tuple_SignatureCVec_SignatureZZNoneZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_C2Tuple_SignatureCVec_SignatureZZNoneZ)
   public init(pointer: LDKFramework.LDKCResult_C2Tuple_SignatureCVec_SignatureZZNoneZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1861,9 +1571,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func clone() -> LDKFramework.Result_C2Tuple_SignatureCVec_SignatureZZNoneZ
 }
 @_hasMissingDesignatedInitializers public class Result_BuiltCommitmentTransactionDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_BuiltCommitmentTransactionDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_BuiltCommitmentTransactionDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_BuiltCommitmentTransactionDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -1876,9 +1583,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func clone() -> LDKFramework.Result_BuiltCommitmentTransactionDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class UpdateFee : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKUpdateFee? {
-    get
-  }
   public init(channel_id_arg: [Swift.UInt8], feerate_per_kw_arg: Swift.UInt32)
   public init(pointer: LDKFramework.LDKUpdateFee)
   public init(pointer: LDKFramework.LDKUpdateFee, anchor: LDKFramework.NativeTypeWrapper)
@@ -1892,9 +1596,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class QueryShortChannelIds : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKQueryShortChannelIds? {
-    get
-  }
   public init(chain_hash_arg: [Swift.UInt8], short_channel_ids_arg: [Swift.UInt64])
   public init(pointer: LDKFramework.LDKQueryShortChannelIds)
   public init(pointer: LDKFramework.LDKQueryShortChannelIds, anchor: LDKFramework.NativeTypeWrapper)
@@ -1907,9 +1608,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class UpdateFailHTLC : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKUpdateFailHTLC? {
-    get
-  }
   public init(pointer: LDKFramework.LDKUpdateFailHTLC)
   public init(pointer: LDKFramework.LDKUpdateFailHTLC, anchor: LDKFramework.NativeTypeWrapper)
   public func get_channel_id() -> [Swift.UInt8]
@@ -1922,9 +1620,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class ChannelPublicKeys : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelPublicKeys? {
-    get
-  }
   public init(funding_pubkey_arg: [Swift.UInt8], revocation_basepoint_arg: [Swift.UInt8], payment_point_arg: [Swift.UInt8], delayed_payment_basepoint_arg: [Swift.UInt8], htlc_basepoint_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKChannelPublicKeys)
   public init(pointer: LDKFramework.LDKChannelPublicKeys, anchor: LDKFramework.NativeTypeWrapper)
@@ -1944,9 +1639,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class APIError : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKAPIError? {
-    get
-  }
   public init(pointer: LDKFramework.LDKAPIError)
   public init(pointer: LDKFramework.LDKAPIError, anchor: LDKFramework.NativeTypeWrapper)
   public enum APIErrorValueType {
@@ -1994,9 +1686,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   }
 }
 @_hasMissingDesignatedInitializers public class DirectionalChannelInfo : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKDirectionalChannelInfo? {
-    get
-  }
   public init(last_update_arg: Swift.UInt32, enabled_arg: Swift.Bool, cltv_expiry_delta_arg: Swift.UInt16, htlc_minimum_msat_arg: Swift.UInt64, htlc_maximum_msat_arg: LDKFramework.Option_u64Z, fees_arg: LDKFramework.RoutingFees, last_update_message_arg: LDKFramework.ChannelUpdate)
   public init(pointer: LDKFramework.LDKDirectionalChannelInfo)
   public init(pointer: LDKFramework.LDKDirectionalChannelInfo, anchor: LDKFramework.NativeTypeWrapper)
@@ -2020,9 +1709,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class BestBlock : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKBestBlock? {
-    get
-  }
   public init(block_hash: [Swift.UInt8], height: Swift.UInt32)
   public init(pointer: LDKFramework.LDKBestBlock)
   public init(pointer: LDKFramework.LDKBestBlock, anchor: LDKFramework.NativeTypeWrapper)
@@ -2032,9 +1718,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_UpdateFulfillHTLCDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_UpdateFulfillHTLCDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_UpdateFulfillHTLCDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_UpdateFulfillHTLCDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2047,9 +1730,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func clone() -> LDKFramework.Result_UpdateFulfillHTLCDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class MinFinalCltvExpiry : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKMinFinalCltvExpiry? {
-    get
-  }
   public init(pointer: LDKFramework.LDKMinFinalCltvExpiry)
   public init(pointer: LDKFramework.LDKMinFinalCltvExpiry, anchor: LDKFramework.NativeTypeWrapper)
   public class func eq(a: LDKFramework.MinFinalCltvExpiry, b: LDKFramework.MinFinalCltvExpiry) -> Swift.Bool
@@ -2057,9 +1737,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class NodeAnnouncement : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKNodeAnnouncement? {
-    get
-  }
   public init(signature_arg: [Swift.UInt8], contents_arg: LDKFramework.UnsignedNodeAnnouncement)
   public init(pointer: LDKFramework.LDKNodeAnnouncement)
   public init(pointer: LDKFramework.LDKNodeAnnouncement, anchor: LDKFramework.NativeTypeWrapper)
@@ -2073,9 +1750,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class UnsignedChannelUpdate : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKUnsignedChannelUpdate? {
-    get
-  }
   public init(pointer: LDKFramework.LDKUnsignedChannelUpdate)
   public init(pointer: LDKFramework.LDKUnsignedChannelUpdate, anchor: LDKFramework.NativeTypeWrapper)
   public func get_chain_hash() -> [Swift.UInt8]
@@ -2100,18 +1774,12 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class MonitorUpdateError : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKMonitorUpdateError? {
-    get
-  }
   public init(pointer: LDKFramework.LDKMonitorUpdateError)
   public init(pointer: LDKFramework.LDKMonitorUpdateError, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.MonitorUpdateError
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class BackgroundProcessor : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKBackgroundProcessor? {
-    get
-  }
   public init(persister: LDKFramework.ChannelManagerPersister, event_handler: LDKFramework.EventHandler, chain_monitor: LDKFramework.ChainMonitor, channel_manager: LDKFramework.ChannelManager, peer_manager: LDKFramework.PeerManager, logger: LDKFramework.Logger)
   public init(pointer: LDKFramework.LDKBackgroundProcessor)
   public init(pointer: LDKFramework.LDKBackgroundProcessor, anchor: LDKFramework.NativeTypeWrapper)
@@ -2120,9 +1788,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class TxCreationKeys : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKTxCreationKeys? {
-    get
-  }
   public init(per_commitment_point_arg: [Swift.UInt8], revocation_key_arg: [Swift.UInt8], broadcaster_htlc_key_arg: [Swift.UInt8], countersignatory_htlc_key_arg: [Swift.UInt8], broadcaster_delayed_payment_key_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKTxCreationKeys)
   public init(pointer: LDKFramework.LDKTxCreationKeys, anchor: LDKFramework.NativeTypeWrapper)
@@ -2144,9 +1809,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class TrustedCommitmentTransaction : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKTrustedCommitmentTransaction? {
-    get
-  }
   public init(pointer: LDKFramework.LDKTrustedCommitmentTransaction)
   public init(pointer: LDKFramework.LDKTrustedCommitmentTransaction, anchor: LDKFramework.NativeTypeWrapper)
   public func txid() -> [Swift.UInt8]
@@ -2156,9 +1818,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_OpenChannelDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_OpenChannelDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_OpenChannelDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_OpenChannelDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2171,9 +1830,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func clone() -> LDKFramework.Result_OpenChannelDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class C2Tuple_OutPointScriptZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKC2Tuple_OutPointScriptZ? {
-    get
-  }
   public init(pointer: LDKFramework.LDKC2Tuple_OutPointScriptZ)
   public init(pointer: LDKFramework.LDKC2Tuple_OutPointScriptZ, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.C2Tuple_OutPointScriptZ
@@ -2181,9 +1837,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_ChannelConfigDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ChannelConfigDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ChannelConfigDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ChannelConfigDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2196,9 +1849,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func clone() -> LDKFramework.Result_ChannelConfigDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class HTLCUpdate : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKHTLCUpdate? {
-    get
-  }
   public init(pointer: LDKFramework.LDKHTLCUpdate)
   public init(pointer: LDKFramework.LDKHTLCUpdate, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.HTLCUpdate
@@ -2207,9 +1857,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_CounterpartyChannelTransactionParametersDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_CounterpartyChannelTransactionParametersDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_CounterpartyChannelTransactionParametersDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_CounterpartyChannelTransactionParametersDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2222,9 +1869,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func clone() -> LDKFramework.Result_CounterpartyChannelTransactionParametersDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class NodeFeatures : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKNodeFeatures? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKNodeFeatures)
   public init(pointer: LDKFramework.LDKNodeFeatures, anchor: LDKFramework.NativeTypeWrapper)
@@ -2236,9 +1880,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class SignOrCreationError : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKSignOrCreationError? {
-    get
-  }
   public init(pointer: LDKFramework.LDKSignOrCreationError)
   public init(pointer: LDKFramework.LDKSignOrCreationError, anchor: LDKFramework.NativeTypeWrapper)
   public enum SignOrCreationErrorValueType {
@@ -2259,7 +1900,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func to_str() -> Swift.String
 }
 @_hasMissingDesignatedInitializers open class Persist : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKPersist?
   public init()
   public init(pointer: LDKFramework.LDKPersist)
   public init(pointer: LDKFramework.LDKPersist, anchor: LDKFramework.NativeTypeWrapper)
@@ -2278,9 +1918,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class AcceptChannel : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKAcceptChannel? {
-    get
-  }
   public init(pointer: LDKFramework.LDKAcceptChannel)
   public init(pointer: LDKFramework.LDKAcceptChannel, anchor: LDKFramework.NativeTypeWrapper)
   public func get_temporary_channel_id() -> [Swift.UInt8]
@@ -2317,18 +1954,12 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class DecodeError : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKDecodeError? {
-    get
-  }
   public init(pointer: LDKFramework.LDKDecodeError)
   public init(pointer: LDKFramework.LDKDecodeError, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.DecodeError
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class OutPoint : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKOutPoint? {
-    get
-  }
   public init(txid_arg: [Swift.UInt8], index_arg: Swift.UInt16)
   public init(pointer: LDKFramework.LDKOutPoint)
   public init(pointer: LDKFramework.LDKOutPoint, anchor: LDKFramework.NativeTypeWrapper)
@@ -2345,9 +1976,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class ChannelReestablish : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelReestablish? {
-    get
-  }
   public init(pointer: LDKFramework.LDKChannelReestablish)
   public init(pointer: LDKFramework.LDKChannelReestablish, anchor: LDKFramework.NativeTypeWrapper)
   public func get_channel_id() -> [Swift.UInt8]
@@ -2362,9 +1990,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class CommitmentTransaction : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCommitmentTransaction? {
-    get
-  }
   public init(pointer: LDKFramework.LDKCommitmentTransaction)
   public init(pointer: LDKFramework.LDKCommitmentTransaction, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.CommitmentTransaction
@@ -2379,9 +2004,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class RawDataPart : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKRawDataPart? {
-    get
-  }
   public init(pointer: LDKFramework.LDKRawDataPart)
   public init(pointer: LDKFramework.LDKRawDataPart, anchor: LDKFramework.NativeTypeWrapper)
   public func get_timestamp() -> LDKFramework.PositiveTimestamp
@@ -2391,9 +2013,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class ClosingSigned : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKClosingSigned? {
-    get
-  }
   public init(channel_id_arg: [Swift.UInt8], fee_satoshis_arg: Swift.UInt64, signature_arg: [Swift.UInt8], fee_range_arg: LDKFramework.ClosingSignedFeeRange)
   public init(pointer: LDKFramework.LDKClosingSigned)
   public init(pointer: LDKFramework.LDKClosingSigned, anchor: LDKFramework.NativeTypeWrapper)
@@ -2411,9 +2030,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_UnsignedNodeAnnouncementDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_UnsignedNodeAnnouncementDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_UnsignedNodeAnnouncementDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_UnsignedNodeAnnouncementDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2426,9 +2042,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func clone() -> LDKFramework.Result_UnsignedNodeAnnouncementDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class GossipTimestampFilter : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKGossipTimestampFilter? {
-    get
-  }
   public init(chain_hash_arg: [Swift.UInt8], first_timestamp_arg: Swift.UInt32, timestamp_range_arg: Swift.UInt32)
   public init(pointer: LDKFramework.LDKGossipTimestampFilter)
   public init(pointer: LDKFramework.LDKGossipTimestampFilter, anchor: LDKFramework.NativeTypeWrapper)
@@ -2444,9 +2057,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class SpendableOutputDescriptor : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKSpendableOutputDescriptor? {
-    get
-  }
   public init(pointer: LDKFramework.LDKSpendableOutputDescriptor)
   public init(pointer: LDKFramework.LDKSpendableOutputDescriptor, anchor: LDKFramework.NativeTypeWrapper)
   public enum SpendableOutputDescriptorValueType {
@@ -2475,9 +2085,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   }
 }
 @_hasMissingDesignatedInitializers public class Result_DelayedPaymentOutputDescriptorDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_DelayedPaymentOutputDescriptorDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_DelayedPaymentOutputDescriptorDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_DelayedPaymentOutputDescriptorDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2490,9 +2097,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func clone() -> LDKFramework.Result_DelayedPaymentOutputDescriptorDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_UpdateAddHTLCDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_UpdateAddHTLCDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_UpdateAddHTLCDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_UpdateAddHTLCDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2505,9 +2109,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func clone() -> LDKFramework.Result_UpdateAddHTLCDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class ErrorAction : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKErrorAction? {
-    get
-  }
   public init(pointer: LDKFramework.LDKErrorAction)
   public init(pointer: LDKFramework.LDKErrorAction, anchor: LDKFramework.NativeTypeWrapper)
   public enum ErrorActionValueType {
@@ -2538,9 +2139,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   }
 }
 @_hasMissingDesignatedInitializers public class DataLossProtect : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKDataLossProtect? {
-    get
-  }
   public init(your_last_per_commitment_secret_arg: [Swift.UInt8], my_current_per_commitment_point_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKDataLossProtect)
   public init(pointer: LDKFramework.LDKDataLossProtect, anchor: LDKFramework.NativeTypeWrapper)
@@ -2552,7 +2150,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers open class Confirm : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKConfirm?
   public init()
   public init(pointer: LDKFramework.LDKConfirm)
   public init(pointer: LDKFramework.LDKConfirm, anchor: LDKFramework.NativeTypeWrapper)
@@ -2577,9 +2174,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   override public init(pointer: LDKFramework.LDKConfirm, anchor: LDKFramework.NativeTypeWrapper)
 }
 @_hasMissingDesignatedInitializers public class Result_UpdateFailMalformedHTLCDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_UpdateFailMalformedHTLCDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_UpdateFailMalformedHTLCDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_UpdateFailMalformedHTLCDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2592,9 +2186,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func clone() -> LDKFramework.Result_UpdateFailMalformedHTLCDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_SignDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_SignDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_SignDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_SignDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2607,9 +2198,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func clone() -> LDKFramework.Result_SignDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Sha256 : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKSha256? {
-    get
-  }
   public init(pointer: LDKFramework.LDKSha256)
   public init(pointer: LDKFramework.LDKSha256, anchor: LDKFramework.NativeTypeWrapper)
   public class func eq(a: LDKFramework.Sha256, b: LDKFramework.Sha256) -> Swift.Bool
@@ -2617,7 +2205,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers open class EventHandler : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKEventHandler?
   public init()
   public init(pointer: LDKFramework.LDKEventHandler)
   public init(pointer: LDKFramework.LDKEventHandler, anchor: LDKFramework.NativeTypeWrapper)
@@ -2634,9 +2221,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   override public init(pointer: LDKFramework.LDKEventHandler, anchor: LDKFramework.NativeTypeWrapper)
 }
 @_hasMissingDesignatedInitializers public class Result_NoneAPIErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_NoneAPIErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_NoneAPIErrorZ)
   public init(pointer: LDKFramework.LDKCResult_NoneAPIErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2648,9 +2232,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func clone() -> LDKFramework.Result_NoneAPIErrorZ
 }
 @_hasMissingDesignatedInitializers public class PrivateRoute : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKPrivateRoute? {
-    get
-  }
   public init(pointer: LDKFramework.LDKPrivateRoute)
   public init(pointer: LDKFramework.LDKPrivateRoute, anchor: LDKFramework.NativeTypeWrapper)
   public class func eq(a: LDKFramework.PrivateRoute, b: LDKFramework.PrivateRoute) -> Swift.Bool
@@ -2660,9 +2241,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class RoutingFees : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKRoutingFees? {
-    get
-  }
   public init(base_msat_arg: Swift.UInt32, proportional_millionths_arg: Swift.UInt32)
   public init(pointer: LDKFramework.LDKRoutingFees)
   public init(pointer: LDKFramework.LDKRoutingFees, anchor: LDKFramework.NativeTypeWrapper)
@@ -2677,9 +2255,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class MessageHandler : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKMessageHandler? {
-    get
-  }
   public init(chan_handler_arg: LDKFramework.ChannelMessageHandler, route_handler_arg: LDKFramework.RoutingMessageHandler)
   public init(pointer: LDKFramework.LDKMessageHandler)
   public init(pointer: LDKFramework.LDKMessageHandler, anchor: LDKFramework.NativeTypeWrapper)
@@ -2690,9 +2265,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class ReplyShortChannelIdsEnd : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKReplyShortChannelIdsEnd? {
-    get
-  }
   public init(chain_hash_arg: [Swift.UInt8], full_information_arg: Swift.Bool)
   public init(pointer: LDKFramework.LDKReplyShortChannelIdsEnd)
   public init(pointer: LDKFramework.LDKReplyShortChannelIdsEnd, anchor: LDKFramework.NativeTypeWrapper)
@@ -2706,7 +2278,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers open class MessageSendEventsProvider : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKMessageSendEventsProvider?
   public init()
   public init(pointer: LDKFramework.LDKMessageSendEventsProvider)
   public init(pointer: LDKFramework.LDKMessageSendEventsProvider, anchor: LDKFramework.NativeTypeWrapper)
@@ -2723,9 +2294,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_CVec_SignatureZNoneZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_CVec_SignatureZNoneZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_CVec_SignatureZNoneZ)
   public init(pointer: LDKFramework.LDKCResult_CVec_SignatureZNoneZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2737,7 +2305,6 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func clone() -> LDKFramework.Result_CVec_SignatureZNoneZ
 }
 @_hasMissingDesignatedInitializers open class Sign : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKSign?
   public init()
   public init(pointer: LDKFramework.LDKSign)
   public init(pointer: LDKFramework.LDKSign, anchor: LDKFramework.NativeTypeWrapper)
@@ -2767,9 +2334,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class ChainMonitor : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChainMonitor? {
-    get
-  }
   public init(chain_source: LDKFramework.Filter?, broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger, feeest: LDKFramework.FeeEstimator, persister: LDKFramework.Persist)
   public init(pointer: LDKFramework.LDKChainMonitor)
   public init(pointer: LDKFramework.LDKChainMonitor, anchor: LDKFramework.NativeTypeWrapper)
@@ -2780,9 +2344,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_NetAddressu8Z : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_NetAddressu8Z? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_NetAddressu8Z)
   public init(pointer: LDKFramework.LDKCResult_NetAddressu8Z, anchor: LDKFramework.NativeTypeWrapper)
@@ -2795,9 +2356,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_NetAddressu8Z
 }
 @_hasMissingDesignatedInitializers public class Result_NoneSemanticErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_NoneSemanticErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_NoneSemanticErrorZ)
   public init(pointer: LDKFramework.LDKCResult_NoneSemanticErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2809,9 +2367,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_NoneSemanticErrorZ
 }
 @_hasMissingDesignatedInitializers public class RevokeAndACK : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKRevokeAndACK? {
-    get
-  }
   public init(channel_id_arg: [Swift.UInt8], per_commitment_secret_arg: [Swift.UInt8], next_per_commitment_point_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKRevokeAndACK)
   public init(pointer: LDKFramework.LDKRevokeAndACK, anchor: LDKFramework.NativeTypeWrapper)
@@ -2827,9 +2382,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class ChannelCounterparty : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelCounterparty? {
-    get
-  }
   public init(pointer: LDKFramework.LDKChannelCounterparty)
   public init(pointer: LDKFramework.LDKChannelCounterparty, anchor: LDKFramework.NativeTypeWrapper)
   public func get_node_id() -> [Swift.UInt8]
@@ -2842,9 +2394,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ? {
-    get
-  }
   public init(pointer: LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ)
   public init(pointer: LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ
@@ -2852,9 +2401,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_RouteLightningErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_RouteLightningErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_RouteLightningErrorZ)
   public init(pointer: LDKFramework.LDKCResult_RouteLightningErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2867,9 +2413,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_RouteLightningErrorZ
 }
 @_hasMissingDesignatedInitializers public class Shutdown : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKShutdown? {
-    get
-  }
   public init(channel_id_arg: [Swift.UInt8], scriptpubkey_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKShutdown)
   public init(pointer: LDKFramework.LDKShutdown, anchor: LDKFramework.NativeTypeWrapper)
@@ -2883,9 +2426,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_TxCreationKeysErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_TxCreationKeysErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_TxCreationKeysErrorZ)
   public init(pointer: LDKFramework.LDKCResult_TxCreationKeysErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2900,9 +2440,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_TxCreationKeysErrorZ
 }
 @_hasMissingDesignatedInitializers public class Option_u16Z : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCOption_u16Z? {
-    get
-  }
   public init(value: Swift.UInt16?)
   public init(pointer: LDKFramework.LDKCOption_u16Z)
   public init(pointer: LDKFramework.LDKCOption_u16Z, anchor: LDKFramework.NativeTypeWrapper)
@@ -2913,9 +2450,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Option_u16Z
 }
 @_hasMissingDesignatedInitializers public class Result_PositiveTimestampCreationErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_PositiveTimestampCreationErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_PositiveTimestampCreationErrorZ)
   public init(pointer: LDKFramework.LDKCResult_PositiveTimestampCreationErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2928,9 +2462,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_PositiveTimestampCreationErrorZ
 }
 @_hasMissingDesignatedInitializers public class ErroringMessageHandler : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKErroringMessageHandler? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKErroringMessageHandler)
   public init(pointer: LDKFramework.LDKErroringMessageHandler, anchor: LDKFramework.NativeTypeWrapper)
@@ -2939,9 +2470,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_SiPrefixNoneZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_SiPrefixNoneZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_SiPrefixNoneZ)
   public init(pointer: LDKFramework.LDKCResult_SiPrefixNoneZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2953,9 +2481,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_SiPrefixNoneZ
 }
 @_hasMissingDesignatedInitializers public class Result_PaymentHashPaymentSendFailureZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_PaymentHashPaymentSendFailureZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_PaymentHashPaymentSendFailureZ)
   public init(pointer: LDKFramework.LDKCResult_PaymentHashPaymentSendFailureZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2968,9 +2493,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_PaymentHashPaymentSendFailureZ
 }
 @_hasMissingDesignatedInitializers public class Description : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKDescription? {
-    get
-  }
   public init(pointer: LDKFramework.LDKDescription)
   public init(pointer: LDKFramework.LDKDescription, anchor: LDKFramework.NativeTypeWrapper)
   public class func eq(a: LDKFramework.Description, b: LDKFramework.Description) -> Swift.Bool
@@ -2980,9 +2502,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_SignatureNoneZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_SignatureNoneZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_SignatureNoneZ)
   public init(pointer: LDKFramework.LDKCResult_SignatureNoneZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -2994,9 +2513,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_SignatureNoneZ
 }
 @_hasMissingDesignatedInitializers public class C2Tuple_u32ScriptZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKC2Tuple_u32ScriptZ? {
-    get
-  }
   public init(pointer: LDKFramework.LDKC2Tuple_u32ScriptZ)
   public init(pointer: LDKFramework.LDKC2Tuple_u32ScriptZ, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.C2Tuple_u32ScriptZ
@@ -3004,9 +2520,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class PayeePubKey : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKPayeePubKey? {
-    get
-  }
   public init(pointer: LDKFramework.LDKPayeePubKey)
   public init(pointer: LDKFramework.LDKPayeePubKey, anchor: LDKFramework.NativeTypeWrapper)
   public class func eq(a: LDKFramework.PayeePubKey, b: LDKFramework.PayeePubKey) -> Swift.Bool
@@ -3014,9 +2527,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_NetAddressDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_NetAddressDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_NetAddressDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_NetAddressDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3034,9 +2544,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_ChannelAnnouncementDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ChannelAnnouncementDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ChannelAnnouncementDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ChannelAnnouncementDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3049,7 +2556,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_ChannelAnnouncementDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers open class Filter : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKFilter?
   public init()
   public init(pointer: LDKFramework.LDKFilter)
   public init(pointer: LDKFramework.LDKFilter, anchor: LDKFramework.NativeTypeWrapper)
@@ -3068,9 +2574,6 @@ public class TCPPeerHandler {
   override public init(pointer: LDKFramework.LDKFilter, anchor: LDKFramework.NativeTypeWrapper)
 }
 @_hasMissingDesignatedInitializers public class CounterpartyChannelTransactionParameters : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCounterpartyChannelTransactionParameters? {
-    get
-  }
   public init(pubkeys_arg: LDKFramework.ChannelPublicKeys, selected_contest_delay_arg: Swift.UInt16)
   public init(pointer: LDKFramework.LDKCounterpartyChannelTransactionParameters)
   public init(pointer: LDKFramework.LDKCounterpartyChannelTransactionParameters, anchor: LDKFramework.NativeTypeWrapper)
@@ -3084,9 +2587,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_NodeInfoDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_NodeInfoDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_NodeInfoDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_NodeInfoDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3099,9 +2599,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_NodeInfoDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class PaymentSendFailure : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKPaymentSendFailure? {
-    get
-  }
   public init(pointer: LDKFramework.LDKPaymentSendFailure)
   public init(pointer: LDKFramework.LDKPaymentSendFailure, anchor: LDKFramework.NativeTypeWrapper)
   public enum PaymentSendFailureValueType {
@@ -3114,9 +2611,9 @@ public class TCPPeerHandler {
   }
   public func getValueType() -> LDKFramework.PaymentSendFailure.PaymentSendFailureValueType?
   public func getValueAsParameterError() -> LDKFramework.APIError?
-  public func getValueAsPathParameterError() -> [LDKFramework.LDKCResult_NoneAPIErrorZ]?
-  public func getValueAsAllFailedRetrySafe() -> [LDKFramework.LDKAPIError]?
-  public func getValueAsPartialFailure() -> [LDKFramework.LDKCResult_NoneAPIErrorZ]?
+  public func getValueAsPathParameterError() -> [LDKFramework.Result_NoneAPIErrorZ]?
+  public func getValueAsAllFailedRetrySafe() -> [LDKFramework.APIError]?
+  public func getValueAsPartialFailure() -> [LDKFramework.Result_NoneAPIErrorZ]?
   @objc deinit
   public func clone() -> LDKFramework.PaymentSendFailure
   public class func parameter_error(a: LDKFramework.APIError) -> LDKFramework.PaymentSendFailure
@@ -3125,9 +2622,6 @@ public class TCPPeerHandler {
   public class func partial_failure(a: [LDKFramework.Result_NoneAPIErrorZ]) -> LDKFramework.PaymentSendFailure
 }
 @_hasMissingDesignatedInitializers public class Result_ReplyChannelRangeDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ReplyChannelRangeDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ReplyChannelRangeDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ReplyChannelRangeDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3140,9 +2634,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_ReplyChannelRangeDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class ChannelConfig : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelConfig? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKChannelConfig)
   public init(pointer: LDKFramework.LDKChannelConfig, anchor: LDKFramework.NativeTypeWrapper)
@@ -3166,9 +2657,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_ClosingSignedFeeRangeDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ClosingSignedFeeRangeDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ClosingSignedFeeRangeDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ClosingSignedFeeRangeDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3181,9 +2669,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_ClosingSignedFeeRangeDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class C2Tuple_SignatureCVec_SignatureZZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKC2Tuple_SignatureCVec_SignatureZZ? {
-    get
-  }
   public init(pointer: LDKFramework.LDKC2Tuple_SignatureCVec_SignatureZZ)
   public init(pointer: LDKFramework.LDKC2Tuple_SignatureCVec_SignatureZZ, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.C2Tuple_SignatureCVec_SignatureZZ
@@ -3191,7 +2676,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers open class Watch : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKWatch?
   public init()
   public init(pointer: LDKFramework.LDKWatch)
   public init(pointer: LDKFramework.LDKWatch, anchor: LDKFramework.NativeTypeWrapper)
@@ -3212,9 +2696,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class FundingLocked : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKFundingLocked? {
-    get
-  }
   public init(channel_id_arg: [Swift.UInt8], next_per_commitment_point_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKFundingLocked)
   public init(pointer: LDKFramework.LDKFundingLocked, anchor: LDKFramework.NativeTypeWrapper)
@@ -3228,9 +2709,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class C2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ? {
-    get
-  }
   public init(pointer: LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ)
   public init(pointer: LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.C2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ
@@ -3238,9 +2716,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class NetAddress : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKNetAddress? {
-    get
-  }
   public init(pointer: LDKFramework.LDKNetAddress)
   public init(pointer: LDKFramework.LDKNetAddress, anchor: LDKFramework.NativeTypeWrapper)
   public enum NetAddressValueType {
@@ -3288,9 +2763,6 @@ public class TCPPeerHandler {
   }
 }
 @_hasMissingDesignatedInitializers public class Result_ChannelUpdateDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ChannelUpdateDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ChannelUpdateDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ChannelUpdateDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3303,9 +2775,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_ChannelUpdateDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class HTLCOutputInCommitment : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKHTLCOutputInCommitment? {
-    get
-  }
   public init(offered_arg: Swift.Bool, amount_msat_arg: Swift.UInt64, cltv_expiry_arg: Swift.UInt32, payment_hash_arg: [Swift.UInt8], transaction_output_index_arg: LDKFramework.Option_u32Z)
   public init(pointer: LDKFramework.LDKHTLCOutputInCommitment)
   public init(pointer: LDKFramework.LDKHTLCOutputInCommitment, anchor: LDKFramework.NativeTypeWrapper)
@@ -3325,9 +2794,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_HolderCommitmentTransactionDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_HolderCommitmentTransactionDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_HolderCommitmentTransactionDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_HolderCommitmentTransactionDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3340,9 +2806,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_HolderCommitmentTransactionDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class ErrorMessage : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKErrorMessage? {
-    get
-  }
   public init(channel_id_arg: [Swift.UInt8], data_arg: Swift.String)
   public init(pointer: LDKFramework.LDKErrorMessage)
   public init(pointer: LDKFramework.LDKErrorMessage, anchor: LDKFramework.NativeTypeWrapper)
@@ -3356,9 +2819,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class InvoiceFeatures : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKInvoiceFeatures? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKInvoiceFeatures)
   public init(pointer: LDKFramework.LDKInvoiceFeatures, anchor: LDKFramework.NativeTypeWrapper)
@@ -3370,9 +2830,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_SpendableOutputDescriptorDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_SpendableOutputDescriptorDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_SpendableOutputDescriptorDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_SpendableOutputDescriptorDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3385,9 +2842,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_SpendableOutputDescriptorDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class MonitorEvent : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKMonitorEvent? {
-    get
-  }
   public init(pointer: LDKFramework.LDKMonitorEvent)
   public init(pointer: LDKFramework.LDKMonitorEvent, anchor: LDKFramework.NativeTypeWrapper)
   public enum MonitorEventValueType {
@@ -3407,9 +2861,6 @@ public class TCPPeerHandler {
   public class func commitment_tx_broadcasted(a: LDKFramework.OutPoint) -> LDKFramework.MonitorEvent
 }
 @_hasMissingDesignatedInitializers public class Result_boolLightningErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_boolLightningErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_boolLightningErrorZ)
   public init(pointer: LDKFramework.LDKCResult_boolLightningErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3422,9 +2873,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_boolLightningErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_NodeAnnouncementInfoDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_NodeAnnouncementInfoDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_NodeAnnouncementInfoDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_NodeAnnouncementInfoDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3437,9 +2885,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_NodeAnnouncementInfoDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_RecoverableSignatureNoneZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_RecoverableSignatureNoneZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_RecoverableSignatureNoneZ)
   public init(pointer: LDKFramework.LDKCResult_RecoverableSignatureNoneZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3451,9 +2896,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_RecoverableSignatureNoneZ
 }
 @_hasMissingDesignatedInitializers public class PeerManager : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKPeerManager? {
-    get
-  }
   #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
   @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public init(message_handler: LDKFramework.MessageHandler, our_node_secret: [Swift.UInt8], ephemeral_random_data: [Swift.UInt8], logger: LDKFramework.Logger)
@@ -3475,9 +2917,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_TransactionNoneZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_TransactionNoneZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_TransactionNoneZ)
   public init(pointer: LDKFramework.LDKCResult_TransactionNoneZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3489,9 +2928,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_TransactionNoneZ
 }
 @_hasMissingDesignatedInitializers public class LightningError : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKLightningError? {
-    get
-  }
   public init(err_arg: Swift.String, action_arg: LDKFramework.ErrorAction)
   public init(pointer: LDKFramework.LDKLightningError)
   public init(pointer: LDKFramework.LDKLightningError, anchor: LDKFramework.NativeTypeWrapper)
@@ -3503,9 +2939,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_PongDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_PongDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_PongDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_PongDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3518,7 +2951,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_PongDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers open class BaseSign : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKBaseSign?
   public init()
   public init(pointer: LDKFramework.LDKBaseSign)
   public init(pointer: LDKFramework.LDKBaseSign, anchor: LDKFramework.NativeTypeWrapper)
@@ -3555,9 +2987,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class RouteHop : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKRouteHop? {
-    get
-  }
   public init(pubkey_arg: [Swift.UInt8], node_features_arg: LDKFramework.NodeFeatures, short_channel_id_arg: Swift.UInt64, channel_features_arg: LDKFramework.ChannelFeatures, fee_msat_arg: Swift.UInt64, cltv_expiry_delta_arg: Swift.UInt32)
   public init(pointer: LDKFramework.LDKRouteHop)
   public init(pointer: LDKFramework.LDKRouteHop, anchor: LDKFramework.NativeTypeWrapper)
@@ -3579,9 +3008,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_PrivateRouteCreationErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_PrivateRouteCreationErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_PrivateRouteCreationErrorZ)
   public init(pointer: LDKFramework.LDKCResult_PrivateRouteCreationErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3594,9 +3020,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_PrivateRouteCreationErrorZ
 }
 @_hasMissingDesignatedInitializers public class NodeInfo : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKNodeInfo? {
-    get
-  }
   public init(channels_arg: [Swift.UInt64], lowest_inbound_channel_fees_arg: LDKFramework.RoutingFees, announcement_info_arg: LDKFramework.NodeAnnouncementInfo)
   public init(pointer: LDKFramework.LDKNodeInfo)
   public init(pointer: LDKFramework.LDKNodeInfo, anchor: LDKFramework.NativeTypeWrapper)
@@ -3611,9 +3034,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_C2Tuple_BlockHashChannelMonitorZDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_C2Tuple_BlockHashChannelMonitorZDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_C2Tuple_BlockHashChannelMonitorZDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_C2Tuple_BlockHashChannelMonitorZDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3627,9 +3047,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Route : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKRoute? {
-    get
-  }
   public init(pointer: LDKFramework.LDKRoute)
   public init(pointer: LDKFramework.LDKRoute, anchor: LDKFramework.NativeTypeWrapper)
   convenience public init(paths_arg: [[LDKFramework.RouteHop]])
@@ -3640,9 +3057,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_AcceptChannelDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_AcceptChannelDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_AcceptChannelDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_AcceptChannelDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3655,9 +3069,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_AcceptChannelDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class StaticPaymentOutputDescriptor : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKStaticPaymentOutputDescriptor? {
-    get
-  }
   public init(outpoint_arg: LDKFramework.OutPoint, output_arg: LDKFramework.LDKTxOut, channel_keys_id_arg: [Swift.UInt8], channel_value_satoshis_arg: Swift.UInt64)
   public init(pointer: LDKFramework.LDKStaticPaymentOutputDescriptor)
   public init(pointer: LDKFramework.LDKStaticPaymentOutputDescriptor, anchor: LDKFramework.NativeTypeWrapper)
@@ -3674,9 +3085,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_ChannelFeaturesDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ChannelFeaturesDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ChannelFeaturesDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ChannelFeaturesDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3688,9 +3096,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_InvoiceSignOrCreationErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_InvoiceSignOrCreationErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_InvoiceSignOrCreationErrorZ)
   public init(pointer: LDKFramework.LDKCResult_InvoiceSignOrCreationErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3703,9 +3108,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_InvoiceSignOrCreationErrorZ
 }
 @_hasMissingDesignatedInitializers public class CommitmentSigned : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCommitmentSigned? {
-    get
-  }
   public init(channel_id_arg: [Swift.UInt8], signature_arg: [Swift.UInt8], htlc_signatures_arg: [[Swift.UInt8]])
   public init(pointer: LDKFramework.LDKCommitmentSigned)
   public init(pointer: LDKFramework.LDKCommitmentSigned, anchor: LDKFramework.NativeTypeWrapper)
@@ -3720,7 +3122,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers open class Logger : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKLogger?
   public init()
   public init(pointer: LDKFramework.LDKLogger)
   public init(pointer: LDKFramework.LDKLogger, anchor: LDKFramework.NativeTypeWrapper)
@@ -3737,9 +3138,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_RevokeAndACKDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_RevokeAndACKDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_RevokeAndACKDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_RevokeAndACKDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3752,9 +3150,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_RevokeAndACKDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_PublicKeyErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_PublicKeyErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_PublicKeyErrorZ)
   public init(pointer: LDKFramework.LDKCResult_PublicKeyErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3769,9 +3164,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_PublicKeyErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_UpdateFailHTLCDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_UpdateFailHTLCDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_UpdateFailHTLCDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_UpdateFailHTLCDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3784,9 +3176,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_UpdateFailHTLCDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_ChannelReestablishDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ChannelReestablishDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ChannelReestablishDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ChannelReestablishDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3799,7 +3188,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_ChannelReestablishDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers open class SocketDescriptor : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKSocketDescriptor?
   public init()
   public init(pointer: LDKFramework.LDKSocketDescriptor)
   public init(pointer: LDKFramework.LDKSocketDescriptor, anchor: LDKFramework.NativeTypeWrapper)
@@ -3823,9 +3211,6 @@ public class TCPPeerHandler {
   override public init(pointer: LDKFramework.LDKSocketDescriptor, anchor: LDKFramework.NativeTypeWrapper)
 }
 @_hasMissingDesignatedInitializers public class Pong : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKPong? {
-    get
-  }
   public init(byteslen_arg: Swift.UInt16)
   public init(pointer: LDKFramework.LDKPong)
   public init(pointer: LDKFramework.LDKPong, anchor: LDKFramework.NativeTypeWrapper)
@@ -3837,16 +3222,13 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class ChannelManager : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelManager? {
-    get
-  }
   public init(fee_est: LDKFramework.FeeEstimator, chain_monitor: LDKFramework.Watch, tx_broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger, keys_manager: LDKFramework.KeysInterface, config: LDKFramework.UserConfig, params: LDKFramework.ChainParameters)
   public init(pointer: LDKFramework.LDKChannelManager)
   public init(pointer: LDKFramework.LDKChannelManager, anchor: LDKFramework.NativeTypeWrapper)
   public func get_current_default_configuration() -> LDKFramework.UserConfig
   public func create_channel(their_network_key: [Swift.UInt8], channel_value_satoshis: Swift.UInt64, push_msat: Swift.UInt64, user_id: Swift.UInt64, override_config: LDKFramework.UserConfig) -> LDKFramework.Result_NoneAPIErrorZ
-  public func list_channels() -> [LDKFramework.LDKChannelDetails]
-  public func list_usable_channels() -> [LDKFramework.LDKChannelDetails]
+  public func list_channels() -> [LDKFramework.ChannelDetails]
+  public func list_usable_channels() -> [LDKFramework.ChannelDetails]
   public func close_channel(channel_id: [Swift.UInt8]) -> LDKFramework.Result_NoneAPIErrorZ
   public func close_channel_with_target_feerate(channel_id: [Swift.UInt8], target_feerate_sats_per_1000_weight: Swift.UInt32) -> LDKFramework.Result_NoneAPIErrorZ
   public func force_close_channel(channel_id: [Swift.UInt8]) -> LDKFramework.Result_NoneAPIErrorZ
@@ -3875,9 +3257,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Option_C2Tuple_usizeTransactionZZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCOption_C2Tuple_usizeTransactionZZ? {
-    get
-  }
   public init(value: LDKFramework.C2Tuple_usizeTransactionZ?)
   public init(pointer: LDKFramework.LDKCOption_C2Tuple_usizeTransactionZZ)
   public init(pointer: LDKFramework.LDKCOption_C2Tuple_usizeTransactionZZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3888,9 +3267,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Option_C2Tuple_usizeTransactionZZ
 }
 @_hasMissingDesignatedInitializers public class ChannelMonitor : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelMonitor? {
-    get
-  }
   public init(pointer: LDKFramework.LDKChannelMonitor)
   public init(pointer: LDKFramework.LDKChannelMonitor, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.ChannelMonitor
@@ -3898,24 +3274,21 @@ public class TCPPeerHandler {
   public func update_monitor(updates: LDKFramework.ChannelMonitorUpdate, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> LDKFramework.Result_NoneMonitorUpdateErrorZ
   public func get_latest_update_id() -> Swift.UInt64
   public func get_funding_txo() -> LDKFramework.C2Tuple_OutPointScriptZ
-  public func get_outputs_to_watch() -> [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ]
+  public func get_outputs_to_watch() -> [LDKFramework.C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ]
   public func load_outputs_to_watch(filter: LDKFramework.Filter)
-  public func get_and_clear_pending_monitor_events() -> [LDKFramework.LDKMonitorEvent]
-  public func get_and_clear_pending_events() -> [LDKFramework.LDKEvent]
+  public func get_and_clear_pending_monitor_events() -> [LDKFramework.MonitorEvent]
+  public func get_and_clear_pending_events() -> [LDKFramework.Event]
   public func get_latest_holder_commitment_txn(logger: LDKFramework.Logger) -> [[Swift.UInt8]]
-  public func block_connected(header: [Swift.UInt8], txdata: [LDKFramework.C2Tuple_usizeTransactionZ], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.LDKTransactionOutputs]
+  public func block_connected(header: [Swift.UInt8], txdata: [LDKFramework.C2Tuple_usizeTransactionZ], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.TransactionOutputs]
   public func block_disconnected(header: [Swift.UInt8], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger)
-  public func transactions_confirmed(header: [Swift.UInt8], txdata: [LDKFramework.C2Tuple_usizeTransactionZ], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.LDKTransactionOutputs]
+  public func transactions_confirmed(header: [Swift.UInt8], txdata: [LDKFramework.C2Tuple_usizeTransactionZ], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.TransactionOutputs]
   public func transaction_unconfirmed(txid: [Swift.UInt8], broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger)
-  public func best_block_updated(header: [Swift.UInt8], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.LDKTransactionOutputs]
-  public func get_relevant_txids() -> [LDKFramework.LDKTxid]
+  public func best_block_updated(header: [Swift.UInt8], height: Swift.UInt32, broadcaster: LDKFramework.BroadcasterInterface, fee_estimator: LDKFramework.FeeEstimator, logger: LDKFramework.Logger) -> [LDKFramework.TransactionOutputs]
+  public func get_relevant_txids() -> [LDKFramework.Txid]
   public func current_best_block() -> LDKFramework.BestBlock
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class AnnouncementSignatures : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKAnnouncementSignatures? {
-    get
-  }
   public init(channel_id_arg: [Swift.UInt8], short_channel_id_arg: Swift.UInt64, node_signature_arg: [Swift.UInt8], bitcoin_signature_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKAnnouncementSignatures)
   public init(pointer: LDKFramework.LDKAnnouncementSignatures, anchor: LDKFramework.NativeTypeWrapper)
@@ -3933,9 +3306,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_CResult_NetAddressu8ZDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_CResult_NetAddressu8ZDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_CResult_NetAddressu8ZDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_CResult_NetAddressu8ZDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -3948,9 +3318,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_CResult_NetAddressu8ZDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class MessageSendEvent : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKMessageSendEvent? {
-    get
-  }
   public init(pointer: LDKFramework.LDKMessageSendEvent)
   public init(pointer: LDKFramework.LDKMessageSendEvent, anchor: LDKFramework.NativeTypeWrapper)
   public enum MessageSendEventValueType {
@@ -4103,9 +3470,6 @@ public class TCPPeerHandler {
   }
 }
 @_hasMissingDesignatedInitializers public class Result_ReplyShortChannelIdsEndDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ReplyShortChannelIdsEndDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ReplyShortChannelIdsEndDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ReplyShortChannelIdsEndDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -4118,9 +3482,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_ReplyShortChannelIdsEndDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_RouteHopDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_RouteHopDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_RouteHopDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_RouteHopDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -4133,9 +3494,6 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_RouteHopDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class IgnoringMessageHandler : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKIgnoringMessageHandler? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKIgnoringMessageHandler)
   public init(pointer: LDKFramework.LDKIgnoringMessageHandler, anchor: LDKFramework.NativeTypeWrapper)
@@ -4144,9 +3502,6 @@ public class TCPPeerHandler {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_InMemorySignerDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_InMemorySignerDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_InMemorySignerDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_InMemorySignerDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -4159,7 +3514,9 @@ public class TCPPeerHandler {
   public func clone() -> LDKFramework.Result_InMemorySignerDecodeErrorZ
 }
 public typealias LDKTransactionOutputs = LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ
+public typealias TransactionOutputs = LDKFramework.C2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ
 public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
+public typealias Txid = [Swift.UInt8]
 @_hasMissingDesignatedInitializers open class NativeTypeWrapper : Swift.Hashable {
   public static func == (lhs: LDKFramework.NativeTypeWrapper, rhs: LDKFramework.NativeTypeWrapper) -> Swift.Bool
   public func hash(into hasher: inout Swift.Hasher)
@@ -4206,7 +3563,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func tuple80_to_array(nativeType: (Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8, Swift.UInt8)) -> [Swift.UInt8]
   public class func new_LDKCVec_APIErrorZWrapper(array: [LDKFramework.LDKAPIError]) -> LDKFramework.Bindings.LDKCVec_APIErrorZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_APIErrorZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_APIErrorZ?
     public init(pointer: LDKFramework.LDKCVec_APIErrorZ)
     public func noOpRetain()
     @objc deinit
@@ -4217,7 +3573,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKAPIErrorArray(array: [LDKFramework.LDKAPIError]) -> [LDKFramework.APIError]
   public class func new_LDKCVec_C2Tuple_BlockHashChannelMonitorZZWrapper(array: [LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ]) -> LDKFramework.Bindings.LDKCVec_C2Tuple_BlockHashChannelMonitorZZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_C2Tuple_BlockHashChannelMonitorZZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_C2Tuple_BlockHashChannelMonitorZZ?
     public init(pointer: LDKFramework.LDKCVec_C2Tuple_BlockHashChannelMonitorZZ)
     public func noOpRetain()
     @objc deinit
@@ -4228,7 +3583,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKC2Tuple_BlockHashChannelMonitorZArray(array: [LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ]) -> [LDKFramework.C2Tuple_BlockHashChannelMonitorZ]
   public class func new_LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZWrapper(array: [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ]) -> LDKFramework.Bindings.LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ?
     public init(pointer: LDKFramework.LDKCVec_C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZZ)
     public func noOpRetain()
     @objc deinit
@@ -4239,7 +3593,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZArray(array: [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ]) -> [LDKFramework.C2Tuple_TxidCVec_C2Tuple_u32ScriptZZZ]
   public class func new_LDKCVec_C2Tuple_u32ScriptZZWrapper(array: [LDKFramework.LDKC2Tuple_u32ScriptZ]) -> LDKFramework.Bindings.LDKCVec_C2Tuple_u32ScriptZZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_C2Tuple_u32ScriptZZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_C2Tuple_u32ScriptZZ?
     public init(pointer: LDKFramework.LDKCVec_C2Tuple_u32ScriptZZ)
     public func noOpRetain()
     @objc deinit
@@ -4250,7 +3603,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKC2Tuple_u32ScriptZArray(array: [LDKFramework.LDKC2Tuple_u32ScriptZ]) -> [LDKFramework.C2Tuple_u32ScriptZ]
   public class func new_LDKCVec_C2Tuple_u32TxOutZZWrapper(array: [LDKFramework.LDKC2Tuple_u32TxOutZ]) -> LDKFramework.Bindings.LDKCVec_C2Tuple_u32TxOutZZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_C2Tuple_u32TxOutZZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_C2Tuple_u32TxOutZZ?
     public init(pointer: LDKFramework.LDKCVec_C2Tuple_u32TxOutZZ)
     public func noOpRetain()
     @objc deinit
@@ -4261,7 +3613,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKC2Tuple_u32TxOutZArray(array: [LDKFramework.LDKC2Tuple_u32TxOutZ]) -> [LDKFramework.C2Tuple_u32TxOutZ]
   public class func new_LDKCVec_C2Tuple_usizeTransactionZZWrapper(array: [LDKFramework.LDKC2Tuple_usizeTransactionZ]) -> LDKFramework.Bindings.LDKCVec_C2Tuple_usizeTransactionZZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_C2Tuple_usizeTransactionZZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_C2Tuple_usizeTransactionZZ?
     public init(pointer: LDKFramework.LDKCVec_C2Tuple_usizeTransactionZZ)
     public func noOpRetain()
     @objc deinit
@@ -4272,7 +3623,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKC2Tuple_usizeTransactionZArray(array: [LDKFramework.LDKC2Tuple_usizeTransactionZ]) -> [LDKFramework.C2Tuple_usizeTransactionZ]
   public class func new_LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZWrapper(array: [LDKFramework.LDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ]) -> LDKFramework.Bindings.LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ?
     public init(pointer: LDKFramework.LDKCVec_C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZZ)
     public func noOpRetain()
     @objc deinit
@@ -4283,7 +3633,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZArray(array: [LDKFramework.LDKC3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ]) -> [LDKFramework.C3Tuple_ChannelAnnouncementChannelUpdateChannelUpdateZ]
   public class func new_LDKCVec_CResult_NoneAPIErrorZZWrapper(array: [LDKFramework.LDKCResult_NoneAPIErrorZ]) -> LDKFramework.Bindings.LDKCVec_CResult_NoneAPIErrorZZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_CResult_NoneAPIErrorZZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_CResult_NoneAPIErrorZZ?
     public init(pointer: LDKFramework.LDKCVec_CResult_NoneAPIErrorZZ)
     public func noOpRetain()
     @objc deinit
@@ -4294,7 +3643,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKCResult_NoneAPIErrorZArray(array: [LDKFramework.LDKCResult_NoneAPIErrorZ]) -> [LDKFramework.Result_NoneAPIErrorZ]
   public class func new_LDKCVec_CVec_RouteHopZZWrapper(array: [[LDKFramework.LDKRouteHop]]) -> LDKFramework.Bindings.LDKCVec_CVec_RouteHopZZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_CVec_RouteHopZZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_CVec_RouteHopZZ?
     public init(pointer: LDKFramework.LDKCVec_CVec_RouteHopZZ)
     public func noOpRetain()
     @objc deinit
@@ -4302,7 +3650,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func LDKCVec_CVec_RouteHopZZ_to_array(nativeType: LDKFramework.LDKCVec_CVec_RouteHopZZ, deallocate: Swift.Bool = true) -> [[LDKFramework.LDKRouteHop]]
   public class func new_LDKCVec_CVec_u8ZZWrapper(array: [[Swift.UInt8]]) -> LDKFramework.Bindings.LDKCVec_CVec_u8ZZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_CVec_u8ZZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_CVec_u8ZZ?
     public init(pointer: LDKFramework.LDKCVec_CVec_u8ZZ)
     public func noOpRetain()
     @objc deinit
@@ -4310,7 +3657,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func LDKCVec_CVec_u8ZZ_to_array(nativeType: LDKFramework.LDKCVec_CVec_u8ZZ, deallocate: Swift.Bool = true) -> [[Swift.UInt8]]
   public class func new_LDKCVec_ChannelDetailsZWrapper(array: [LDKFramework.LDKChannelDetails]) -> LDKFramework.Bindings.LDKCVec_ChannelDetailsZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_ChannelDetailsZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_ChannelDetailsZ?
     public init(pointer: LDKFramework.LDKCVec_ChannelDetailsZ)
     public func noOpRetain()
     @objc deinit
@@ -4321,7 +3667,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKChannelDetailsArray(array: [LDKFramework.LDKChannelDetails]) -> [LDKFramework.ChannelDetails]
   public class func new_LDKCVec_ChannelMonitorZWrapper(array: [LDKFramework.LDKChannelMonitor]) -> LDKFramework.Bindings.LDKCVec_ChannelMonitorZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_ChannelMonitorZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_ChannelMonitorZ?
     public init(pointer: LDKFramework.LDKCVec_ChannelMonitorZ)
     public func noOpRetain()
     @objc deinit
@@ -4332,7 +3677,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKChannelMonitorArray(array: [LDKFramework.LDKChannelMonitor]) -> [LDKFramework.ChannelMonitor]
   public class func new_LDKCVec_EventZWrapper(array: [LDKFramework.LDKEvent]) -> LDKFramework.Bindings.LDKCVec_EventZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_EventZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_EventZ?
     public init(pointer: LDKFramework.LDKCVec_EventZ)
     public func noOpRetain()
     @objc deinit
@@ -4343,7 +3687,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKEventArray(array: [LDKFramework.LDKEvent]) -> [LDKFramework.Event]
   public class func new_LDKCVec_MessageSendEventZWrapper(array: [LDKFramework.LDKMessageSendEvent]) -> LDKFramework.Bindings.LDKCVec_MessageSendEventZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_MessageSendEventZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_MessageSendEventZ?
     public init(pointer: LDKFramework.LDKCVec_MessageSendEventZ)
     public func noOpRetain()
     @objc deinit
@@ -4354,7 +3697,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKMessageSendEventArray(array: [LDKFramework.LDKMessageSendEvent]) -> [LDKFramework.MessageSendEvent]
   public class func new_LDKCVec_MonitorEventZWrapper(array: [LDKFramework.LDKMonitorEvent]) -> LDKFramework.Bindings.LDKCVec_MonitorEventZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_MonitorEventZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_MonitorEventZ?
     public init(pointer: LDKFramework.LDKCVec_MonitorEventZ)
     public func noOpRetain()
     @objc deinit
@@ -4365,7 +3707,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKMonitorEventArray(array: [LDKFramework.LDKMonitorEvent]) -> [LDKFramework.MonitorEvent]
   public class func new_LDKCVec_NetAddressZWrapper(array: [LDKFramework.LDKNetAddress]) -> LDKFramework.Bindings.LDKCVec_NetAddressZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_NetAddressZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_NetAddressZ?
     public init(pointer: LDKFramework.LDKCVec_NetAddressZ)
     public func noOpRetain()
     @objc deinit
@@ -4376,7 +3717,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKNetAddressArray(array: [LDKFramework.LDKNetAddress]) -> [LDKFramework.NetAddress]
   public class func new_LDKCVec_NodeAnnouncementZWrapper(array: [LDKFramework.LDKNodeAnnouncement]) -> LDKFramework.Bindings.LDKCVec_NodeAnnouncementZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_NodeAnnouncementZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_NodeAnnouncementZ?
     public init(pointer: LDKFramework.LDKCVec_NodeAnnouncementZ)
     public func noOpRetain()
     @objc deinit
@@ -4387,7 +3727,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKNodeAnnouncementArray(array: [LDKFramework.LDKNodeAnnouncement]) -> [LDKFramework.NodeAnnouncement]
   public class func new_LDKCVec_PrivateRouteZWrapper(array: [LDKFramework.LDKPrivateRoute]) -> LDKFramework.Bindings.LDKCVec_PrivateRouteZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_PrivateRouteZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_PrivateRouteZ?
     public init(pointer: LDKFramework.LDKCVec_PrivateRouteZ)
     public func noOpRetain()
     @objc deinit
@@ -4398,7 +3737,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKPrivateRouteArray(array: [LDKFramework.LDKPrivateRoute]) -> [LDKFramework.PrivateRoute]
   public class func new_LDKCVec_PublicKeyZWrapper(array: [[Swift.UInt8]]) -> LDKFramework.Bindings.LDKCVec_PublicKeyZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_PublicKeyZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_PublicKeyZ?
     public init(pointer: LDKFramework.LDKCVec_PublicKeyZ)
     public func noOpRetain()
     @objc deinit
@@ -4406,7 +3744,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func LDKCVec_PublicKeyZ_to_array(nativeType: LDKFramework.LDKCVec_PublicKeyZ, deallocate: Swift.Bool = true) -> [[Swift.UInt8]]
   public class func new_LDKCVec_RouteHintZWrapper(array: [LDKFramework.LDKRouteHint]) -> LDKFramework.Bindings.LDKCVec_RouteHintZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_RouteHintZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_RouteHintZ?
     public init(pointer: LDKFramework.LDKCVec_RouteHintZ)
     public func noOpRetain()
     @objc deinit
@@ -4417,7 +3754,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKRouteHintArray(array: [LDKFramework.LDKRouteHint]) -> [LDKFramework.RouteHint]
   public class func new_LDKCVec_RouteHopZWrapper(array: [LDKFramework.LDKRouteHop]) -> LDKFramework.Bindings.LDKCVec_RouteHopZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_RouteHopZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_RouteHopZ?
     public init(pointer: LDKFramework.LDKCVec_RouteHopZ)
     public func noOpRetain()
     @objc deinit
@@ -4428,7 +3764,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKRouteHopArray(array: [LDKFramework.LDKRouteHop]) -> [LDKFramework.RouteHop]
   public class func new_LDKCVec_SignatureZWrapper(array: [[Swift.UInt8]]) -> LDKFramework.Bindings.LDKCVec_SignatureZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_SignatureZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_SignatureZ?
     public init(pointer: LDKFramework.LDKCVec_SignatureZ)
     public func noOpRetain()
     @objc deinit
@@ -4436,7 +3771,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func LDKCVec_SignatureZ_to_array(nativeType: LDKFramework.LDKCVec_SignatureZ, deallocate: Swift.Bool = true) -> [[Swift.UInt8]]
   public class func new_LDKCVec_SpendableOutputDescriptorZWrapper(array: [LDKFramework.LDKSpendableOutputDescriptor]) -> LDKFramework.Bindings.LDKCVec_SpendableOutputDescriptorZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_SpendableOutputDescriptorZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_SpendableOutputDescriptorZ?
     public init(pointer: LDKFramework.LDKCVec_SpendableOutputDescriptorZ)
     public func noOpRetain()
     @objc deinit
@@ -4447,7 +3781,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKSpendableOutputDescriptorArray(array: [LDKFramework.LDKSpendableOutputDescriptor]) -> [LDKFramework.SpendableOutputDescriptor]
   public class func new_LDKCVec_TransactionOutputsZWrapper(array: [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ]) -> LDKFramework.Bindings.LDKCVec_TransactionOutputsZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_TransactionOutputsZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_TransactionOutputsZ?
     public init(pointer: LDKFramework.LDKCVec_TransactionOutputsZ)
     public func noOpRetain()
     @objc deinit
@@ -4458,7 +3791,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZArray(array: [LDKFramework.LDKC2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ]) -> [LDKFramework.C2Tuple_TxidCVec_C2Tuple_u32TxOutZZZ]
   public class func new_LDKCVec_TransactionZWrapper(array: [[Swift.UInt8]]) -> LDKFramework.Bindings.LDKCVec_TransactionZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_TransactionZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_TransactionZ?
     public init(pointer: LDKFramework.LDKCVec_TransactionZ)
     public func noOpRetain()
     @objc deinit
@@ -4466,7 +3798,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func LDKCVec_TransactionZ_to_array(nativeType: LDKFramework.LDKCVec_TransactionZ, deallocate: Swift.Bool = true) -> [[Swift.UInt8]]
   public class func new_LDKCVec_TxOutZWrapper(array: [LDKFramework.LDKTxOut]) -> LDKFramework.Bindings.LDKCVec_TxOutZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_TxOutZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_TxOutZ?
     public init(pointer: LDKFramework.LDKCVec_TxOutZ)
     public func noOpRetain()
     @objc deinit
@@ -4477,7 +3808,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKTxOutArray(array: [LDKFramework.LDKTxOut]) -> [LDKFramework.TxOut]
   public class func new_LDKCVec_TxidZWrapper(array: [LDKFramework.LDKThirtyTwoBytes]) -> LDKFramework.Bindings.LDKCVec_TxidZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_TxidZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_TxidZ?
     public init(pointer: LDKFramework.LDKCVec_TxidZ)
     public func noOpRetain()
     @objc deinit
@@ -4485,7 +3815,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func LDKCVec_TxidZ_to_array(nativeType: LDKFramework.LDKCVec_TxidZ, deallocate: Swift.Bool = true) -> [LDKFramework.LDKThirtyTwoBytes]
   public class func new_LDKCVec_UpdateAddHTLCZWrapper(array: [LDKFramework.LDKUpdateAddHTLC]) -> LDKFramework.Bindings.LDKCVec_UpdateAddHTLCZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_UpdateAddHTLCZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_UpdateAddHTLCZ?
     public init(pointer: LDKFramework.LDKCVec_UpdateAddHTLCZ)
     public func noOpRetain()
     @objc deinit
@@ -4496,7 +3825,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKUpdateAddHTLCArray(array: [LDKFramework.LDKUpdateAddHTLC]) -> [LDKFramework.UpdateAddHTLC]
   public class func new_LDKCVec_UpdateFailHTLCZWrapper(array: [LDKFramework.LDKUpdateFailHTLC]) -> LDKFramework.Bindings.LDKCVec_UpdateFailHTLCZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_UpdateFailHTLCZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_UpdateFailHTLCZ?
     public init(pointer: LDKFramework.LDKCVec_UpdateFailHTLCZ)
     public func noOpRetain()
     @objc deinit
@@ -4507,7 +3835,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKUpdateFailHTLCArray(array: [LDKFramework.LDKUpdateFailHTLC]) -> [LDKFramework.UpdateFailHTLC]
   public class func new_LDKCVec_UpdateFailMalformedHTLCZWrapper(array: [LDKFramework.LDKUpdateFailMalformedHTLC]) -> LDKFramework.Bindings.LDKCVec_UpdateFailMalformedHTLCZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_UpdateFailMalformedHTLCZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_UpdateFailMalformedHTLCZ?
     public init(pointer: LDKFramework.LDKCVec_UpdateFailMalformedHTLCZ)
     public func noOpRetain()
     @objc deinit
@@ -4518,7 +3845,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKUpdateFailMalformedHTLCArray(array: [LDKFramework.LDKUpdateFailMalformedHTLC]) -> [LDKFramework.UpdateFailMalformedHTLC]
   public class func new_LDKCVec_UpdateFulfillHTLCZWrapper(array: [LDKFramework.LDKUpdateFulfillHTLC]) -> LDKFramework.Bindings.LDKCVec_UpdateFulfillHTLCZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_UpdateFulfillHTLCZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_UpdateFulfillHTLCZ?
     public init(pointer: LDKFramework.LDKCVec_UpdateFulfillHTLCZ)
     public func noOpRetain()
     @objc deinit
@@ -4529,7 +3855,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func wrapDanglingNativeLDKUpdateFulfillHTLCArray(array: [LDKFramework.LDKUpdateFulfillHTLC]) -> [LDKFramework.UpdateFulfillHTLC]
   public class func new_LDKCVec_u64ZWrapper(array: [Swift.UInt64]) -> LDKFramework.Bindings.LDKCVec_u64ZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_u64ZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_u64Z?
     public init(pointer: LDKFramework.LDKCVec_u64Z)
     public func noOpRetain()
     @objc deinit
@@ -4537,7 +3862,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func LDKCVec_u64Z_to_array(nativeType: LDKFramework.LDKCVec_u64Z, deallocate: Swift.Bool = true) -> [Swift.UInt64]
   public class func new_LDKCVec_u8ZWrapper(array: [Swift.UInt8]) -> LDKFramework.Bindings.LDKCVec_u8ZWrapper
   @_hasMissingDesignatedInitializers public class LDKCVec_u8ZWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKCVec_u8Z?
     public init(pointer: LDKFramework.LDKCVec_u8Z)
     public func noOpRetain()
     @objc deinit
@@ -4545,7 +3869,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func LDKCVec_u8Z_to_array(nativeType: LDKFramework.LDKCVec_u8Z, deallocate: Swift.Bool = true) -> [Swift.UInt8]
   public class func new_LDKu8sliceWrapper(array: [Swift.UInt8]) -> LDKFramework.Bindings.LDKu8sliceWrapper
   @_hasMissingDesignatedInitializers public class LDKu8sliceWrapper : LDKFramework.NativeTypeWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKu8slice?
     public init(pointer: LDKFramework.LDKu8slice)
     public func noOpRetain()
     @objc deinit
@@ -4580,7 +3903,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public class func clearInstancePointers()
   public class func new_LDKTransactionWrapper(array: [Swift.UInt8]) -> LDKFramework.Bindings.LDKTransactionWrapper
   @_hasMissingDesignatedInitializers public class LDKTransactionWrapper {
-    public var cOpaqueStruct: LDKFramework.LDKTransaction?
     public init(pointer: LDKFramework.LDKTransaction)
     public func noOpRetain()
     @objc deinit
@@ -4601,9 +3923,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_NoneErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_NoneErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_NoneErrorZ)
   public init(pointer: LDKFramework.LDKCResult_NoneErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -4617,9 +3936,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public func clone() -> LDKFramework.Result_NoneErrorZ
 }
 @_hasMissingDesignatedInitializers public class ChainParameters : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChainParameters? {
-    get
-  }
   #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
   @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
   public init(network_arg: LDKFramework.LDKNetwork, best_block_arg: LDKFramework.BestBlock)
@@ -4637,9 +3953,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_TxCreationKeysDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_TxCreationKeysDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_TxCreationKeysDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_TxCreationKeysDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -4652,9 +3965,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public func clone() -> LDKFramework.Result_TxCreationKeysDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class ClosingSignedFeeRange : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKClosingSignedFeeRange? {
-    get
-  }
   public init(min_fee_satoshis_arg: Swift.UInt64, max_fee_satoshis_arg: Swift.UInt64)
   public init(pointer: LDKFramework.LDKClosingSignedFeeRange)
   public init(pointer: LDKFramework.LDKClosingSignedFeeRange, anchor: LDKFramework.NativeTypeWrapper)
@@ -4668,9 +3978,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_ExpiryTimeCreationErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ExpiryTimeCreationErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ExpiryTimeCreationErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ExpiryTimeCreationErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -4683,9 +3990,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public func clone() -> LDKFramework.Result_ExpiryTimeCreationErrorZ
 }
 @_hasMissingDesignatedInitializers public class ShutdownScript : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKShutdownScript? {
-    get
-  }
   public init(script_hash: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKShutdownScript)
   public init(pointer: LDKFramework.LDKShutdownScript, anchor: LDKFramework.NativeTypeWrapper)
@@ -4699,9 +4003,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class ChannelHandshakeLimits : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelHandshakeLimits? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKChannelHandshakeLimits)
   public init(pointer: LDKFramework.LDKChannelHandshakeLimits, anchor: LDKFramework.NativeTypeWrapper)
@@ -4725,9 +4026,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_ChannelPublicKeysDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ChannelPublicKeysDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ChannelPublicKeysDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ChannelPublicKeysDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -4740,9 +4038,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public func clone() -> LDKFramework.Result_ChannelPublicKeysDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_FundingSignedDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_FundingSignedDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_FundingSignedDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_FundingSignedDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -4755,9 +4050,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public func clone() -> LDKFramework.Result_FundingSignedDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_TxOutAccessErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_TxOutAccessErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_TxOutAccessErrorZ)
   public init(pointer: LDKFramework.LDKCResult_TxOutAccessErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -4770,9 +4062,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public func clone() -> LDKFramework.Result_TxOutAccessErrorZ
 }
 @_hasMissingDesignatedInitializers public class ChannelAnnouncement : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelAnnouncement? {
-    get
-  }
   public init(node_signature_1_arg: [Swift.UInt8], node_signature_2_arg: [Swift.UInt8], bitcoin_signature_1_arg: [Swift.UInt8], bitcoin_signature_2_arg: [Swift.UInt8], contents_arg: LDKFramework.UnsignedChannelAnnouncement)
   public init(pointer: LDKFramework.LDKChannelAnnouncement)
   public init(pointer: LDKFramework.LDKChannelAnnouncement, anchor: LDKFramework.NativeTypeWrapper)
@@ -4792,9 +4081,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class C3Tuple_RawInvoice_u832InvoiceSignatureZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKC3Tuple_RawInvoice_u832InvoiceSignatureZ? {
-    get
-  }
   public init(pointer: LDKFramework.LDKC3Tuple_RawInvoice_u832InvoiceSignatureZ)
   public init(pointer: LDKFramework.LDKC3Tuple_RawInvoice_u832InvoiceSignatureZ, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.C3Tuple_RawInvoice_u832InvoiceSignatureZ
@@ -4802,9 +4088,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class ChannelTransactionParameters : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelTransactionParameters? {
-    get
-  }
   public init(holder_pubkeys_arg: LDKFramework.ChannelPublicKeys, holder_selected_contest_delay_arg: Swift.UInt16, is_outbound_from_holder_arg: Swift.Bool, counterparty_parameters_arg: LDKFramework.CounterpartyChannelTransactionParameters, funding_outpoint_arg: LDKFramework.OutPoint)
   public init(pointer: LDKFramework.LDKChannelTransactionParameters)
   public init(pointer: LDKFramework.LDKChannelTransactionParameters, anchor: LDKFramework.NativeTypeWrapper)
@@ -4827,9 +4110,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Option_u64Z : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCOption_u64Z? {
-    get
-  }
   public init(value: Swift.UInt64?)
   public init(pointer: LDKFramework.LDKCOption_u64Z)
   public init(pointer: LDKFramework.LDKCOption_u64Z, anchor: LDKFramework.NativeTypeWrapper)
@@ -4840,15 +4120,12 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public func clone() -> LDKFramework.Option_u64Z
 }
 @_hasMissingDesignatedInitializers public class Result_CVec_C2Tuple_BlockHashChannelMonitorZZErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_CVec_C2Tuple_BlockHashChannelMonitorZZErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_CVec_C2Tuple_BlockHashChannelMonitorZZErrorZ)
   public init(pointer: LDKFramework.LDKCResult_CVec_C2Tuple_BlockHashChannelMonitorZZErrorZ, anchor: LDKFramework.NativeTypeWrapper)
   public func isOk() -> Swift.Bool
   public func getError() -> LDKFramework.LDKIOError?
-  public func getValue() -> [LDKFramework.LDKC2Tuple_BlockHashChannelMonitorZ]?
+  public func getValue() -> [LDKFramework.C2Tuple_BlockHashChannelMonitorZ]?
   public class func ok(o: [LDKFramework.C2Tuple_BlockHashChannelMonitorZ]) -> LDKFramework.Result_CVec_C2Tuple_BlockHashChannelMonitorZZErrorZ
   #warning("This method passes non-cloneable objects by owned value. Here be dragons.")
   @available(*, deprecated, message: "This method passes non-cloneable objects by owned value. Here be dragons.")
@@ -4856,9 +4133,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_GossipTimestampFilterDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_GossipTimestampFilterDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_GossipTimestampFilterDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_GossipTimestampFilterDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -4871,9 +4145,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public func clone() -> LDKFramework.Result_GossipTimestampFilterDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class C2Tuple_usizeTransactionZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKC2Tuple_usizeTransactionZ? {
-    get
-  }
   public init(pointer: LDKFramework.LDKC2Tuple_usizeTransactionZ)
   public init(pointer: LDKFramework.LDKC2Tuple_usizeTransactionZ, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.C2Tuple_usizeTransactionZ
@@ -4881,9 +4152,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class CommitmentUpdate : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCommitmentUpdate? {
-    get
-  }
   public init(pointer: LDKFramework.LDKCommitmentUpdate)
   public init(pointer: LDKFramework.LDKCommitmentUpdate, anchor: LDKFramework.NativeTypeWrapper)
   convenience public init(update_add_htlcs_arg: [LDKFramework.UpdateAddHTLC], update_fulfill_htlcs_arg: [LDKFramework.UpdateFulfillHTLC], update_fail_htlcs_arg: [LDKFramework.UpdateFailHTLC], update_fail_malformed_htlcs_arg: [LDKFramework.UpdateFailMalformedHTLC], update_fee_arg: LDKFramework.UpdateFee, commitment_signed_arg: LDKFramework.CommitmentSigned)
@@ -4899,9 +4167,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class C2Tuple_PaymentHashPaymentSecretZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKC2Tuple_PaymentHashPaymentSecretZ? {
-    get
-  }
   public init(pointer: LDKFramework.LDKC2Tuple_PaymentHashPaymentSecretZ)
   public init(pointer: LDKFramework.LDKC2Tuple_PaymentHashPaymentSecretZ, anchor: LDKFramework.NativeTypeWrapper)
   public func clone() -> LDKFramework.C2Tuple_PaymentHashPaymentSecretZ
@@ -4909,9 +4174,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_NoneMonitorUpdateErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_NoneMonitorUpdateErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_NoneMonitorUpdateErrorZ)
   public init(pointer: LDKFramework.LDKCResult_NoneMonitorUpdateErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -4923,9 +4185,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public func clone() -> LDKFramework.Result_NoneMonitorUpdateErrorZ
 }
 @_hasMissingDesignatedInitializers public class HolderCommitmentTransaction : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKHolderCommitmentTransaction? {
-    get
-  }
   public init(commitment_tx: LDKFramework.CommitmentTransaction, counterparty_sig: [Swift.UInt8], counterparty_htlc_sigs: [[Swift.UInt8]], holder_funding_key: [Swift.UInt8], counterparty_funding_key: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKHolderCommitmentTransaction)
   public init(pointer: LDKFramework.LDKHolderCommitmentTransaction, anchor: LDKFramework.NativeTypeWrapper)
@@ -4938,9 +4197,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_NodeFeaturesDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_NodeFeaturesDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_NodeFeaturesDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_NodeFeaturesDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -4952,9 +4208,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_ShutdownDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_ShutdownDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_ShutdownDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_ShutdownDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -4967,9 +4220,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public func clone() -> LDKFramework.Result_ShutdownDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_InvoiceNoneZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_InvoiceNoneZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_InvoiceNoneZ)
   public init(pointer: LDKFramework.LDKCResult_InvoiceNoneZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -4981,9 +4231,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public func clone() -> LDKFramework.Result_InvoiceNoneZ
 }
 @_hasMissingDesignatedInitializers public class UpdateFulfillHTLC : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKUpdateFulfillHTLC? {
-    get
-  }
   public init(channel_id_arg: [Swift.UInt8], htlc_id_arg: Swift.UInt64, payment_preimage_arg: [Swift.UInt8])
   public init(pointer: LDKFramework.LDKUpdateFulfillHTLC)
   public init(pointer: LDKFramework.LDKUpdateFulfillHTLC, anchor: LDKFramework.NativeTypeWrapper)
@@ -4999,7 +4246,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   @objc deinit
 }
 @_hasMissingDesignatedInitializers open class Access : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKAccess?
   public init()
   public init(pointer: LDKFramework.LDKAccess)
   public init(pointer: LDKFramework.LDKAccess, anchor: LDKFramework.NativeTypeWrapper)
@@ -5016,9 +4262,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   override public init(pointer: LDKFramework.LDKAccess, anchor: LDKFramework.NativeTypeWrapper)
 }
 @_hasMissingDesignatedInitializers public class ChannelHandshakeConfig : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKChannelHandshakeConfig? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKChannelHandshakeConfig)
   public init(pointer: LDKFramework.LDKChannelHandshakeConfig, anchor: LDKFramework.NativeTypeWrapper)
@@ -5032,9 +4275,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class PaymentPurpose : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKPaymentPurpose? {
-    get
-  }
   public init(pointer: LDKFramework.LDKPaymentPurpose)
   public init(pointer: LDKFramework.LDKPaymentPurpose, anchor: LDKFramework.NativeTypeWrapper)
   public enum PaymentPurposeValueType {
@@ -5060,9 +4300,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   }
 }
 @_hasMissingDesignatedInitializers public class Result_QueryChannelRangeDecodeErrorZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_QueryChannelRangeDecodeErrorZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_QueryChannelRangeDecodeErrorZ)
   public init(pointer: LDKFramework.LDKCResult_QueryChannelRangeDecodeErrorZ, anchor: LDKFramework.NativeTypeWrapper)
@@ -5075,9 +4312,6 @@ public typealias LDKTxid = LDKFramework.LDKThirtyTwoBytes
   public func clone() -> LDKFramework.Result_QueryChannelRangeDecodeErrorZ
 }
 @_hasMissingDesignatedInitializers public class Result_NonePaymentSendFailureZ : LDKFramework.NativeTypeWrapper {
-  public var cOpaqueStruct: LDKFramework.LDKCResult_NonePaymentSendFailureZ? {
-    get
-  }
   public init()
   public init(pointer: LDKFramework.LDKCResult_NonePaymentSendFailureZ)
   public init(pointer: LDKFramework.LDKCResult_NonePaymentSendFailureZ, anchor: LDKFramework.NativeTypeWrapper)
