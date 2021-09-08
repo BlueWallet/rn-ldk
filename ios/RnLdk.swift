@@ -139,12 +139,8 @@ class RnLdk: NSObject {
             let error = NSError(domain: "start as_KeysInterface failed", code: 1, userInfo: nil)
             return reject("start", "Failed",  error)
         }
-        _ = keysInterface.get_node_secret() // Bindings.LDKSecretKey_to_array(nativeType: keysInterface.cOpaqueStruct!.get_node_secret(keysInterface.cOpaqueStruct!.this_arg))
-        guard let cOpaqueStruct = keysInterface.cOpaqueStruct  else {
-            let error = NSError(domain: "start cOpaqueStruct failed", code: 1, userInfo: nil)
-            return reject("start", "Failed",  error)
-        }
-        _ = Bindings.LDKThirtyTwoBytes_to_array(nativeType: cOpaqueStruct.get_secure_random_bytes(cOpaqueStruct.this_arg))
+        _ = keysInterface.get_node_secret()
+        _ = keysInterface.get_secure_random_bytes()
         let userConfig = UserConfig.init()
         
         if (!serializedChannelManagerHex.isEmpty) {
@@ -254,6 +250,12 @@ class RnLdk: NSObject {
             let error = NSError(domain: "Channel manager", code: 1, userInfo: nil)
             return reject("updateBestBlock", "updateBestBlock: channelManager guard failed",  error)
         }
+        
+        if headerHex.count == 0 {
+            let error = NSError(domain: "Channel manager", code: 1, userInfo: nil)
+            return reject("updateBestBlock", "updateBestBlock: headerHex is empty",  error)
+        }
+        
         channelManager.as_Confirm().best_block_updated(header: hexStringToByteArray(headerHex), height: UInt32(truncating: height))
 
         guard let chainMonitor = chain_monitor else {
@@ -503,17 +505,15 @@ class RnLdk: NSObject {
             return reject("listUsableChannels", "Channel manager not initialized",  error)
         }
         
-        let rawChannels = channel_manager.list_usable_channels().isEmpty ? [] : channel_manager.list_usable_channels()
+        let channels = channel_manager.list_usable_channels().isEmpty ? [] : channel_manager.list_usable_channels()
         var jsonArray = "["
         var first = true
-        rawChannels.map { (rawDetails: LDKChannelDetails) ->  ChannelDetails in
-            let it = ChannelDetails(pointer: rawDetails)
+        channels.map { (it: ChannelDetails) in
             let channelObject = self.channel2ChannelObject(it: it)
             
             if (!first) { jsonArray += "," }
             jsonArray += channelObject
             first = false
-            return it
         }
         
         jsonArray += "]"
@@ -527,17 +527,15 @@ class RnLdk: NSObject {
             return reject("listChannels", "Channel Manager not initialized",  error)
         }
         
-        let rawChannels = channel_manager.list_channels().isEmpty ? [] : channel_manager.list_channels()
+        let channels = channel_manager.list_channels().isEmpty ? [] : channel_manager.list_channels()
         var jsonArray = "["
         var first = true
-        rawChannels.map { (rawDetails: LDKChannelDetails) ->  ChannelDetails in
-            let it = ChannelDetails(pointer: rawDetails)
+        channels.map { (it: ChannelDetails) in
             let channelObject = self.channel2ChannelObject(it: it)
             
             if (!first) { jsonArray += "," }
             jsonArray += channelObject
             first = false
-            return it
         }
         
         jsonArray += "]"
@@ -610,7 +608,7 @@ class RnLdk: NSObject {
     
     @objc
     func stop(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        channel_manager_constructor?.interrupt()
+        channel_manager_constructor?.interrupt(tcpPeerHandler: peer_handler)
         
         channel_manager = nil
         peer_manager = nil
@@ -627,8 +625,7 @@ class RnLdk: NSObject {
 func handleEvent(event: Event) {
     if let spendableOutputEvent = event.getValueAsSpendableOutputs() {
         print("ReactNativeLDK: trying to spend output")
-        let cOutputs = spendableOutputEvent.getOutputs()
-        let outputs = cOutputs.map { (o) in SpendableOutputDescriptor(pointer: o) }
+        let outputs = spendableOutputEvent.getOutputs()
         let destinationScript = hexStringToByteArray(refund_address_script)
         guard let result = keys_manager?.spend_spendable_outputs(descriptors: outputs, outputs: [], change_destination_script: destinationScript, feerate_sat_per_1000_weight: UInt32(feerate_fast)) else {
             return
