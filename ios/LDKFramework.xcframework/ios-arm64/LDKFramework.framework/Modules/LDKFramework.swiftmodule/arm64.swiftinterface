@@ -41,7 +41,7 @@ import Swift
   public init(pointer: LDKFramework.LDKWatchedOutput, anchor: LDKFramework.NativeTypeWrapper)
   public func get_block_hash() -> [Swift.UInt8]
   public func set_block_hash(val: [Swift.UInt8])
-  public func get_outpoint() -> LDKFramework.OutPoint
+  public func get_outpoint() -> LDKFramework.OutPoint?
   public func set_outpoint(val: LDKFramework.OutPoint)
   public func get_script_pubkey() -> [Swift.UInt8]
   public func set_script_pubkey(val: [Swift.UInt8])
@@ -235,7 +235,7 @@ import Swift
   public init(outpoint_arg: LDKFramework.OutPoint, per_commitment_point_arg: [Swift.UInt8], to_self_delay_arg: Swift.UInt16, output_arg: LDKFramework.LDKTxOut, revocation_pubkey_arg: [Swift.UInt8], channel_keys_id_arg: [Swift.UInt8], channel_value_satoshis_arg: Swift.UInt64)
   public init(pointer: LDKFramework.LDKDelayedPaymentOutputDescriptor)
   public init(pointer: LDKFramework.LDKDelayedPaymentOutputDescriptor, anchor: LDKFramework.NativeTypeWrapper)
-  public func get_outpoint() -> LDKFramework.OutPoint
+  public func get_outpoint() -> LDKFramework.OutPoint?
   public func set_outpoint(val: LDKFramework.OutPoint)
   public func get_per_commitment_point() -> [Swift.UInt8]
   public func set_per_commitment_point(val: [Swift.UInt8])
@@ -481,7 +481,7 @@ import Swift
   public func set_channel_id(val: [Swift.UInt8])
   public func get_counterparty() -> LDKFramework.ChannelCounterparty
   public func set_counterparty(val: LDKFramework.ChannelCounterparty)
-  public func get_funding_txo() -> LDKFramework.OutPoint
+  public func get_funding_txo() -> LDKFramework.OutPoint?
   public func set_funding_txo(val: LDKFramework.OutPoint)
   public func get_short_channel_id() -> LDKFramework.Option_u64Z
   public func set_short_channel_id(val: LDKFramework.Option_u64Z)
@@ -1258,7 +1258,7 @@ import Swift
   public func counterparty_selected_contest_delay() -> Swift.UInt16
   public func holder_selected_contest_delay() -> Swift.UInt16
   public func is_outbound() -> Swift.Bool
-  public func funding_outpoint() -> LDKFramework.OutPoint
+  public func funding_outpoint() -> LDKFramework.OutPoint?
   public func get_channel_parameters() -> LDKFramework.ChannelTransactionParameters
   public func sign_counterparty_payment_input(spend_tx: [Swift.UInt8], input_idx: Swift.UInt, descriptor: LDKFramework.StaticPaymentOutputDescriptor) -> LDKFramework.Result_CVec_CVec_u8ZZNoneZ
   public func sign_dynamic_p2wsh_input(spend_tx: [Swift.UInt8], input_idx: Swift.UInt, descriptor: LDKFramework.DelayedPaymentOutputDescriptor) -> LDKFramework.Result_CVec_CVec_u8ZZNoneZ
@@ -1533,7 +1533,7 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func countersignatory_pubkeys() -> LDKFramework.ChannelPublicKeys
   public func contest_delay() -> Swift.UInt16
   public func is_outbound() -> Swift.Bool
-  public func funding_outpoint() -> LDKFramework.OutPoint
+  public func funding_outpoint() -> LDKFramework.OutPoint?
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class ExpiryTime : LDKFramework.NativeTypeWrapper {
@@ -2079,7 +2079,7 @@ public protocol ExtendedChannelManagerPersister : LDKFramework.ChannelManagerPer
   public func write() -> [Swift.UInt8]
   public class func read(ser: [Swift.UInt8]) -> LDKFramework.Result_SpendableOutputDescriptorDecodeErrorZ
   @_hasMissingDesignatedInitializers public class StaticOutput : LDKFramework.NativeTypeWrapper {
-    public func getOutpoint() -> LDKFramework.OutPoint
+    public func getOutpoint() -> LDKFramework.OutPoint?
     public func getOutput() -> LDKFramework.TxOut
     @objc deinit
   }
@@ -3072,7 +3072,7 @@ public class TCPPeerHandler {
   public init(outpoint_arg: LDKFramework.OutPoint, output_arg: LDKFramework.LDKTxOut, channel_keys_id_arg: [Swift.UInt8], channel_value_satoshis_arg: Swift.UInt64)
   public init(pointer: LDKFramework.LDKStaticPaymentOutputDescriptor)
   public init(pointer: LDKFramework.LDKStaticPaymentOutputDescriptor, anchor: LDKFramework.NativeTypeWrapper)
-  public func get_outpoint() -> LDKFramework.OutPoint
+  public func get_outpoint() -> LDKFramework.OutPoint?
   public func set_outpoint(val: LDKFramework.OutPoint)
   public func set_output(val: LDKFramework.LDKTxOut)
   public func get_channel_keys_id() -> [Swift.UInt8]
@@ -4099,7 +4099,7 @@ public typealias Txid = [Swift.UInt8]
   public func set_is_outbound_from_holder(val: Swift.Bool)
   public func get_counterparty_parameters() -> LDKFramework.CounterpartyChannelTransactionParameters
   public func set_counterparty_parameters(val: LDKFramework.CounterpartyChannelTransactionParameters)
-  public func get_funding_outpoint() -> LDKFramework.OutPoint
+  public func get_funding_outpoint() -> LDKFramework.OutPoint?
   public func set_funding_outpoint(val: LDKFramework.OutPoint)
   public func clone() -> LDKFramework.ChannelTransactionParameters
   public func is_populated() -> Swift.Bool
