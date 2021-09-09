@@ -98,7 +98,7 @@ class MyFilter: Filter {
     override func register_output(output: WatchedOutput) -> Option_C2Tuple_usizeTransactionZZ {
         print("ReactNativeLDK: register_output")
         let scriptPubkeyBytes = output.get_script_pubkey()
-        let outpoint = output.get_outpoint()
+        let outpoint = output.get_outpoint()!
         let outputIndex = outpoint.get_index()
         
         // watch for any transactions that spend this output on-chain
@@ -559,9 +559,16 @@ class RnLdk: NSObject {
         channelObject += "\"is_outbound\":" + (it.get_is_outbound() ? "true" : "false") + ","
         channelObject += "\"is_public\":" + (it.get_is_public() ? "true" : "false") + ","
         channelObject += "\"remote_node_id\":" + "\"" + bytesToHex(bytes: it.get_counterparty().get_node_id()) + "\"," // @deprecated fixme
+        
         // fixme:
-        // channelObject += "\"funding_txo_txid\":" + "\"" + bytesToHex(bytes: it.get_funding_txo().get_txid()) + "\","
-        // channelObject += "\"funding_txo_index\":" + String(it.get_funding_txo().get_index()) + ","
+        if let funding_txo = it.get_funding_txo() {
+            channelObject += "\"funding_txo_txid\":" + "\"" + bytesToHex(bytes: funding_txo.get_txid()) + "\","
+            channelObject += "\"funding_txo_index\":" + String(funding_txo.get_index()) + ","
+        }else{
+            channelObject += "\"funding_txo_txid\": null,"
+            channelObject += "\"funding_txo_index\": null,"
+        }
+        
         channelObject += "\"counterparty_unspendable_punishment_reserve\":" + String(it.get_counterparty().get_unspendable_punishment_reserve()) + ","
         channelObject += "\"counterparty_node_id\":" + "\"" + bytesToHex(bytes: it.get_counterparty().get_node_id()) + "\","
         channelObject += "\"unspendable_punishment_reserve\":" + String(unspendable_punishment_reserve) + ","
