@@ -15,7 +15,9 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text>ver {result}</Text>
+      <Text>
+        ver {result} (package {RnLdk.getPackageVersion()})
+      </Text>
 
       <Button
         onPress={async () => {
@@ -48,6 +50,7 @@ export default function App() {
       <Button
         onPress={() => {
           RnLdk.connectPeer('02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1', '165.227.95.104', 9735).then(console.warn); // lnd1
+          RnLdk.connectPeer('03abf6f44c355dec0d5aa155bdbdd6e0c8fefe318eff402de65c6eb2e1be55dc3e', '18.221.23.28', 9735).then(console.warn); // opennode
         }}
         title="connect peer"
         color="#841584"
@@ -79,7 +82,7 @@ export default function App() {
 
       <Button
         onPress={async () => {
-          const address = await RnLdk.openChannelStep1('02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1', 100000);
+          const address = await RnLdk.openChannelStep1('02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1', 100000); // lnd1
           console.log(address + '');
           onChangeText(address + '');
         }}
@@ -173,6 +176,7 @@ export default function App() {
       <Button
         onPress={async () => {
           await AsyncStorage.clear();
+          Alert.alert('purged');
         }}
         title="PURGE async storage"
         color="#841584"
