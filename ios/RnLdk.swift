@@ -126,7 +126,10 @@ class RnLdk: NSObject {
     
     @objc
     func start(_ entropyHex: String, blockchainTipHeight: NSNumber, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        chain_monitor = ChainMonitor.init(chain_source: LDKFramework.Option_FilterZ(value: filter), broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister)
+        
+        // Bindings.setLogThreshold(severity: .DEBUG)
+        
+        chain_monitor = ChainMonitor.init(chain_source: Option_FilterZ(value: filter), broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister)
         guard let chainMonitor = chain_monitor else {
             let error = NSError(domain: "start chainMonitor failed", code: 1, userInfo: nil)
             return reject("start", "chainMonitor guard Failed",  error)
