@@ -1,6 +1,6 @@
 /* eslint-disable no-alert */
 import * as React from 'react';
-import { TextInput, Alert, StyleSheet, View, Text, Button } from 'react-native';
+import { TextInput, Alert, StyleSheet, Text, Button, ScrollView } from 'react-native';
 import RnLdk from 'rn-ldk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SyncedAsyncStorage from './synced-async-storage';
@@ -14,7 +14,7 @@ export default function App() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ScrollView automaticallyAdjustContentInsets contentInsetAdjustmentBehavior={'automatic'} contentContainerStyle={styles.container}>
       <Text>
         ver {result} (package {RnLdk.getPackageVersion()})
       </Text>
@@ -181,13 +181,12 @@ export default function App() {
         title="PURGE async storage"
         color="#841584"
       />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
