@@ -1,6 +1,7 @@
 import { NativeEventEmitter, NativeModules } from 'react-native';
 import utils from './util';
 const { RnLdk: RnLdkNative } = NativeModules;
+const pckg = require('../package.json');
 
 const MARKER_LOG = 'log';
 interface LogMsg {
@@ -487,6 +488,10 @@ class RnLdkImplementation {
   getVersion(): Promise<number> {
     this.logToGeneralLog('getting version');
     return RnLdkNative.getVersion();
+  }
+
+  getPackageVersion(): string {
+    return pckg.version;
   }
 
   /**
