@@ -126,7 +126,7 @@ class RnLdk: NSObject {
     
     @objc
     func start(_ entropyHex: String, blockchainTipHeight: NSNumber, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        chain_monitor = ChainMonitor.init(chain_source: filter, broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister)
+        chain_monitor = ChainMonitor.init(chain_source: LDKFramework.Option_FilterZ(value: filter), broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister)
         guard let chainMonitor = chain_monitor else {
             let error = NSError(domain: "start chainMonitor failed", code: 1, userInfo: nil)
             return reject("start", "chainMonitor guard Failed",  error)
@@ -651,8 +651,8 @@ func handleEvent(event: Event) {
         return
     }
     
-    if let paymentFailedEvent = event.getValueAsPaymentFailed() {
-        print("ReactNativeLDK: payment failed")
+    if let paymentFailedEvent = event.getValueAsPaymentPathFailed() {
+        print("ReactNativeLDK: payment path failed")
         sendEvent(eventName: MARKER_PAYMENT_FAILED, eventBody: ["payment_hash": bytesToHex(bytes: paymentFailedEvent.getPayment_hash()), "rejected_by_dest": paymentFailedEvent.getRejected_by_dest() ? "true" : "false"])
         return
     }
