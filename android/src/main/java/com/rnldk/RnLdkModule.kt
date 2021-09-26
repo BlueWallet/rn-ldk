@@ -4,7 +4,7 @@ import com.facebook.react.bridge.*
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import org.json.JSONArray
 import org.ldk.batteries.ChannelManagerConstructor
-import org.ldk.batteries.ChannelManagerConstructor.ChannelManagerPersister
+import org.ldk.batteries.ChannelManagerConstructor.EventHandler
 import org.ldk.batteries.NioPeerHandler
 import org.ldk.enums.ConfirmationTarget
 import org.ldk.enums.Currency
@@ -55,7 +55,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun getVersion(promise: Promise) {
-    promise.resolve("0.0.100.1");
+    promise.resolve("0.0.101.0");
   }
 
   @ReactMethod
@@ -119,7 +119,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     // now, initializing channel manager persister that is responsoble for backing up channel_manager bytes
 
-    val channel_manager_persister = object : ChannelManagerPersister {
+    val channel_manager_persister = object : EventHandler {
       override fun handle_event(event: Event) {
         that.handleEvent(event);
       }
@@ -162,7 +162,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       }
     })
 
-    chain_monitor = ChainMonitor.of(tx_filter, tx_broadcaster, logger, fee_estimator, persister);
+    chain_monitor = ChainMonitor.of(Option_FilterZ.some(tx_filter), tx_broadcaster, logger, fee_estimator, persister);
 
     // INITIALIZE THE KEYSMANAGER ##################################################################
     // What it's used for: providing keys for signing lightning transactions
@@ -405,7 +405,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       this.sendEvent(MARKER_PAYMENT_SENT, params);
     }
 
-    if (event is Event.PaymentFailed) {
+    if (event is Event.PaymentPathFailed) {
       println("ReactNativeLDK: " + "payment failed, payment_hash: " + byteArrayToHex(event.payment_hash));
       val params = Arguments.createMap();
       params.putString("payment_hash", byteArrayToHex(event.payment_hash));
