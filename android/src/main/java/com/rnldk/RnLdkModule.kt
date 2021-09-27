@@ -55,7 +55,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun getVersion(promise: Promise) {
-    promise.resolve("0.0.101.0");
+    promise.resolve("0.0.101.1");
   }
 
   @ReactMethod
@@ -215,7 +215,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun transactionConfirmed(headerHex: String, height: Int, txPos: Int, transactionHex: String, promise: Promise) {
-    val tx = TwoTuple(txPos.toLong(), hexStringToByteArray(transactionHex));
+    val tx = TwoTuple_usizeTransactionZ.of(txPos.toLong(), hexStringToByteArray(transactionHex))
     val txarray = arrayOf(tx);
     channel_manager?.as_Confirm()?.transactions_confirmed(hexStringToByteArray(headerHex), txarray, height);
     chain_monitor?.as_Confirm()?.transactions_confirmed(hexStringToByteArray(headerHex), txarray, height);
