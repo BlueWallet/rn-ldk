@@ -55,7 +55,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun getVersion(promise: Promise) {
-    promise.resolve("0.0.101.2");
+    promise.resolve("0.0.101.2[debug]");
   }
 
   @ReactMethod
@@ -162,7 +162,10 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       }
     })
 
-    chain_monitor = ChainMonitor.of(Option_FilterZ.none(), tx_broadcaster, logger, fee_estimator, persister);
+    val filter = Option_FilterZ.some(tx_filter);
+    System.out.println("yo");
+    System.out.println(filter);
+    chain_monitor = ChainMonitor.of(filter, tx_broadcaster, logger, fee_estimator, persister);
 
     // INITIALIZE THE KEYSMANAGER ##################################################################
     // What it's used for: providing keys for signing lightning transactions
