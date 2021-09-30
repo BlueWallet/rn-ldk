@@ -163,6 +163,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     })
 
     val filter = Option_FilterZ.some(tx_filter);
+    System.out.println(org.ldk.impl.version.get_ldk_java_bindings_version() + ", " + org.ldk.impl.bindings.get_ldk_c_bindings_version() + ", " + org.ldk.impl.bindings.get_ldk_version());
     System.out.println("yo");
     System.out.println(filter);
     chain_monitor = ChainMonitor.of(filter, tx_broadcaster, logger, fee_estimator, persister);
