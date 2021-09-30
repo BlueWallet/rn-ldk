@@ -162,7 +162,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       }
     })
 
-    chain_monitor = ChainMonitor.of(Option_FilterZ.some(tx_filter), tx_broadcaster, logger, fee_estimator, persister);
+    chain_monitor = ChainMonitor.of(Option_FilterZ.none(), tx_broadcaster, logger, fee_estimator, persister);
 
     // INITIALIZE THE KEYSMANAGER ##################################################################
     // What it's used for: providing keys for signing lightning transactions
