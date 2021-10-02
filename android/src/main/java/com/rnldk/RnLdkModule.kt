@@ -656,6 +656,32 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
+  fun getMaturingBalance(promise: Promise) {
+    var totalSat: Int = 0;
+    val balances = chain_monitor?.get_claimable_balances(channel_manager!!.list_channels());
+    balances!!.iterator().forEach {
+      if (it is Balance.ClaimableAwaitingConfirmations) {
+        println("ReactNativeLDK: ClaimableAwaitingConfirmations = " + it.claimable_amount_satoshis);
+        totalSat += it.claimable_amount_satoshis.toInt();
+      }
+
+      if (it is Balance.ClaimableOnChannelClose) {
+        println("ReactNativeLDK: ClaimableOnChannelClose = " + it.claimable_amount_satoshis);
+      }
+
+      if (it is Balance.ContentiousClaimable) {
+        println("ReactNativeLDK: ContentiousClaimable = " + it.claimable_amount_satoshis);
+      }
+
+      if (it is Balance.MaybeClaimableHTLCAwaitingTimeout) {
+        println("ReactNativeLDK: MaybeClaimableHTLCAwaitingTimeout = " + it.claimable_amount_satoshis);
+      }
+    }
+
+    promise.resolve(totalSat);
+  }
+
+  @ReactMethod
   fun stop(promise: Promise) {
     println("ReactNativeLDK: stop")
     channel_manager_constructor?.interrupt();
