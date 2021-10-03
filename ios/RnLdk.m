@@ -88,6 +88,7 @@ RCT_EXTERN_METHOD(fireAnEvent:(RCTPromiseResolveBlock)resolve reject:(RCTPromise
 
 RCT_EXTERN_METHOD(stop:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(getMaturingBalance:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 
 @end

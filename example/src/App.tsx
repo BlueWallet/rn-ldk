@@ -118,6 +118,14 @@ export default function App() {
       />
 
       <Button
+        onPress={() => {
+          RnLdk.getMaturingBalance().then(console.warn);
+        }}
+        title="getMaturingBalance"
+        color="#841584"
+      />
+
+      <Button
         onPress={async () => {
           await RnLdk.closeChannelCooperatively(text);
         }}

@@ -55,7 +55,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun getVersion(promise: Promise) {
-    promise.resolve("0.0.101.2");
+    promise.resolve(org.ldk.impl.version.get_ldk_java_bindings_version() + ", " + org.ldk.impl.bindings.get_ldk_c_bindings_version() + ", " + org.ldk.impl.bindings.get_ldk_version());
   }
 
   @ReactMethod
@@ -162,7 +162,11 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       }
     })
 
-    chain_monitor = ChainMonitor.of(Option_FilterZ.some(tx_filter), tx_broadcaster, logger, fee_estimator, persister);
+    val filter = Option_FilterZ.some(tx_filter);
+    System.out.println(org.ldk.impl.version.get_ldk_java_bindings_version() + ", " + org.ldk.impl.bindings.get_ldk_c_bindings_version() + ", " + org.ldk.impl.bindings.get_ldk_version());
+    System.out.println("yo");
+    System.out.println(filter);
+    chain_monitor = ChainMonitor.of(filter, tx_broadcaster, logger, fee_estimator, persister);
 
     // INITIALIZE THE KEYSMANAGER ##################################################################
     // What it's used for: providing keys for signing lightning transactions
@@ -649,6 +653,32 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     params.putString("line", "test");
     this.sendEvent(MARKER_LOG, params);
     promise.resolve(true);
+  }
+
+  @ReactMethod
+  fun getMaturingBalance(promise: Promise) {
+    var totalSat: Int = 0;
+    val balances = chain_monitor?.get_claimable_balances(channel_manager!!.list_channels());
+    balances!!.iterator().forEach {
+      if (it is Balance.ClaimableAwaitingConfirmations) {
+        println("ReactNativeLDK: ClaimableAwaitingConfirmations = " + it.claimable_amount_satoshis);
+        totalSat += it.claimable_amount_satoshis.toInt();
+      }
+
+      if (it is Balance.ClaimableOnChannelClose) {
+        println("ReactNativeLDK: ClaimableOnChannelClose = " + it.claimable_amount_satoshis);
+      }
+
+      if (it is Balance.ContentiousClaimable) {
+        println("ReactNativeLDK: ContentiousClaimable = " + it.claimable_amount_satoshis);
+      }
+
+      if (it is Balance.MaybeClaimableHTLCAwaitingTimeout) {
+        println("ReactNativeLDK: MaybeClaimableHTLCAwaitingTimeout = " + it.claimable_amount_satoshis);
+      }
+    }
+
+    promise.resolve(totalSat);
   }
 
   @ReactMethod

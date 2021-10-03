@@ -5,6 +5,7 @@ const pckg = require('../package.json');
 
 const MARKER_LOG = 'log';
 interface LogMsg {
+  ts: string;
   line: string;
 }
 
@@ -138,6 +139,7 @@ class RnLdkImplementation {
    */
   _log(event: LogMsg) {
     console.log('ldk log:', event);
+    if (!event.ts) event.ts = (new Date()).toISOString().replace('T', ' ');
     this.logs.push(event);
   }
 
@@ -145,6 +147,7 @@ class RnLdkImplementation {
     const str = JSON.stringify(args);
     console.log('js log:', str);
     const msg: LogMsg = {
+      ts: (new Date()).toISOString().replace('T', ' '),
       line: str,
     };
 
@@ -435,6 +438,10 @@ class RnLdkImplementation {
     this.logToGeneralLog('listing channels');
     const str = await RnLdkNative.listChannels();
     return JSON.parse(str);
+  }
+
+  async getMaturingBalance() {
+    return RnLdkNative.getMaturingBalance();
   }
 
   private async getHeaderHexByHeight(height: number) {
@@ -790,6 +797,14 @@ class RnLdkImplementation {
     if (!this.logs.find((el) => el.line === 'test')) throw new Error('Cant find test log event: ' + JSON.stringify(RnLdk.logs));
 
     return true;
+  }
+
+  getLogs() {
+    return this.logs;
+  }
+
+  cleanLogs() {
+    this.logs = [];
   }
 }
 

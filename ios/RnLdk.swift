@@ -190,7 +190,7 @@ class RnLdk: NSObject {
     
     @objc
     func getVersion(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        resolve("0.0.101")
+        resolve("\(Bindings.swift_ldk_c_bindings_get_compiled_version()), \(Bindings.swift_ldk_get_compiled_version())")
     }	
     
     func getName() -> String {
@@ -629,6 +629,40 @@ class RnLdk: NSObject {
         channel_manager_constructor = nil
         
         resolve(true)
+    }
+    
+    @objc
+    func getMaturingBalance(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard let chain_monitor = chain_monitor, let channel_manager = channel_manager else {
+            let error = NSError(domain: "getMaturingBalance", code: 1, userInfo: nil)
+            return reject("getMaturingBalance", "No chain monitor/channel manager found",  error)
+        }
+
+        
+        var totalSat: Int = 0
+        let balances = chain_monitor.get_claimable_balances(ignored_channels: channel_manager.list_channels())
+        
+        for balance in balances {
+            if let awaitingConfirmations = balance.getValueAsClaimableAwaitingConfirmations() {
+                print("ReactNativeLDK: ClaimableAwaitingConfirmations = \(awaitingConfirmations.getClaimable_amount_satoshis())")
+                totalSat = totalSat + NSNumber(value:awaitingConfirmations.getClaimable_amount_satoshis()).intValue
+            }
+            
+            if let onChannelClose = balance.getValueAsClaimableOnChannelClose() {
+              print("ReactNativeLDK: ClaimableOnChannelClose = \(onChannelClose.getClaimable_amount_satoshis())")
+            }
+
+            if let contentiousClaimable = balance.getValueAsContentiousClaimable() {
+                print("ReactNativeLDK: ContentiousClaimable = \(contentiousClaimable.getClaimable_amount_satoshis())")
+            }
+
+            if let maybeClaimableHTLCAwaitingTimeout = balance.getValueAsMaybeClaimableHTLCAwaitingTimeout() {
+              print("ReactNativeLDK: MaybeClaimableHTLCAwaitingTimeout = \(maybeClaimableHTLCAwaitingTimeout.getClaimable_amount_satoshis())")
+            }
+            
+        }
+            
+        resolve(totalSat)
     }
 }
 
