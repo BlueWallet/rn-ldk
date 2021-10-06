@@ -124,6 +124,10 @@ let channel_manager_persister = MyChannelManagerPersister()
 @objc(RnLdk)
 class RnLdk: NSObject {
     
+    @objc static func requiresMainQueueSetup() -> Bool {
+        return false
+    }
+    
     @objc
     func start(_ entropyHex: String, blockchainTipHeight: NSNumber, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         
