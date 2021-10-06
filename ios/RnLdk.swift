@@ -654,6 +654,7 @@ class RnLdk: NSObject {
             
             if let onChannelClose = balance.getValueAsClaimableOnChannelClose() {
               print("ReactNativeLDK: ClaimableOnChannelClose = \(onChannelClose.getClaimable_amount_satoshis())")
+              totalSat = totalSat + NSNumber(value:onChannelClose.getClaimable_amount_satoshis()).intValue
             }
 
             if let contentiousClaimable = balance.getValueAsContentiousClaimable() {
