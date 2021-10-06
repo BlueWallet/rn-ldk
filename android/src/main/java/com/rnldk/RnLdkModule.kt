@@ -667,6 +667,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
       if (it is Balance.ClaimableOnChannelClose) {
         println("ReactNativeLDK: ClaimableOnChannelClose = " + it.claimable_amount_satoshis);
+        totalSat += it.claimable_amount_satoshis.toInt();
       }
 
       if (it is Balance.ContentiousClaimable) {
