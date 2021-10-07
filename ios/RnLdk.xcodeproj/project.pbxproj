@@ -3,11 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		6D13AC53264EC461002CC78F /* ReactEventEmitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D13AC52264EC461002CC78F /* ReactEventEmitter.m */; };
+		8423AF77270EAE6A00568893 /* LDKFramework-maccatalyst.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8423AF75270EAE6A00568893 /* LDKFramework-maccatalyst.xcframework */; platformFilter = maccatalyst; };
+		8423AF78270EAE6A00568893 /* LDKFramework.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8423AF76270EAE6A00568893 /* LDKFramework.xcframework */; platformFilter = ios; };
 		E5094CD0268A934F00C60D88 /* RnLdk.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RnLdk.m */; };
 		F4FF95D7245B92E800C19C63 /* RnLdk.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* RnLdk.swift */; };
 /* End PBXBuildFile section */
@@ -28,6 +30,8 @@
 		134814201AA4EA6300B7C361 /* libRnLdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRnLdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D13AC51264EC461002CC78F /* ReactEventEmitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReactEventEmitter.h; sourceTree = "<group>"; };
 		6D13AC52264EC461002CC78F /* ReactEventEmitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReactEventEmitter.m; sourceTree = "<group>"; };
+		8423AF75270EAE6A00568893 /* LDKFramework-maccatalyst.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = "LDKFramework-maccatalyst.xcframework"; sourceTree = "<group>"; };
+		8423AF76270EAE6A00568893 /* LDKFramework.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = LDKFramework.xcframework; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RnLdk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RnLdk.m; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* RnLdk-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RnLdk-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4FF95D6245B92E800C19C63 /* RnLdk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RnLdk.swift; sourceTree = "<group>"; };
@@ -38,6 +42,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8423AF77270EAE6A00568893 /* LDKFramework-maccatalyst.xcframework in Frameworks */,
+				8423AF78270EAE6A00568893 /* LDKFramework.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,7 +67,17 @@
 				B3E7B5891CC2AC0600A0062D /* RnLdk.m */,
 				F4FF95D5245B92E700C19C63 /* RnLdk-Bridging-Header.h */,
 				134814211AA4EA7D00B7C361 /* Products */,
+				8423AF74270EAE6A00568893 /* Frameworks */,
 			);
+			sourceTree = "<group>";
+		};
+		8423AF74270EAE6A00568893 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8423AF75270EAE6A00568893 /* LDKFramework-maccatalyst.xcframework */,
+				8423AF76270EAE6A00568893 /* LDKFramework.xcframework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
