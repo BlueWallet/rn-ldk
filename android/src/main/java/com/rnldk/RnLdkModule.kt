@@ -315,14 +315,16 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       for (c in 1..hopsJson.length()) {
         val hopJson = hopsJson.getJSONObject(c - 1);
 
-        path = path.plusElement(RouteHop.of(
-          hexStringToByteArray(hopJson.getString("pubkey")),
-          NodeFeatures.known(),
-          hopJson.getString("short_channel_id").toLong(),
-          ChannelFeatures.known(),
-          hopJson.getString("fee_msat").toLong(),
-          hopJson.getString("cltv_expiry_delta").toInt()
-        ));
+        path = path.plusElement(
+          RouteHop.of(
+            hexStringToByteArray(hopJson.getString("pubkey")),
+            NodeFeatures.known(),
+            hopJson.getString("short_channel_id").toLong(),
+            ChannelFeatures.known(),
+            hopJson.getString("fee_msat").toLong(),
+            hopJson.getString("cltv_expiry_delta").toInt()
+          )
+        );
       }
     }
 

@@ -61,17 +61,17 @@ class MyPersister: Persist {
         let idBytes: [UInt8] = id.to_channel_id()
         let monitorBytes: [UInt8] = data.write()
         sendEvent(eventName: MARKER_PERSIST, eventBody: ["id": bytesToHex(bytes: idBytes), "data": bytesToHex(bytes: monitorBytes)])
-        
+
         // simplified result instantiation calls coming shortly!
         return Result_NoneChannelMonitorUpdateErrZ.ok()
     }
-    
+
     override func update_persisted_channel(id: OutPoint, update: ChannelMonitorUpdate, data: ChannelMonitor) -> Result_NoneChannelMonitorUpdateErrZ {
         print("ReactNativeLDK: update_persisted_channel")
         let idBytes: [UInt8] = id.to_channel_id()
         let monitorBytes: [UInt8] = data.write()
         sendEvent(eventName: MARKER_PERSIST, eventBody: ["id": bytesToHex(bytes: idBytes), "data": bytesToHex(bytes: monitorBytes)])
-        
+
         // simplified result instantiation calls coming shortly!
         return Result_NoneChannelMonitorUpdateErrZ.ok()
     }
@@ -81,7 +81,7 @@ class MyChannelManagerPersister : ChannelManagerPersister, ExtendedChannelManage
     func handle_event(event: Event) {
         handleEvent(event: event)
     }
-    
+
     override func persist_manager(channel_manager: ChannelManager) -> Result_NoneErrorZ {
         let channel_manager_bytes = channel_manager.write()
         sendEvent(eventName: "persist_manager", eventBody: ["channel_manager_bytes": bytesToHex(bytes: channel_manager_bytes)])
@@ -94,20 +94,20 @@ class MyFilter: Filter {
         print("ReactNativeLDK: register_tx")
         sendEvent(eventName: MARKER_REGISTER_TX, eventBody: ["txid": bytesToHex(bytes: txid ?? []), "script_pubkey": bytesToHex(bytes: script_pubkey)])
     }
-    
+
     override func register_output(output: WatchedOutput) -> Option_C2Tuple_usizeTransactionZZ {
         print("ReactNativeLDK: register_output")
         let scriptPubkeyBytes = output.get_script_pubkey()
         let outpoint = output.get_outpoint()!
         let outputIndex = outpoint.get_index()
-        
+
         // watch for any transactions that spend this output on-chain
-        
+
         let blockHashBytes = output.get_block_hash()
         // if block hash bytes are not null, return any transaction spending the output that is found in the corresponding block along with its index
-        
+
         sendEvent(eventName: MARKER_REGISTER_OUTPUT, eventBody: ["block_hash": bytesToHex(bytes: blockHashBytes), "index": String(outputIndex), "script_pubkey": bytesToHex(bytes: scriptPubkeyBytes)])
-        
+
         return Option_C2Tuple_usizeTransactionZZ.none()
     }
 }
@@ -123,16 +123,16 @@ let channel_manager_persister = MyChannelManagerPersister()
 
 @objc(RnLdk)
 class RnLdk: NSObject {
-    
+
     @objc static func requiresMainQueueSetup() -> Bool {
         return false
     }
-    
+
     @objc
     func start(_ entropyHex: String, blockchainTipHeight: NSNumber, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        
+
         // Bindings.setLogThreshold(severity: .DEBUG)
-        
+
         chain_monitor = ChainMonitor.init(chain_source: Option_FilterZ(value: filter), broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister)
         guard let chainMonitor = chain_monitor else {
             let error = NSError(domain: "start chainMonitor failed", code: 1, userInfo: nil)
@@ -149,16 +149,16 @@ class RnLdk: NSObject {
         _ = keysInterface.get_node_secret()
         _ = keysInterface.get_secure_random_bytes()
         let userConfig = UserConfig.init()
-        
+
         if (!serializedChannelManagerHex.isEmpty) {
             var serializedChannelMonitors: [[UInt8]] = []
             let hexesArr = monitorHexes.split(separator: ",")
             for hex in hexesArr {
                 serializedChannelMonitors.append(hexStringToByteArray(String(hex)))
             }
-            
+
             let serialized_channel_manager: [UInt8] = hexStringToByteArray(serializedChannelManagerHex)
-            
+
             do {
                 channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: serializedChannelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, router: nil, tx_broadcaster: broadcaster, logger: logger)
             } catch {
@@ -168,7 +168,7 @@ class RnLdk: NSObject {
         } else {
             channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: userConfig, current_blockchain_tip_hash: hexStringToByteArray(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, router: nil, tx_broadcaster: broadcaster, logger: logger)
         }
-        
+
         guard let channel_manager_constructor = channel_manager_constructor  else {
             let error = NSError(domain: "start channel_manager_constructor failed", code: 1, userInfo: nil)
             reject("start", "channel_manager_constructor failed",  error)
@@ -177,37 +177,37 @@ class RnLdk: NSObject {
         channel_manager = channel_manager_constructor.channelManager
         channel_manager_constructor.chain_sync_completed(persister: channel_manager_persister)
         peer_manager = channel_manager_constructor.peerManager
-        
+
         //        let ignorer = IgnoringMessageHandler()
         //        let messageHandler = MessageHandler(chan_handler_arg: channel_manager!.as_ChannelMessageHandler(), route_handler_arg:  ignorer.as_RoutingMessageHandler())
         //        peer_manager = PeerManager(message_handler: messageHandler, our_node_secret: nodeSecret, ephemeral_random_data: secureRandomBytes, logger: logger)
-        
+
         guard let peerManager = peer_manager else {
             let error = NSError(domain: "peerManager failed", code: 1, userInfo: nil)
             return reject("start", "peerManager failed",  error)
         }
         peer_handler = TCPPeerHandler(peerManager: peerManager)
-        
+
         resolve("hello ldk")
     }
-    
-    
+
+
     @objc
     func getVersion(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         resolve("\(Bindings.swift_ldk_c_bindings_get_compiled_version()), \(Bindings.swift_ldk_get_compiled_version())")
-    }	
-    
+    }
+
     func getName() -> String {
         return "RnLdk"
     }
-    
+
     @objc
     func getRelevantTxids(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let channel_manager = channel_manager, let chain_monitor = chain_monitor else {
             let error = NSError(domain: "Channel manager", code: 1, userInfo: nil)
             return reject("Channel manager", "getRelevantTxids: Not Initialized",  error)
         }
-        
+
         var first = true
         var json: String = "["
         for it in channel_manager.as_Confirm().get_relevant_txids() {
@@ -215,7 +215,7 @@ class RnLdk: NSObject {
             first = false
             json += "\"" + bytesToHex32Reversed(bytes: it.data) + "\"" // reversed
         }
-        
+
         for it in chain_monitor.as_Confirm().get_relevant_txids() {
             if (!first) { json += "," }
             first = false
@@ -224,7 +224,7 @@ class RnLdk: NSObject {
         json += "]"
         resolve(json)
     }
-    
+
     @objc
     func transactionUnconfirmed(_ txidHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let channel_manager = channel_manager, let chain_monitor = chain_monitor else {
@@ -235,34 +235,34 @@ class RnLdk: NSObject {
         chain_monitor.as_Confirm().transaction_unconfirmed(txid: hexStringToByteArray(txidHex))
         resolve(true)
     }
-    
+
     @objc
     func transactionConfirmed(_ headerHex: String, height: NSNumber, txPos: NSNumber, transactionHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let channel_manager = channel_manager, let chain_monitor = chain_monitor else {
             let error = NSError(domain: "Channel manager", code: 1, userInfo: nil)
             return reject("Channel manager", "transactionConfirmed: Not Initialized",  error)
         }
-        
+
         let txData = C2Tuple_usizeTransactionZ.new(a: UInt(truncating: txPos), b: hexStringToByteArray(transactionHex))
         let txarray = [txData]
-        
+
         channel_manager.as_Confirm().transactions_confirmed(header: hexStringToByteArray(headerHex), txdata: txarray, height: UInt32(truncating: height))
         chain_monitor.as_Confirm().transactions_confirmed(header: hexStringToByteArray(headerHex), txdata: txarray, height: UInt32(truncating: height))
         resolve(true)
     }
-    
+
     @objc
     func updateBestBlock(_ headerHex: String, height: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let channelManager = channel_manager else {
             let error = NSError(domain: "Channel manager", code: 1, userInfo: nil)
             return reject("updateBestBlock", "updateBestBlock: channelManager guard failed",  error)
         }
-        
+
         if headerHex.count == 0 {
             let error = NSError(domain: "Channel manager", code: 1, userInfo: nil)
             return reject("updateBestBlock", "updateBestBlock: headerHex is empty",  error)
         }
-        
+
         channelManager.as_Confirm().best_block_updated(header: hexStringToByteArray(headerHex), height: UInt32(truncating: height))
 
         guard let chainMonitor = chain_monitor else {
@@ -272,7 +272,7 @@ class RnLdk: NSObject {
         chainMonitor.as_Confirm().best_block_updated(header: hexStringToByteArray(headerHex), height: UInt32(truncating: height))
         resolve(true)
     }
-    
+
     @objc
     func connectPeer(_ pubkeyHex: String, hostname: String, port: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         print("ReactNativeLDK: connecting to peer " + pubkeyHex)
@@ -286,8 +286,8 @@ class RnLdk: NSObject {
         }
         resolve(true)
     }
-    
-    
+
+
     @objc
     func disconnectByNodeId(_ pubkeyHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         print("ReactNativeLDK: connecting to peer " + pubkeyHex)
@@ -298,7 +298,7 @@ class RnLdk: NSObject {
         peerManager.disconnect_by_node_id(node_id: hexStringToByteArray(pubkeyHex), no_connection_possible: false)
         resolve(true)
     }
-    
+
     @objc
     func sendPayment(_ destPubkeyHex: String, paymentHashHex: String, paymentSecretHex: String, shortChannelId: String, paymentValueMsat: NSNumber, finalCltvValue: NSNumber, LdkRoutesJsonArrayString: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         print("ReactNativeLDK: destPubkeyHex " + destPubkeyHex)
@@ -307,7 +307,7 @@ class RnLdk: NSObject {
         print("ReactNativeLDK: shortChannelId " + shortChannelId)
         print("ReactNativeLDK: paymentValueMsat " + paymentValueMsat.stringValue)
         print("ReactNativeLDK: finalCltvValue " + finalCltvValue.stringValue)
-        
+
         guard let short_channel_id_arg = UInt64(shortChannelId), let channel_manager = channel_manager else {
             let error = NSError(domain: "sendPayment", code: 1, userInfo: nil)
             return reject("sendPayment", "cOpaqueStruct failed",  error)
@@ -327,17 +327,17 @@ class RnLdk: NSObject {
         if (!LdkRoutesJsonArrayString.isEmpty) {
             // full route was provided
             path.removeAll()
-            
+
             do {
                 let data = Data(LdkRoutesJsonArrayString.utf8)
                 // make sure this JSON is in the format we expect
-                
+
                 if let json = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions()) as? [AnyObject] {
                     // try to read out an array
                     for hopJson in json {
                         print("hop:::: ")
                         //                        print(hopJson)
-                        
+
                         print(hopJson["pubkey"] as? String ?? "No pubkey")
                         print(hopJson["short_channel_id"] as? String ?? "No short_channel_id")
                         print(hopJson["fee_msat"] as? NSNumber ?? "No fee_msat")
@@ -353,20 +353,20 @@ class RnLdk: NSObject {
                             )
                             path.append(routeHop)
                         }
-                        
+
                     }
                 }
             } catch let error as NSError {
                 reject("sendPayment", "Failed to load",  error)
             }
         }
-        
+
         let route = Route(
             paths_arg: [
                 path
             ]
         )
-        
+
         let payment_hash = hexStringToByteArray(paymentHashHex)
         let payment_secret = hexStringToByteArray(paymentSecretHex)
         let payment_res = channel_manager.send_payment(route: route, payment_hash: payment_hash, payment_secret: payment_secret)
@@ -377,7 +377,7 @@ class RnLdk: NSObject {
             reject("sendPayment", "Failed",  error)
         }
     }
-    
+
     @objc
     func addInvoice(_ amtMsat: NSNumber, description: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let channel_manager = channel_manager, let keys_manager = keys_manager else {
@@ -385,7 +385,7 @@ class RnLdk: NSObject {
             return  reject("addInvoice", "No channel_manager initialized",  error)
         }
         let invoiceResult = Bindings.createInvoiceFromChannelManager(channelManager: channel_manager, keysManager: keys_manager.as_KeysInterface(), network: LDKCurrency_Bitcoin, amountMsat: UInt64(truncating: amtMsat), description: description)
-        
+
         if let invoice = invoiceResult.getValue() {
             resolve(invoice.to_str())
         } else {
@@ -393,17 +393,17 @@ class RnLdk: NSObject {
             reject("addInvoice", "Failed", error)
         }
     }
-    
+
     @objc
     func listPeers(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let peer_manager = peer_manager else {
             let error = NSError(domain: "listPeers", code: 1, userInfo: nil)
             return  reject("lostPeers", "No peer manager initialized",  error)
         }
-        
+
         let peer_node_ids = peer_manager.get_peer_node_ids()
         print(peer_node_ids)
-        
+
         var json = "["
         var first = true
         for it in peer_node_ids {
@@ -414,9 +414,9 @@ class RnLdk: NSObject {
         json += "]"
         resolve(json)
     }
-    
-    
-    
+
+
+
     @objc
     func getNodeId(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         if let nodeId = channel_manager?.get_our_node_id() {
@@ -426,7 +426,7 @@ class RnLdk: NSObject {
             reject("getNodeId", "Exception",  error)
         }
     }
-    
+
     @objc
     func closeChannelCooperatively(_ channelIdHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let close_result = channel_manager?.close_channel(channel_id: hexStringToByteArray(channelIdHex)), close_result.isOk() else {
@@ -435,7 +435,7 @@ class RnLdk: NSObject {
         }
         resolve(true)
     }
-    
+
     @objc
     func closeChannelForce(_ channelIdHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let close_result = channel_manager?.force_close_channel(channel_id: hexStringToByteArray(channelIdHex)) else {
@@ -449,7 +449,7 @@ class RnLdk: NSObject {
             reject("closeChannelForce", "Failed",  error)
         }
     }
-    
+
     @objc
     func openChannelStep1(_ pubkey: String, channelValue: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         temporary_channel_id = nil
@@ -472,14 +472,14 @@ class RnLdk: NSObject {
             reject("openChannelStep1", "Failed",  error)
         }
     }
-    
+
     @objc
     func openChannelStep2(_ txhex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let temporary_channel_id = temporary_channel_id else {
             let error = NSError(domain: "openChannelStep2", code: 1, userInfo: nil)
             return reject("openChannelStep2", "Not initialized",  error)
         }
-        
+
         guard let funding_res = channel_manager?.funding_transaction_generated(temporary_channel_id: temporary_channel_id, funding_transaction: hexStringToByteArray(txhex)) else {
             print("ReactNativeLDK: funding_res = false")
             let error = NSError(domain: "openChannelStep2", code: 1, userInfo: nil)
@@ -495,66 +495,66 @@ class RnLdk: NSObject {
             reject("openChannelStep2", "Failed",  error)
             return
         }
-        
+
         // At this point LDK will exchange the remaining channel open messages with
         // the counterparty and, when appropriate, broadcast the funding transaction
         // provided.
         // Once it confirms, the channel will be open and available for use (indicated
         // by its presence in `channel_manager.list_usable_channels()`).
-        
+
         resolve(true)
     }
-    
+
     @objc
     func listUsableChannels(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let channel_manager = channel_manager else {
             let error = NSError(domain: "listUsableChannels", code: 1, userInfo: nil)
             return reject("listUsableChannels", "Channel manager not initialized",  error)
         }
-        
+
         let channels = channel_manager.list_usable_channels().isEmpty ? [] : channel_manager.list_usable_channels()
         var jsonArray = "["
         var first = true
         channels.map { (it: ChannelDetails) in
             let channelObject = self.channel2ChannelObject(it: it)
-            
+
             if (!first) { jsonArray += "," }
             jsonArray += channelObject
             first = false
         }
-        
+
         jsonArray += "]"
         resolve(jsonArray)
     }
-    
+
     @objc
     func listChannels(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let channel_manager = channel_manager else {
             let error = NSError(domain: "listChannels", code: 1, userInfo: nil)
             return reject("listChannels", "Channel Manager not initialized",  error)
         }
-        
+
         let channels = channel_manager.list_channels().isEmpty ? [] : channel_manager.list_channels()
         var jsonArray = "["
         var first = true
         channels.map { (it: ChannelDetails) in
             let channelObject = self.channel2ChannelObject(it: it)
-            
+
             if (!first) { jsonArray += "," }
             jsonArray += channelObject
             first = false
         }
-        
+
         jsonArray += "]"
         resolve(jsonArray)
     }
-    
+
     func channel2ChannelObject(it: ChannelDetails) -> String {
         let short_channel_id = it.get_short_channel_id().getValue() ?? 0
         let confirmations_required = it.get_confirmations_required().getValue() ?? 0;
         let force_close_spend_delay = it.get_force_close_spend_delay().getValue() ?? 0;
         let unspendable_punishment_reserve = it.get_unspendable_punishment_reserve().getValue() ?? 0;
-        
+
         var channelObject = "{"
         channelObject += "\"channel_id\":" + "\"" + bytesToHex(bytes: it.get_channel_id()) + "\","
         channelObject += "\"channel_value_satoshis\":" + String(it.get_channel_value_satoshis()) + ","
@@ -566,7 +566,7 @@ class RnLdk: NSObject {
         channelObject += "\"is_outbound\":" + (it.get_is_outbound() ? "true" : "false") + ","
         channelObject += "\"is_public\":" + (it.get_is_public() ? "true" : "false") + ","
         channelObject += "\"remote_node_id\":" + "\"" + bytesToHex(bytes: it.get_counterparty().get_node_id()) + "\"," // @deprecated fixme
-        
+
         // fixme:
         if let funding_txo = it.get_funding_txo() {
             channelObject += "\"funding_txo_txid\":" + "\"" + bytesToHex(bytes: funding_txo.get_txid()) + "\","
@@ -575,7 +575,7 @@ class RnLdk: NSObject {
             channelObject += "\"funding_txo_txid\": null,"
             channelObject += "\"funding_txo_index\": null,"
         }
-        
+
         channelObject += "\"counterparty_unspendable_punishment_reserve\":" + String(it.get_counterparty().get_unspendable_punishment_reserve()) + ","
         channelObject += "\"counterparty_node_id\":" + "\"" + bytesToHex(bytes: it.get_counterparty().get_node_id()) + "\","
         channelObject += "\"unspendable_punishment_reserve\":" + String(unspendable_punishment_reserve) + ","
@@ -583,16 +583,16 @@ class RnLdk: NSObject {
         channelObject += "\"force_close_spend_delay\":" + String(force_close_spend_delay) + ","
         channelObject += "\"user_id\":" + String(it.get_user_id())
         channelObject += "}"
-        
+
         return channelObject
     }
-    
+
     @objc
     func setRefundAddressScript(_ refundAddressScriptHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         refund_address_script = refundAddressScriptHex
         resolve(true)
     }
-    
+
     @objc
     func setFeerate(_ newFeerateFast: NSNumber, newFeerateMedium: NSNumber, newFeerateSlow: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         if (Int(truncating: newFeerateFast) < 300) {
@@ -612,18 +612,18 @@ class RnLdk: NSObject {
         feerate_slow = Int(truncating: newFeerateSlow)
         resolve(true)
     }
-    
+
     @objc
     func fireAnEvent(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         sendEvent(eventName: MARKER_LOG, eventBody: ["line": "test"])
         resolve(true)
     }
-    
-    
+
+
     @objc
     func stop(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         channel_manager_constructor?.interrupt(tcpPeerHandler: peer_handler)
-        
+
         channel_manager = nil
         peer_manager = nil
         keys_manager = nil
@@ -631,10 +631,10 @@ class RnLdk: NSObject {
         peer_handler = nil
         chain_monitor = nil
         channel_manager_constructor = nil
-        
+
         resolve(true)
     }
-    
+
     @objc
     func getMaturingBalance(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let chain_monitor = chain_monitor, let channel_manager = channel_manager else {
@@ -642,16 +642,16 @@ class RnLdk: NSObject {
             return reject("getMaturingBalance", "No chain monitor/channel manager found",  error)
         }
 
-        
+
         var totalSat: Int = 0
         let balances = chain_monitor.get_claimable_balances(ignored_channels: channel_manager.list_channels())
-        
+
         for balance in balances {
             if let awaitingConfirmations = balance.getValueAsClaimableAwaitingConfirmations() {
                 print("ReactNativeLDK: ClaimableAwaitingConfirmations = \(awaitingConfirmations.getClaimable_amount_satoshis())")
                 totalSat = totalSat + NSNumber(value:awaitingConfirmations.getClaimable_amount_satoshis()).intValue
             }
-            
+
             if let onChannelClose = balance.getValueAsClaimableOnChannelClose() {
               print("ReactNativeLDK: ClaimableOnChannelClose = \(onChannelClose.getClaimable_amount_satoshis())")
               totalSat = totalSat + NSNumber(value:onChannelClose.getClaimable_amount_satoshis()).intValue
@@ -664,9 +664,9 @@ class RnLdk: NSObject {
             if let maybeClaimableHTLCAwaitingTimeout = balance.getValueAsMaybeClaimableHTLCAwaitingTimeout() {
               print("ReactNativeLDK: MaybeClaimableHTLCAwaitingTimeout = \(maybeClaimableHTLCAwaitingTimeout.getClaimable_amount_satoshis())")
             }
-            
+
         }
-            
+
         resolve(totalSat)
     }
 }
@@ -679,43 +679,43 @@ func handleEvent(event: Event) {
         guard let result = keys_manager?.spend_spendable_outputs(descriptors: outputs, outputs: [], change_destination_script: destinationScript, feerate_sat_per_1000_weight: UInt32(feerate_fast)) else {
             return
         }
-        
+
         if let transaction = result.getValue() {
             sendEvent(eventName: MARKER_BROADCAST, eventBody: ["txhex": bytesToHex(bytes: transaction)])
         }
-        
+
         return
     }
-    
+
     if let paymentSentEvent = event.getValueAsPaymentSent() {
         print("ReactNativeLDK: payment sent")
         sendEvent(eventName: MARKER_PAYMENT_SENT, eventBody: ["payment_preimage": bytesToHex(bytes: paymentSentEvent.getPayment_preimage())])
         return
     }
-    
+
     if let paymentFailedEvent = event.getValueAsPaymentPathFailed() {
         print("ReactNativeLDK: payment path failed")
         sendEvent(eventName: MARKER_PAYMENT_FAILED, eventBody: ["payment_hash": bytesToHex(bytes: paymentFailedEvent.getPayment_hash()), "rejected_by_dest": paymentFailedEvent.getRejected_by_dest() ? "true" : "false"])
         return
     }
-    
+
     if let _ = event.getValueAsPendingHTLCsForwardable() {
         print("ReactNativeLDK: forward HTLC")
         channel_manager?.process_pending_htlc_forwards()
         return
     }
-    
+
     if let paymentReceivedEvent = event.getValueAsPaymentReceived() {
         print("ReactNativeLDK: payment received")
-        
-        
+
+
         if paymentReceivedEvent.getPurpose().getValueType()! == .InvoicePayment {
             let paymentPreimage = paymentReceivedEvent.getPurpose().getValueAsInvoicePayment()?.getPayment_preimage()
             let paymentSecret = paymentReceivedEvent.getPurpose().getValueAsInvoicePayment()?.getPayment_secret()
-            
+
             if (paymentPreimage == nil) { return }
             if (paymentSecret == nil) { return }
-            
+
             let _ = channel_manager?.claim_funds(payment_preimage: paymentPreimage!)
             sendEvent(eventName: MARKER_PAYMENT_RECEIVED, eventBody: [
                 "payment_hash": bytesToHex(bytes: paymentReceivedEvent.getPayment_hash()),
@@ -725,12 +725,12 @@ func handleEvent(event: Event) {
             ])
             return
         }
-        
+
         if paymentReceivedEvent.getPurpose().getValueType()! == .SpontaneousPayment {
             let paymentPreimage = paymentReceivedEvent.getPurpose().getValueAsSpontaneousPayment()
-        
+
             if (paymentPreimage == nil) { return }
-            
+
             let _ = channel_manager?.claim_funds(payment_preimage: paymentPreimage!)
             sendEvent(eventName: MARKER_PAYMENT_RECEIVED, eventBody: [
                 "payment_hash": bytesToHex(bytes: paymentReceivedEvent.getPayment_hash()),
@@ -740,9 +740,9 @@ func handleEvent(event: Event) {
             return
         }
     }
-    
+
     //
-    
+
     if let fundingGenerationReadyEvent = event.getValueAsFundingGenerationReady() {
         print("ReactNativeLDK: funding generation ready")
         let funding_spk = fundingGenerationReadyEvent.getOutput_script()
@@ -839,6 +839,6 @@ func bytesToHex32Reversed(bytes: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt
     bytesArray.append(bytes.29)
     bytesArray.append(bytes.30)
     bytesArray.append(bytes.31)
-    
+
     return bytesToHex(bytes: bytesArray.reversed())
 }
