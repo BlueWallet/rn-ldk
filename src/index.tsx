@@ -65,6 +65,13 @@ interface FundingGenerationReadyMsg {
   user_channel_id: string;
 }
 
+type ClosureReason = 'ProcessingError' | 'OutdatedChannelManager' | 'HolderForceClosed' | 'DisconnectedPeer' | 'CounterpartyForceClosed' | 'CooperativeClosure' | 'CommitmentTxConfirmed';
+const MARKER_CHANNEL_CLOSED = 'channel_closed';
+interface ChannelClosedMsg {
+  reason: ClosureReason;
+  text?: string;
+}
+
 class RnLdkImplementation {
   static CHANNEL_MANAGER_PREFIX = 'channel_manager';
   static CHANNEL_PREFIX = 'channel_monitor_';
@@ -77,6 +84,7 @@ class RnLdkImplementation {
   sentPayments: PaymentSentMsg[] = [];
   receivedPayments: PaymentReceivedMsg[] = [];
   failedPayments: PaymentFailedMsg[] = [];
+  channelsClosed: ChannelClosedMsg[] = [];
   logs: LogMsg[] = [];
 
   private started = false;
@@ -182,6 +190,11 @@ class RnLdkImplementation {
   _fundingGenerationReady(event: FundingGenerationReadyMsg) {
     this.logToGeneralLog('funding generation ready:', event);
     this.fundingsReady.push(event);
+  }
+
+  _channelClosed(event: ChannelClosedMsg) {
+    this.logToGeneralLog('channel closed:', event);
+    this.channelsClosed.push(event);
   }
 
   /**
@@ -363,6 +376,7 @@ class RnLdkImplementation {
     if (!this.started) throw new Error('LDK not yet started');
     this.logToGeneralLog(`opening channel with ${pubkey} for ${sat} sat`);
     this.fundingsReady = []; // reset it
+    const numChannelsClosed = this.channelsClosed.length;
     const result = await RnLdkNative.openChannelStep1(pubkey, sat);
     if (!result) return false;
     let timer = 60;
@@ -375,11 +389,18 @@ class RnLdkImplementation {
         }
         break;
       }
+
+      if (this.channelsClosed.length > numChannelsClosed) {
+        this.channelsClosed[this.channelsClosed.length - 1];
+        this.logToGeneralLog('channel closed while waiting for FundingGenerationReady event');
+        // fixme: some day LDK will return either channel_id in advance, or user_id in Closed Channel event, so
+        // we will know for sure which channel closed. for now, we just guess that closed channel is the one we have
+        // just initiated
+        return false;
+      }
     }
 
-    console.warn('timeout waiting for FundingGenerationReady event');
-    this.logToGeneralLog('checkBlockchain() done');
-    ('timeout waiting for FundingGenerationReady event');
+    this.logToGeneralLog('timeout waiting for FundingGenerationReady event');
     return false;
   }
 
@@ -851,6 +872,10 @@ eventEmitter.addListener(MARKER_PAYMENT_SENT, (event: PaymentSentMsg) => {
 
 eventEmitter.addListener(MARKER_FUNDING_GENERATION_READY, (event: FundingGenerationReadyMsg) => {
   RnLdk._fundingGenerationReady(event);
+});
+
+eventEmitter.addListener(MARKER_CHANNEL_CLOSED, (event: ChannelClosedMsg) => {
+  RnLdk._channelClosed(event);
 });
 
 export default RnLdk as RnLdkImplementation;
