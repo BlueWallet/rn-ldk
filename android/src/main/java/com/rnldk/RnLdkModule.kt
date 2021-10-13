@@ -31,6 +31,7 @@ const val MARKER_PAYMENT_FAILED = "payment_failed";
 const val MARKER_PAYMENT_RECEIVED = "payment_received";
 const val MARKER_PERSIST_MANAGER = "persist_manager";
 const val MARKER_FUNDING_GENERATION_READY = "funding_generation_ready";
+const val MARKER_CHANNEL_CLOSED = "channel_closed";
 //
 
 var feerate_fast = 7500; // estimate fee rate in BTC/kB
@@ -461,6 +462,43 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         temporary_channel_id = event.temporary_channel_id;
         this.sendEvent(MARKER_FUNDING_GENERATION_READY, params);
       }
+    }
+
+    if (event is Event.PaymentForwarded) {
+      // todo. one day, when ldk is a full routing node...
+    }
+
+    if (event is Event.ChannelClosed) {
+      println("ReactNativeLDK: " + "ChannelClosed");
+      val params = Arguments.createMap();
+      val reason = event.reason;
+      params.putString("channel_id", byteArrayToHex(event.channel_id));
+
+      if (reason is ClosureReason.CommitmentTxConfirmed) {
+        params.putString("reason", "CommitmentTxConfirmed");
+      }
+      if (reason is ClosureReason.CooperativeClosure) {
+        params.putString("reason", "CooperativeClosure");
+      }
+      if (reason is ClosureReason.CounterpartyForceClosed) {
+        params.putString("reason", "CounterpartyForceClosed");
+        params.putString("text", reason.peer_msg);
+      }
+      if (reason is ClosureReason.DisconnectedPeer) {
+        params.putString("reason", "DisconnectedPeer");
+      }
+      if (reason is ClosureReason.HolderForceClosed) {
+        params.putString("reason", "HolderForceClosed");
+      }
+      if (reason is ClosureReason.OutdatedChannelManager) {
+        params.putString("reason", "OutdatedChannelManager");
+      }
+      if (reason is ClosureReason.ProcessingError) {
+        params.putString("reason", "ProcessingError");
+        params.putString("text", reason.err);
+      }
+
+      this.sendEvent(MARKER_CHANNEL_CLOSED, params);
     }
   }
 
