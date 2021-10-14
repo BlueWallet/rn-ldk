@@ -29,7 +29,7 @@ RCT_EXPORT_MODULE();
 }
 
 - (NSArray<NSString *> *)supportedEvents {
-    return @[@"broadcast",@"register_tx",@"log",@"marker_register_output",@"broadcast",@"persist",@"payment_sent",@"payment_failed",@"payment_received",@"persist_manager",@"funding_generation_ready"];
+    return @[@"broadcast",@"register_tx",@"log",@"marker_register_output",@"broadcast",@"persist",@"payment_sent",@"payment_failed",@"payment_received",@"persist_manager",@"funding_generation_ready",@"channel_closed"];
 }
 
 - (void)sendNotification:(NSDictionary *)userInfo
