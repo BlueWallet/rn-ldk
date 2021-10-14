@@ -11,6 +11,7 @@ let MARKER_PAYMENT_SENT = "payment_sent"
 let MARKER_PAYMENT_FAILED = "payment_failed"
 let MARKER_PAYMENT_RECEIVED = "payment_received"
 let MARKER_FUNDING_GENERATION_READY = "funding_generation_ready"
+let MARKER_CHANNEL_CLOSED = "channel_closed"
 //
 
 var feerate_fast = 7500 // estimate fee rate in BTC/kB
@@ -758,6 +759,48 @@ func handleEvent(event: Event) {
             print("ReactNativeLDK: funding generation ready: something went wrong " + bytesToHex(bytes: fundingGenerationReadyEvent.getOutput_script()))
         }
         return
+    }
+    
+    if event.getValueAsPaymentForwarded() != nil {
+        // todo. one day, when ldk is a full routing node...
+    }
+    
+    if let channelClosed = event.getValueAsChannelClosed() {
+        print("ReactNativeLDK ChannelClosed")
+        let reason = channelClosed.getReason()
+        var params = [String: String]()
+        params["channel_id"] = bytesToHex(bytes:channelClosed.getChannel_id())
+        if reason == ClosureReason.commitment_tx_confirmed() {
+            params["reason"] = "CommitmentTxConfirmed"
+        }
+        
+        if reason == ClosureReason.cooperative_closure() {
+            params["reason"] = "CooperativeClosure"
+        }
+        
+        if let getValueAsCounterpartyForceClosed = reason.getValueAsCounterpartyForceClosed() {
+            params["reason"] = "CounterpartyForceClosed"
+            params["text"] = getValueAsCounterpartyForceClosed.getPeer_msg()
+        }
+        
+        if reason == ClosureReason.disconnected_peer() {
+            params["reason"] = "DisconnectedPeer"
+        }
+        
+        if reason == ClosureReason.holder_force_closed() {
+            params["reason"] = "HolderForceClosed"
+        }
+        
+        if reason == ClosureReason.outdated_channel_manager() {
+            params["reason"] = "OutdatedChannelManager"
+        }
+        
+        if let getValueAsProcessingError = reason.getValueAsProcessingError() {
+            params["reason"] = "ProcessingError"
+            params["text"] = getValueAsProcessingError.getErr()
+        }
+        
+        sendEvent(eventName: MARKER_CHANNEL_CLOSED, eventBody: params)
     }
 }
 
