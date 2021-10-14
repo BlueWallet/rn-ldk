@@ -147,7 +147,7 @@ class RnLdkImplementation {
    */
   _log(event: LogMsg) {
     console.log('ldk log:', event);
-    if (!event.ts) event.ts = (new Date()).toISOString().replace('T', ' ');
+    if (!event.ts) event.ts = new Date().toISOString().replace('T', ' ');
     this.logs.push(event);
   }
 
@@ -155,7 +155,7 @@ class RnLdkImplementation {
     const str = JSON.stringify(args);
     console.log('js log:', str);
     const msg: LogMsg = {
-      ts: (new Date()).toISOString().replace('T', ' '),
+      ts: new Date().toISOString().replace('T', ' '),
       line: str,
     };
 
