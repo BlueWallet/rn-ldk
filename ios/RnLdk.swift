@@ -457,7 +457,7 @@ class RnLdk: NSObject {
         let peer_node_pubkey = hexStringToByteArray(pubkey)
         let userConfig = UserConfig.init()
         if let create_channel_result = channel_manager?.create_channel(
-            their_network_key: peer_node_pubkey, channel_value_satoshis: UInt64(truncating: channelValue), push_msat: 0, user_id: 42, override_config: userConfig
+            their_network_key: peer_node_pubkey, channel_value_satoshis: UInt64(truncating: channelValue), push_msat: 0, user_channel_id: 42, override_config: userConfig
         ) {
             if create_channel_result.isOk() {
                 print("ReactNativeLDK: create_channel_result = true")
@@ -582,7 +582,7 @@ class RnLdk: NSObject {
         channelObject += "\"unspendable_punishment_reserve\":" + String(unspendable_punishment_reserve) + ","
         channelObject += "\"confirmations_required\":" + String(confirmations_required) + ","
         channelObject += "\"force_close_spend_delay\":" + String(force_close_spend_delay) + ","
-        channelObject += "\"user_id\":" + String(it.get_user_id())
+        channelObject += "\"user_id\":" + String(it.get_user_channel_id())
         channelObject += "}"
 
         return channelObject
