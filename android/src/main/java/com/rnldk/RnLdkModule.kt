@@ -339,7 +339,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     val payment_hash = hexStringToByteArray(paymentHashHex);
     val payment_secret = hexStringToByteArray(paymentSecretHex);
     val payment_res = channel_manager?.send_payment(route, payment_hash, payment_secret);
-    if (payment_res is Result_NonePaymentSendFailureZ.Result_NonePaymentSendFailureZ_OK) {
+    if (payment_res is Result_PaymentIdPaymentSendFailureZ.Result_PaymentIdPaymentSendFailureZ_OK) {
       promise.resolve(true);
     } else {
       promise.reject("sendPayment failed");
@@ -540,8 +540,8 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       peer_node_pubkey, channelValue.toLong(), 0, 42, null
     );
 
-    if (create_channel_result !is Result_NoneAPIErrorZ.Result_NoneAPIErrorZ_OK) {
-      println("ReactNativeLDK: " + "create_channel_result !is Result_NoneAPIErrorZ.Result_NoneAPIErrorZ_OK, = " + create_channel_result);
+    if (create_channel_result !is Result__u832APIErrorZ.Result__u832APIErrorZ_OK) {
+      println("ReactNativeLDK: " + "create_channel_result !is Result__u832APIErrorZ.Result__u832APIErrorZ_OK, = " + create_channel_result);
       promise.reject("openChannelStep1 failed");
       return;
     }
@@ -663,7 +663,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     channelObject += "\"unspendable_punishment_reserve\":" + unspendable_punishment_reserve + ",";
     channelObject += "\"confirmations_required\":" + confirmations_required + ",";
     channelObject += "\"force_close_spend_delay\":" + force_close_spend_delay + ",";
-    channelObject += "\"user_id\":" + it._user_id;
+    channelObject += "\"user_id\":" + it._user_channel_id;
     channelObject += "}";
 
     return channelObject;
