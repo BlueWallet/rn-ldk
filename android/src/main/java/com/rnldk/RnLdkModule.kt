@@ -473,6 +473,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       val params = Arguments.createMap();
       val reason = event.reason;
       params.putString("channel_id", byteArrayToHex(event.channel_id));
+      params.putString("user_channel_id", event.user_channel_id.toString());
 
       if (reason is ClosureReason.CommitmentTxConfirmed) {
         params.putString("reason", "CommitmentTxConfirmed");
@@ -546,7 +547,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       return;
     }
 
-    promise.resolve(true);
+    promise.resolve(byteArrayToHex(create_channel_result.res));
   }
 
   @ReactMethod
