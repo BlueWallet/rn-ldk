@@ -461,7 +461,11 @@ class RnLdk: NSObject {
         ) {
             if create_channel_result.isOk() {
                 print("ReactNativeLDK: create_channel_result = true")
-                resolve(true)
+                if let channelResultValue = create_channel_result.getValue() {
+                    resolve(bytesToHex(bytes: channelResultValue))
+                    return
+                }
+                resolve("???") // this should never happen
             } else {
                 print("ReactNativeLDK: create_channel_result = false")
                 let error = NSError(domain: "openChannelStep1", code: 1, userInfo: nil)
@@ -770,6 +774,7 @@ func handleEvent(event: Event) {
         let reason = channelClosed.getReason()
         var params = [String: String]()
         params["channel_id"] = bytesToHex(bytes:channelClosed.getChannel_id())
+        params["user_channel_id"] = String(channelClosed.getUser_channel_id())
         if reason == ClosureReason.commitment_tx_confirmed() {
             params["reason"] = "CommitmentTxConfirmed"
         }
