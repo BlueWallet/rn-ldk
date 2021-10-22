@@ -69,6 +69,8 @@ type ClosureReason = 'ProcessingError' | 'OutdatedChannelManager' | 'HolderForce
 const MARKER_CHANNEL_CLOSED = 'channel_closed';
 interface ChannelClosedMsg {
   reason: ClosureReason;
+  channel_id: string;
+  user_channel_id: number;
   text?: string;
 }
 
@@ -376,9 +378,8 @@ class RnLdkImplementation {
     if (!this.started) throw new Error('LDK not yet started');
     this.logToGeneralLog(`opening channel with ${pubkey} for ${sat} sat`);
     this.fundingsReady = []; // reset it
-    const numChannelsClosed = this.channelsClosed.length;
-    const result = await RnLdkNative.openChannelStep1(pubkey, sat);
-    if (!result) return false;
+    const tempChannelId: string = await RnLdkNative.openChannelStep1(pubkey, sat);
+    if (!tempChannelId) return false;
     let timer = 60;
     while (timer-- > 0) {
       await new Promise((resolve) => setTimeout(resolve, 500)); // sleep
@@ -390,13 +391,12 @@ class RnLdkImplementation {
         break;
       }
 
-      if (this.channelsClosed.length > numChannelsClosed) {
-        this.channelsClosed[this.channelsClosed.length - 1];
-        this.logToGeneralLog('channel closed while waiting for FundingGenerationReady event');
-        // fixme: some day LDK will return either channel_id in advance, or user_id in Closed Channel event, so
-        // we will know for sure which channel closed. for now, we just guess that closed channel is the one we have
-        // just initiated
-        return false;
+      // what if our temp channel closed while we wait for the funding generation event? lets check it:
+      for (const closed of this.channelsClosed) {
+        if (42 === +closed.user_channel_id || closed.channel_id === tempChannelId) {
+          this.logToGeneralLog('channel closed while waiting for FundingGenerationReady event');
+          return false;
+        }
       }
     }
 
