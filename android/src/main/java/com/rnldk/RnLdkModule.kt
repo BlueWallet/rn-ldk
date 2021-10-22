@@ -702,7 +702,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     val balances = chain_monitor?.get_claimable_balances(channel_manager!!.list_channels());
     balances!!.iterator().forEach {
       if (it is Balance.ClaimableAwaitingConfirmations) {
-        println("ReactNativeLDK: ClaimableAwaitingConfirmations = " + it.claimable_amount_satoshis);
+        println("ReactNativeLDK: ClaimableAwaitingConfirmations = " + it.claimable_amount_satoshis + " " + it.confirmation_height);
         totalSat += it.claimable_amount_satoshis.toInt();
       }
 
@@ -712,11 +712,11 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       }
 
       if (it is Balance.ContentiousClaimable) {
-        println("ReactNativeLDK: ContentiousClaimable = " + it.claimable_amount_satoshis);
+        println("ReactNativeLDK: ContentiousClaimable = " + it.claimable_amount_satoshis + " " + it.timeout_height);
       }
 
       if (it is Balance.MaybeClaimableHTLCAwaitingTimeout) {
-        println("ReactNativeLDK: MaybeClaimableHTLCAwaitingTimeout = " + it.claimable_amount_satoshis);
+        println("ReactNativeLDK: MaybeClaimableHTLCAwaitingTimeout = " + it.claimable_amount_satoshis + " " + it.claimable_height);
       }
     }
 
