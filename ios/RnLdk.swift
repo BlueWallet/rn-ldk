@@ -760,11 +760,11 @@ func handleEvent(event: Event) {
         }
         return
     }
-    
+
     if event.getValueAsPaymentForwarded() != nil {
         // todo. one day, when ldk is a full routing node...
     }
-    
+
     if let channelClosed = event.getValueAsChannelClosed() {
         print("ReactNativeLDK ChannelClosed")
         let reason = channelClosed.getReason()
@@ -773,33 +773,33 @@ func handleEvent(event: Event) {
         if reason == ClosureReason.commitment_tx_confirmed() {
             params["reason"] = "CommitmentTxConfirmed"
         }
-        
+
         if reason == ClosureReason.cooperative_closure() {
             params["reason"] = "CooperativeClosure"
         }
-        
+
         if let getValueAsCounterpartyForceClosed = reason.getValueAsCounterpartyForceClosed() {
             params["reason"] = "CounterpartyForceClosed"
             params["text"] = getValueAsCounterpartyForceClosed.getPeer_msg()
         }
-        
+
         if reason == ClosureReason.disconnected_peer() {
             params["reason"] = "DisconnectedPeer"
         }
-        
+
         if reason == ClosureReason.holder_force_closed() {
             params["reason"] = "HolderForceClosed"
         }
-        
+
         if reason == ClosureReason.outdated_channel_manager() {
             params["reason"] = "OutdatedChannelManager"
         }
-        
+
         if let getValueAsProcessingError = reason.getValueAsProcessingError() {
             params["reason"] = "ProcessingError"
             params["text"] = getValueAsProcessingError.getErr()
         }
-        
+
         sendEvent(eventName: MARKER_CHANNEL_CLOSED, eventBody: params)
     }
 }
