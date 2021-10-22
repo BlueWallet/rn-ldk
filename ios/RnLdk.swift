@@ -461,15 +461,14 @@ class RnLdk: NSObject {
         ) {
             if create_channel_result.isOk() {
                 print("ReactNativeLDK: create_channel_result = true")
-                if let channelResultValue = create_channel_result.getValue() {
-                    resolve(bytesToHex(bytes: channelResultValue))
-                    return
+                guard let channelResultValue = create_channel_result.getValue() {
+                    // This should never happen
+                    return reject("openChannelStep1", "create_channel_result",  error)
                 }
-                resolve("???") // this should never happen
+                resolve(bytesToHex(bytes: channelResultValue))
             } else {
                 print("ReactNativeLDK: create_channel_result = false")
                 let error = NSError(domain: "openChannelStep1", code: 1, userInfo: nil)
-                reject("openChannelStep1", "Failed",  error)
             }
         } else {
             print("ReactNativeLDK: create_channel_result = false")
