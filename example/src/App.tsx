@@ -119,9 +119,14 @@ export default function App() {
 
       <Button
         onPress={() => {
-          RnLdk.getMaturingBalance().then(console.warn);
+          RnLdk.getMaturingBalance().then((maturingBalance) => {
+            console.warn({ maturingBalance });
+          });
+          RnLdk.getMaturingHeight().then((maturingHeight) => {
+            console.warn({ maturingHeight });
+          });
         }}
-        title="getMaturingBalance"
+        title="get Maturing Balance/Height"
         color="#841584"
       />
 

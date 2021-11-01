@@ -465,6 +465,10 @@ class RnLdkImplementation {
     return RnLdkNative.getMaturingBalance();
   }
 
+  async getMaturingHeight() {
+    return RnLdkNative.getMaturingHeight();
+  }
+
   private async getHeaderHexByHeight(height: number) {
     const response2 = await fetch('https://blockstream.info/api/block-height/' + height);
     const hash = await response2.text();
