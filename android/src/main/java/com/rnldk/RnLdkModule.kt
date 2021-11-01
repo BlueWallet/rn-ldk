@@ -724,6 +724,43 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
+  fun getMaturingHeight(promise: Promise) {
+    var maxHeight: Int = 0;
+    val balances = chain_monitor?.get_claimable_balances(channel_manager!!.list_channels());
+    balances!!.iterator().forEach {
+      if (it is Balance.ClaimableAwaitingConfirmations) {
+        println("ReactNativeLDK: ClaimableAwaitingConfirmations = " + it.claimable_amount_satoshis + " " + it.confirmation_height);
+        maxHeight = when (it.confirmation_height > maxHeight) {
+          true -> it.confirmation_height
+          false -> maxHeight
+        }
+      }
+
+      if (it is Balance.ClaimableOnChannelClose) {
+        println("ReactNativeLDK: ClaimableOnChannelClose = " + it.claimable_amount_satoshis);
+      }
+
+      if (it is Balance.ContentiousClaimable) {
+        println("ReactNativeLDK: ContentiousClaimable = " + it.claimable_amount_satoshis + " " + it.timeout_height);
+        maxHeight = when (it.timeout_height > maxHeight) {
+          true -> it.timeout_height
+          false -> maxHeight
+        }
+      }
+
+      if (it is Balance.MaybeClaimableHTLCAwaitingTimeout) {
+        println("ReactNativeLDK: MaybeClaimableHTLCAwaitingTimeout = " + it.claimable_amount_satoshis + " " + it.claimable_height);
+        maxHeight = when (it.claimable_height > maxHeight) {
+          true -> it.claimable_height
+          false -> maxHeight
+        }
+      }
+    }
+
+    promise.resolve(maxHeight);
+  }
+
+  @ReactMethod
   fun stop(promise: Promise) {
     println("ReactNativeLDK: stop")
     channel_manager_constructor?.interrupt();
