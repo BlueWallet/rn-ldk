@@ -654,7 +654,9 @@ class RnLdk: NSObject {
         for balance in balances {
             if let claimableAwaitingConfirmations = balance.getValueAsClaimableAwaitingConfirmations()  {
                 print("ReactNativeLDK: ClaimableAwaitingConfirmations = \(claimableAwaitingConfirmations.getClaimable_amount_satoshis()) \(claimableAwaitingConfirmations.getConfirmation_height())")
-                maxHeight = claimableAwaitingConfirmations.getConfirmation_height()
+                if claimableAwaitingConfirmations.getConfirmation_height() > maxHeight {
+                  maxHeight = claimableAwaitingConfirmations.getConfirmation_height()
+                }
             }
             
             if let claimableOnChannelClose = balance.getValueAsClaimableOnChannelClose() {
@@ -672,7 +674,6 @@ class RnLdk: NSObject {
                 print("ReactNativeLDK: MaybeClaimableHTLCAwaitingTimeout = \(maybeClaimableHTLCAwaitingTimeout.getClaimable_amount_satoshis()) \(maybeClaimableHTLCAwaitingTimeout.getClaimable_height())")
                 if maybeClaimableHTLCAwaitingTimeout.getClaimable_height() > maxHeight {
                     maxHeight = maybeClaimableHTLCAwaitingTimeout.getClaimable_height()
-                    
                 }
             }
             
