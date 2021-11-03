@@ -1,4 +1,4 @@
-import { NativeEventEmitter, NativeModules } from 'react-native';
+import { NativeEventEmitter, NativeModules, Alert } from 'react-native';
 import utils from './util';
 const { RnLdk: RnLdkNative } = NativeModules;
 const pckg = require('../package.json');
@@ -853,13 +853,24 @@ eventEmitter.addListener(MARKER_BROADCAST, (event: BroadcastMsg) => {
   RnLdk._broadcast(event).then(console.log);
 });
 
-eventEmitter.addListener(MARKER_PERSIST, (event: PersistMsg) => {
-  if (!event.id || !event.data) throw new Error('Unexpected data passed for persister: ' + JSON.stringify(event));
-  RnLdk._persist(event);
+eventEmitter.addListener(MARKER_PERSIST, async (event: PersistMsg) => {
+  try {
+    if (!event.id || !event.data) throw new Error('Unexpected data passed for persister: ' + JSON.stringify(event));
+    await RnLdk._persist(event);
+  } catch (error) {
+    console.error(error.message);
+    Alert.alert('persister: ' + error.message);
+  }
 });
 
-eventEmitter.addListener(MARKER_PERSIST_MANAGER, (event: PersistManagerMsg) => {
-  RnLdk._persistManager(event);
+eventEmitter.addListener(MARKER_PERSIST_MANAGER, async (event: PersistManagerMsg) => {
+  try {
+    if (!event.channel_manager_bytes) throw new Error('Unexpected data passed for manager persister: ' + JSON.stringify(event));
+    await RnLdk._persistManager(event);
+  } catch (error) {
+    console.error(error.message);
+    Alert.alert('manager persister: ' + error.message);
+  }
 });
 
 eventEmitter.addListener(MARKER_PAYMENT_FAILED, (event: PaymentFailedMsg) => {

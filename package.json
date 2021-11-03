@@ -1,6 +1,6 @@
 {
   "name": "rn-ldk",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "rn-ldk",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
