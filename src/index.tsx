@@ -857,7 +857,7 @@ eventEmitter.addListener(MARKER_PERSIST, async (event: PersistMsg) => {
   try {
     if (!event.id || !event.data) throw new Error('Unexpected data passed for persister: ' + JSON.stringify(event));
     await RnLdk._persist(event);
-  } catch (error) {
+  } catch (error: any) {
     console.error(error.message);
     Alert.alert('persister: ' + error.message);
   }
@@ -867,7 +867,7 @@ eventEmitter.addListener(MARKER_PERSIST_MANAGER, async (event: PersistManagerMsg
   try {
     if (!event.channel_manager_bytes) throw new Error('Unexpected data passed for manager persister: ' + JSON.stringify(event));
     await RnLdk._persistManager(event);
-  } catch (error) {
+  } catch (error: any) {
     console.error(error.message);
     Alert.alert('manager persister: ' + error.message);
   }
