@@ -268,7 +268,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   fun connectPeer(pubkeyHex: String, hostname: String, port: Int, promise: Promise) {
     println("ReactNativeLDK: connecting to peer " + pubkeyHex);
     try {
-      nio_peer_handler?.connect(hexStringToByteArray(pubkeyHex), InetSocketAddress(hostname, port), 9000);
+      nio_peer_handler!!.connect(hexStringToByteArray(pubkeyHex), InetSocketAddress(hostname, port), 9000);
       promise.resolve(true)
     } catch (e: IOException) {
       promise.reject("connectPeer exception: " + e.message);
