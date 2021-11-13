@@ -853,24 +853,42 @@ eventEmitter.addListener(MARKER_BROADCAST, (event: BroadcastMsg) => {
   RnLdk._broadcast(event).then(console.log);
 });
 
+const channelPersisterTimeouts: any = {};
 eventEmitter.addListener(MARKER_PERSIST, async (event: PersistMsg) => {
-  try {
-    if (!event.id || !event.data) throw new Error('Unexpected data passed for persister: ' + JSON.stringify(event));
-    await RnLdk._persist(event);
-  } catch (error: any) {
-    console.error(error.message);
-    Alert.alert('persister: ' + error.message);
+  // dumb way to dedup bulk updates:
+  if (channelPersisterTimeouts[event.id]) {
+    console.log('deduping channel monitor persist events');
+    clearTimeout(channelPersisterTimeouts[event.id]);
   }
+  channelPersisterTimeouts[event.id] = setTimeout(async () => {
+    channelPersisterTimeouts[event.id] = null;
+    try {
+      if (!event.id || !event.data) throw new Error('Unexpected data passed for persister: ' + JSON.stringify(event));
+      await RnLdk._persist(event);
+    } catch (error: any) {
+      console.error(error.message);
+      Alert.alert('persister: ' + error.message);
+    }
+  }, 1000);
 });
 
+let managerPersisterTimeout: NodeJS.Timeout | null;
 eventEmitter.addListener(MARKER_PERSIST_MANAGER, async (event: PersistManagerMsg) => {
-  try {
-    if (!event.channel_manager_bytes) throw new Error('Unexpected data passed for manager persister: ' + JSON.stringify(event));
-    await RnLdk._persistManager(event);
-  } catch (error: any) {
-    console.error(error.message);
-    Alert.alert('manager persister: ' + error.message);
+  // dumb way to dedup bulk updates:
+  if (managerPersisterTimeout) {
+    console.log('deduping channel manager persist events');
+    clearTimeout(managerPersisterTimeout);
   }
+  managerPersisterTimeout = setTimeout(async () => {
+    managerPersisterTimeout = null;
+    try {
+      if (!event.channel_manager_bytes) throw new Error('Unexpected data passed for manager persister: ' + JSON.stringify(event));
+      await RnLdk._persistManager(event);
+    } catch (error: any) {
+      console.error(error.message);
+      Alert.alert('manager persister: ' + error.message);
+    }
+  }, 1000);
 });
 
 eventEmitter.addListener(MARKER_PAYMENT_FAILED, (event: PaymentFailedMsg) => {
