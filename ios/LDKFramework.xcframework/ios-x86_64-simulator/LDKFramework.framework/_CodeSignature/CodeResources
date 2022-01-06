@@ -6,7 +6,7 @@
 	<dict>
 		<key>Headers/LDKFramework-Swift.h</key>
 		<data>
-		sSaBVnP5mgVbsaaywZSAhIbY254=
+		AXp5SmOU1NQ+STOB95uYE9m3oC4=
 		</data>
 		<key>Headers/LDKFramework.h</key>
 		<data>
@@ -18,47 +18,47 @@
 		</data>
 		<key>Headers/ldk_rust_types.h</key>
 		<data>
-		Gf/x6unaHSHXy+ktJ03iNjyyGUE=
+		jFKReWBYbmjsCPxLur/p8/4BfXo=
 		</data>
 		<key>Headers/ldk_ver.h</key>
 		<data>
-		XRoOKo4fbOAFLRm7jpEI7qmyfbk=
+		tEvxoCO8+Lnb6mKaEpC0WNPQ9Xc=
 		</data>
 		<key>Headers/lightning.h</key>
 		<data>
-		VfNrAzg1Hjjr/OVXRjyzpG/NYsc=
+		T0SGpFnDKXZeefkvbklaqTngd4g=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		m7GhXS0YDBYHlgi47nUvkGYrWuQ=
+		BrdoFE6I6Rss395AyNlFYFdTRZY=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		AuRlz8LfwWm5HjM1cFvTlBp2ogU=
+		yut78QuDLsBhLrYNaLJfRRpdyAA=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		qp5Qx3VvAGw4MbQytqp7Che5G18=
+		aShJvNzKtCyyTPHN6iEY/o8gg7U=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		+iHF8up3fx67IDj3u9eYxckE+ko=
+		6DeYteUtbGNnySs53lMwWpb/JoI=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftdoc</key>
 		<data>
-		AuRlz8LfwWm5HjM1cFvTlBp2ogU=
+		yut78QuDLsBhLrYNaLJfRRpdyAA=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftinterface</key>
 		<data>
-		qp5Qx3VvAGw4MbQytqp7Che5G18=
+		aShJvNzKtCyyTPHN6iEY/o8gg7U=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftmodule</key>
 		<data>
-		+iHF8up3fx67IDj3u9eYxckE+ko=
+		6DeYteUtbGNnySs53lMwWpb/JoI=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
-		MLlCx0Wu1FpH0fSCW9RITgBPSr0=
+		ysRfaZ1XquyQTpHoNSH94McSFck=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -67,7 +67,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			GwialMscAxCwd5uJV2OdOIovdi1jIJsCxNx0prxtA0M=
+			zHXj1sOOvBxe48kw/VHk7MJg0/D1TYBRjZCEIGFoQVA=
 			</data>
 		</dict>
 		<key>Headers/LDKFramework.h</key>
@@ -88,70 +88,70 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			OFMy5OFAhMoaT0zVd4JDIkOZQczVDpD4zufCMO8yIas=
+			QNiStUs+IbuyiXevZOReyXgVXsbIghqiiix3W1G/j2Q=
 			</data>
 		</dict>
 		<key>Headers/ldk_ver.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			my1zqNumzdlwYtNq48c5hTOpfeRZbEr0o9xXxlAMj70=
+			uD90sKAjGHjxCUDo2vkYg2e3KyRqAHBPBdm5M9V4ixM=
 			</data>
 		</dict>
 		<key>Headers/lightning.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Dr6eI9ykkOzHUtVe26FOMq+lEidYKqx6V6j04sENXXQ=
+			JYKx8unBBdqe6wQlv65qZ3/3AZYteGNi3lZeF2T+eoE=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			ji+o93C7zrowHzroD1cqwJwCFLFUhNflkcSAL/pM/ZM=
+			VZIv2QeM9cfrQpyMRHBqnFrBoKARQDA2Dg5nAteqVeQ=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			21mJ3ERdOwzygGKn9kb0LcsGEHBu7BUGkiGHRunBO+E=
+			VxKV/P97o6m19h10nJGULpwSc2QRzCqE4h0mxsEXCMI=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			DoOtBDK+t0tQMcPVJwb42fEEJyfObc972ExKuaVgNGQ=
+			2WXByhRGaEhfiMOemYcIFu8XCtXA+h7rc+28zaRrDYQ=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			ji+o93C7zrowHzroD1cqwJwCFLFUhNflkcSAL/pM/ZM=
+			VZIv2QeM9cfrQpyMRHBqnFrBoKARQDA2Dg5nAteqVeQ=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			21mJ3ERdOwzygGKn9kb0LcsGEHBu7BUGkiGHRunBO+E=
+			VxKV/P97o6m19h10nJGULpwSc2QRzCqE4h0mxsEXCMI=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			DoOtBDK+t0tQMcPVJwb42fEEJyfObc972ExKuaVgNGQ=
+			2WXByhRGaEhfiMOemYcIFu8XCtXA+h7rc+28zaRrDYQ=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			eSKfie+1ESJgvP4dfsfHltWUBhbPmjJU6CKgXxsNSVg=
+			ynKwyaLB+TGkriFWUXYtuN3Tt7QTcF4l1EXH7RDXPVM=
 			</data>
 		</dict>
 	</dict>
