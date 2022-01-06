@@ -41,11 +41,10 @@ class MyFeeEstimator: FeeEstimator {
 }
 
 class MyLogger: Logger {
-    override func log(record: String?) {
-        if let record = record {
-            print("ReactNativeLDK: \(record)")
-            sendEvent(eventName: MARKER_LOG, eventBody: ["line" : record])
-        }
+    override func log(record: Record) {
+        let recordString = "\(record.get_args())"
+        print("ReactNativeLDK: \(recordString)")
+        sendEvent(eventName: MARKER_LOG, eventBody: ["line" : recordString])
     }
 }
 
@@ -57,9 +56,9 @@ class MyBroadcasterInterface: BroadcasterInterface {
 }
 
 class MyPersister: Persist {
-    override func persist_new_channel(id: OutPoint, data: ChannelMonitor) -> Result_NoneChannelMonitorUpdateErrZ {
+    override func persist_new_channel(channel_id: OutPoint, data: ChannelMonitor, update_id: MonitorUpdateId) -> Result_NoneChannelMonitorUpdateErrZ {
         print("ReactNativeLDK: persist_new_channel")
-        let idBytes: [UInt8] = id.to_channel_id()
+        let idBytes: [UInt8] = channel_id.write()
         let monitorBytes: [UInt8] = data.write()
         sendEvent(eventName: MARKER_PERSIST, eventBody: ["id": bytesToHex(bytes: idBytes), "data": bytesToHex(bytes: monitorBytes)])
         
@@ -67,9 +66,9 @@ class MyPersister: Persist {
         return Result_NoneChannelMonitorUpdateErrZ.ok()
     }
     
-    override func update_persisted_channel(id: OutPoint, update: ChannelMonitorUpdate, data: ChannelMonitor) -> Result_NoneChannelMonitorUpdateErrZ {
+    override func update_persisted_channel(channel_id: OutPoint, update: ChannelMonitorUpdate, data: ChannelMonitor, update_id: MonitorUpdateId) -> Result_NoneChannelMonitorUpdateErrZ {
         print("ReactNativeLDK: update_persisted_channel")
-        let idBytes: [UInt8] = id.to_channel_id()
+        let idBytes: [UInt8] = channel_id.write()
         let monitorBytes: [UInt8] = data.write()
         sendEvent(eventName: MARKER_PERSIST, eventBody: ["id": bytesToHex(bytes: idBytes), "data": bytesToHex(bytes: monitorBytes)])
         
@@ -161,13 +160,13 @@ class RnLdk: NSObject {
             let serialized_channel_manager: [UInt8] = hexStringToByteArray(serializedChannelManagerHex)
             
             do {
-                channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: serializedChannelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, router: nil, tx_broadcaster: broadcaster, logger: logger)
+                channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: serializedChannelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, net_graph: nil, tx_broadcaster: broadcaster, logger: logger)
             } catch {
                 reject("start", "Failed",  error)
                 return
             }
         } else {
-            channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: userConfig, current_blockchain_tip_hash: hexStringToByteArray(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, router: nil, tx_broadcaster: broadcaster, logger: logger)
+            channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: userConfig, current_blockchain_tip_hash: hexStringToByteArray(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, net_graph: nil, tx_broadcaster: broadcaster, logger: logger)
         }
         
         guard let channel_manager_constructor = channel_manager_constructor  else {
@@ -176,7 +175,7 @@ class RnLdk: NSObject {
             return
         }
         channel_manager = channel_manager_constructor.channelManager
-        channel_manager_constructor.chain_sync_completed(persister: channel_manager_persister)
+        channel_manager_constructor.chain_sync_completed(persister: channel_manager_persister, scorer: nil)
         peer_manager = channel_manager_constructor.peerManager
         
         //        let ignorer = IgnoringMessageHandler()
@@ -362,10 +361,12 @@ class RnLdk: NSObject {
             }
         }
         
+        let payee = Payee(pubkey: hexStringToByteArray(destPubkeyHex))
         let route = Route(
             paths_arg: [
                 path
-            ]
+            ],
+            payee_arg: payee
         )
         
         let payment_hash = hexStringToByteArray(paymentHashHex)
