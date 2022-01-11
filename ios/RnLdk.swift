@@ -678,8 +678,9 @@ class RnLdk: NSObject {
                 }
             }
             
-            resolve(maxHeight);
-        }}
+        }
+        resolve(maxHeight);
+    }
     
     
     @objc
