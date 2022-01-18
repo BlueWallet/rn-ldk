@@ -282,7 +282,7 @@ class RnLdk: NSObject {
         }
         if (!peer_handler.connect(address: hostname, port: UInt16(truncating: port),  theirNodeId: hexStringToByteArray(pubkeyHex))) {
             let error = NSError(domain: "connectPeer", code: 1, userInfo: nil)
-            return reject("connectPeer", "Exception",  error)
+            return reject("connectPeer", "Unable to connect to peer host: \(hostname)",  error)
         }
         resolve(true)
     }
