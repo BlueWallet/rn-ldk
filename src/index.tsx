@@ -259,6 +259,10 @@ class RnLdkImplementation {
     if (progressCallback) progressCallback(1 / 8);
     await this.updateBestBlock();
 
+    this.logToGeneralLog('checkBlockchain() 1.5/x');
+    await this.saveNetworkGraph();
+    if (progressCallback) progressCallback(1.5 / 8);
+
     this.logToGeneralLog('checkBlockchain() 2/x');
     if (progressCallback) progressCallback(2 / 8);
     await this.updateFeerate();
@@ -531,10 +535,11 @@ class RnLdkImplementation {
    * Assumes storage is provided.
    *
    * @param entropyHex 256 bit entropy, basically a private key for a node, e.g. 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+   * @param writablePath A local fs dir that's writable and persists - network graph shall be stored there. If default value is used - then no graph sync will be attempted
    *
    * @returns boolean TRUE if all went well
    */
-  async start(entropyHex: string): Promise<boolean> {
+  async start(entropyHex: string, writablePath: string = ''): Promise<boolean> {
     if (!this.storage) throw new Error('Storage is not yet set');
     if (this.started) throw new Error('LDK already started');
     this.logToGeneralLog('LDK starting...');
@@ -554,7 +559,25 @@ class RnLdkImplementation {
 
     const serializedChannelManagerHex = (await this.getItem(RnLdkImplementation.CHANNEL_MANAGER_PREFIX)) || '';
     this.logToGeneralLog('starting with', { blockchainTipHeight, blockchainTipHashHex, serializedChannelManagerHex, monitorHexes: monitorHexes.join(',') });
-    return RnLdkNative.start(entropyHex, blockchainTipHeight, blockchainTipHashHex, serializedChannelManagerHex, monitorHexes.join(','));
+    return RnLdkNative.start(entropyHex, blockchainTipHeight, blockchainTipHashHex, serializedChannelManagerHex, monitorHexes.join(','), writablePath);
+  }
+
+  /**
+   * In native code, purges in-memory network graph to file on disk
+   */
+  async saveNetworkGraph() {
+    return RnLdkNative.saveNetworkGraph();
+  }
+
+  /**
+   * Tries to pay an invoice using our internal pathfinding, given that we enabled
+   * graph sync on startup
+   *
+   * @param bolt11 Invoice string
+   * @param amtSat Amount in sats in case it's a zero-amount invoice
+   */
+  async payInvoice(bolt11: string, amtSat: number): Promise<boolean> {
+    return RnLdkNative.payInvoice(bolt11, amtSat);
   }
 
   /**
@@ -694,6 +717,12 @@ class RnLdkImplementation {
     return await response.json();
   }
 
+  /**
+   * Tries to pay an invoice using 3rd party server for routefinding
+   *
+   * @param bolt11 Invoice string
+   * @param numSatoshis Amount in sats in case it's a zero-amount invoice
+   */
   async sendPayment(bolt11: string, numSatoshis: number = 666): Promise<boolean> {
     if (!this.started) throw new Error('LDK not yet started');
     this.logToGeneralLog('sendPayment():', { bolt11, numSatoshis });

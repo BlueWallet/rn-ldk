@@ -15,7 +15,7 @@ import org.ldk.structs.Filter.FilterInterface
 import org.ldk.structs.Persist
 import org.ldk.structs.Persist.PersistInterface
 import org.ldk.structs.Result_NoneAPIErrorZ.Result_NoneAPIErrorZ_OK
-import org.ldk.util.TwoTuple
+import java.io.File
 import java.io.IOException
 import java.net.InetSocketAddress
 
@@ -47,6 +47,10 @@ var chain_monitor: ChainMonitor? = null;
 var temporary_channel_id: ByteArray? = null;
 var keys_manager: KeysManager? = null;
 var channel_manager_constructor: ChannelManagerConstructor? = null;
+var router: NetworkGraph? = null; // optional, used only in graph sync; if null - no sync
+var scorer: MultiThreadedLockableScore? = null; // optional, used only in graph sync; if null - no sync
+
+var networkGraphPath = "";
 
 class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
@@ -60,8 +64,10 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
-  fun start(entropyHex: String, blockchainTipHeight: Int, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, promise: Promise) {
+  fun start(entropyHex: String, blockchainTipHeight: Int, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, writablePath: String, promise: Promise) {
     println("ReactNativeLDK: " + "start")
+    if (writablePath != "") networkGraphPath = writablePath + "/network_graph.bin";
+
     val that = this;
 
     // INITIALIZE THE FEEESTIMATOR #################################################################
@@ -78,10 +84,13 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     // INITIALIZE THE LOGGER #######################################################################
     // What it's used for: LDK logging
-    val logger = Logger.new_impl { arg: String? ->
-      println("ReactNativeLDK: " + arg)
+    val logger = Logger.new_impl { arg: Record ->
+      if (arg._level == org.ldk.enums.Level.LDKLevel_Gossip) return@new_impl;
+      if (arg._level == org.ldk.enums.Level.LDKLevel_Trace) return@new_impl;
+      if (arg._level == org.ldk.enums.Level.LDKLevel_Debug) return@new_impl;
+      println("ReactNativeLDK: " + arg._args)
       val params = Arguments.createMap()
-      params.putString("line", arg)
+      params.putString("line", arg._args)
       that.sendEvent(MARKER_LOG, params)
     }
 
@@ -97,7 +106,8 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     // INITIALIZE PERSIST ##########################################################################
     // What it's used for: persisting crucial channel data in a timely manner
     val persister = Persist.new_impl(object : PersistInterface {
-      override fun persist_new_channel(id: OutPoint, data: ChannelMonitor): Result_NoneChannelMonitorUpdateErrZ {
+      override fun persist_new_channel(id: OutPoint?, data: ChannelMonitor?, update_id: MonitorUpdateId?): Result_NoneChannelMonitorUpdateErrZ? {
+        if (id == null || data == null) return null;
         val channel_monitor_bytes = data.write()
         println("ReactNativeLDK: persist_new_channel")
         val params = Arguments.createMap()
@@ -107,7 +117,8 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         return Result_NoneChannelMonitorUpdateErrZ.ok();
       }
 
-      override fun update_persisted_channel(id: OutPoint, update: ChannelMonitorUpdate, data: ChannelMonitor): Result_NoneChannelMonitorUpdateErrZ {
+      override fun update_persisted_channel(id: OutPoint?, update: ChannelMonitorUpdate?, data: ChannelMonitor?, update_id: MonitorUpdateId?): Result_NoneChannelMonitorUpdateErrZ? {
+        if (id == null || data == null) return null;
         val channel_monitor_bytes = data.write()
         println("ReactNativeLDK: update_persisted_channel");
         val params = Arguments.createMap()
@@ -191,23 +202,93 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       channelMonitors = channel_monitor_list.toTypedArray();
     }
 
+    // initialize graph sync #########################################################################
+
+    if (networkGraphPath != "") {
+      println("ReactNativeLDK: using network graph path: $networkGraphPath");
+      val f = File(networkGraphPath);
+      if (f.exists()) {
+        println("ReactNativeLDK: loading network graph...");
+        val serialized_graph = File(networkGraphPath).readBytes()
+        val readResult = NetworkGraph.read(serialized_graph)
+        if (readResult is Result_NetworkGraphDecodeErrorZ.Result_NetworkGraphDecodeErrorZ_OK) {
+          router = readResult.res
+          println("ReactNativeLDK: loaded network graph ok")
+        } else {
+          println("ReactNativeLDK: network graph load failed")
+          if (readResult is Result_NetworkGraphDecodeErrorZ.Result_NetworkGraphDecodeErrorZ_Err) {
+            println("ReactNativeLDK: " + readResult.err);
+          }
+          // error, creating from scratch
+          println("ReactNativeLDK: network graph error, creating from scratch")
+          router = NetworkGraph.of(hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversedArray())
+        }
+      } else {
+        // first run, creating from scratch
+        println("ReactNativeLDK: network graph first run, creating from scratch")
+        router = NetworkGraph.of(hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversedArray())
+      }
+
+      scorer = MultiThreadedLockableScore.of(Scorer.with_default().as_Score())
+    }
+
     // INITIALIZE THE CHANNELMANAGER ###############################################################
     // What it's used for: managing channel state
+
+    // this is gona be fee policy for __incoming__ channels. they are set upfront globally:
+    val uc = UserConfig.with_default()
+    val newChannelConfig = ChannelConfig.with_default()
+    newChannelConfig.set_forwarding_fee_proportional_millionths(10000);
+    newChannelConfig.set_forwarding_fee_base_msat(1000);
+    newChannelConfig.set_announced_channel(false); // new channels are private
+
+    val handshake = ChannelHandshakeConfig.with_default();
+    handshake.set_minimum_depth(1);
+    uc.set_own_channel_config(handshake);
+
+    uc.set_channel_options(newChannelConfig);
+    val newLim = ChannelHandshakeLimits.with_default()
+    newLim.set_force_announced_channel_preference(true) // new channels are private
+
+    uc.set_peer_channel_config_limits(newLim)
+    //
 
 
     try {
       if (serializedChannelManagerHex != "") {
         // loading from disk
-        channel_manager_constructor = ChannelManagerConstructor(hexStringToByteArray(serializedChannelManagerHex), channelMonitors, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor, tx_filter, null, tx_broadcaster, logger);
+        channel_manager_constructor = ChannelManagerConstructor(
+          hexStringToByteArray(serializedChannelManagerHex),
+          channelMonitors,
+          uc,
+          keys_manager?.as_KeysInterface(),
+          fee_estimator,
+          chain_monitor,
+          tx_filter,
+          router,
+          tx_broadcaster,
+          logger
+        );
         channel_manager = channel_manager_constructor!!.channel_manager;
-        channel_manager_constructor!!.chain_sync_completed(channel_manager_persister);
+        channel_manager_constructor!!.chain_sync_completed(channel_manager_persister, scorer);
         peer_manager = channel_manager_constructor!!.peer_manager;
         nio_peer_handler = channel_manager_constructor!!.nio_peer_handler;
       } else {
         // fresh start
-        channel_manager_constructor = ChannelManagerConstructor(Network.LDKNetwork_Bitcoin, UserConfig.with_default(), hexStringToByteArray(blockchainTipHashHex), blockchainTipHeight, keys_manager?.as_KeysInterface(), fee_estimator, chain_monitor, null, tx_broadcaster, logger);
+        channel_manager_constructor = ChannelManagerConstructor(
+          Network.LDKNetwork_Bitcoin,
+          uc,
+          hexStringToByteArray(blockchainTipHashHex),
+          blockchainTipHeight,
+          keys_manager?.as_KeysInterface(),
+          fee_estimator,
+          chain_monitor,
+          router,
+          tx_broadcaster,
+          logger
+        );
         channel_manager = channel_manager_constructor!!.channel_manager;
-        channel_manager_constructor!!.chain_sync_completed(channel_manager_persister);
+        channel_manager_constructor!!.chain_sync_completed(channel_manager_persister, scorer);
         peer_manager = channel_manager_constructor!!.peer_manager;
         nio_peer_handler = channel_manager_constructor!!.nio_peer_handler;
       }
@@ -216,6 +297,12 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       println("ReactNativeLDK: can't start, " + e.message);
       promise.reject(e.message);
     }
+  }
+
+  @ReactMethod
+  fun saveNetworkGraph(promise: Promise) {
+    File(networkGraphPath).writeBytes(router!!.write());
+    promise.resolve(true);
   }
 
   @ReactMethod
@@ -333,7 +420,8 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     val route = Route.of(
       arrayOf(
         path
-      )
+      ),
+      Payee.from_node_id(hexStringToByteArray(destPubkeyHex))
     );
 
     val payment_hash = hexStringToByteArray(paymentHashHex);
@@ -344,6 +432,28 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     } else {
       promise.reject("sendPayment failed");
     }
+  }
+
+  @ReactMethod
+  fun payInvoice(bolt11: String, amtSat: Int, promise: Promise) {
+    if (channel_manager_constructor?.payer == null) return promise.reject("payer is null");
+
+    val parsedInvoice = Invoice.from_str(bolt11)
+    if (parsedInvoice !is Result_InvoiceNoneZ.Result_InvoiceNoneZ_OK) {
+      return promise.reject("cant parse invoice");
+    }
+
+    val sendRes = if (amtSat != 0) {
+      channel_manager_constructor!!.payer!!.pay_zero_value_invoice(parsedInvoice.res, amtSat.toLong() * 1000)
+    } else {
+      channel_manager_constructor!!.payer!!.pay_invoice(parsedInvoice.res)
+    }
+
+    if (sendRes !is Result_PaymentIdPaymentErrorZ.Result_PaymentIdPaymentErrorZ_OK) {
+      return promise.reject("send failed");
+    }
+
+    promise.resolve(true);
   }
 
   @ReactMethod

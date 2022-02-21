@@ -5,6 +5,8 @@ import RnLdk from 'rn-ldk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SyncedAsyncStorage from './synced-async-storage';
 
+const RNFS = require('react-native-fs');
+
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
   const [text, onChangeText] = React.useState<string>('');
@@ -22,7 +24,7 @@ export default function App() {
       <Button
         onPress={async () => {
           console.warn('starting...');
-          const entropy = '8b626e47c75f0b6db440a25564ece9b00b2119484683ac2bffaeb2eb118712e8';
+          const entropy = '8b626e47cf7f878f86f782354234623462346234623462343246b2eb118712e8';
 
           const syncedStorage = new SyncedAsyncStorage(entropy);
           await syncedStorage.selftest();
@@ -32,7 +34,7 @@ export default function App() {
 
           RnLdk.setStorage(syncedStorage);
           RnLdk.setRefundAddressScript('76a91419129d53e6319baf19dba059bead166df90ab8f588ac'); // 13HaCAB4jf7FYSZexJxoczyDDnutzZigjS
-          RnLdk.start(entropy).then(console.warn);
+          RnLdk.start(entropy, RNFS.DocumentDirectoryPath).then(console.warn);
         }}
         title="Start"
         color="#841584"
@@ -49,8 +51,9 @@ export default function App() {
 
       <Button
         onPress={() => {
-          RnLdk.connectPeer('02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1', '165.227.95.104', 9735).then(console.warn); // lnd1
+          // RnLdk.connectPeer('02e89ca9e8da72b33d896bae51d20e7e6675aa971f7557500b6591b15429e717f1', '165.227.95.104', 9735).then(console.warn); // lnd1
           RnLdk.connectPeer('03abf6f44c355dec0d5aa155bdbdd6e0c8fefe318eff402de65c6eb2e1be55dc3e', '18.221.23.28', 9735).then(console.warn); // opennode
+          RnLdk.connectPeer('030c3f19d742ca294a55c00376b3b355c3c90d61c6b6b39554dbc7ac19b141c14f', '52.50.244.44', 9735).then(console.warn); // bitrefill
         }}
         title="connect peer"
         color="#841584"
