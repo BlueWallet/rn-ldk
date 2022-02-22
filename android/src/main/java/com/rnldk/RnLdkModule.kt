@@ -28,6 +28,7 @@ const val MARKER_BROADCAST = "broadcast";
 const val MARKER_PERSIST = "persist";
 const val MARKER_PAYMENT_SENT = "payment_sent";
 const val MARKER_PAYMENT_FAILED = "payment_failed";
+const val MARKER_PAYMENT_PATH_FAILED = "payment_path_failed";
 const val MARKER_PAYMENT_RECEIVED = "payment_received";
 const val MARKER_PERSIST_MANAGER = "persist_manager";
 const val MARKER_FUNDING_GENERATION_READY = "funding_generation_ready";
@@ -175,9 +176,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     })
 
     val filter = Option_FilterZ.some(tx_filter);
-    System.out.println(org.ldk.impl.version.get_ldk_java_bindings_version() + ", " + org.ldk.impl.bindings.get_ldk_c_bindings_version() + ", " + org.ldk.impl.bindings.get_ldk_version());
-    System.out.println("yo");
-    System.out.println(filter);
+    System.out.println("ReactNativeLDK: version " + org.ldk.impl.version.get_ldk_java_bindings_version() + ", " + org.ldk.impl.bindings.get_ldk_c_bindings_version() + ", " + org.ldk.impl.bindings.get_ldk_version());
     chain_monitor = ChainMonitor.of(filter, tx_broadcaster, logger, fee_estimator, persister);
 
     // INITIALIZE THE KEYSMANAGER ##################################################################
@@ -436,7 +435,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun payInvoice(bolt11: String, amtSat: Int, promise: Promise) {
-    if (channel_manager_constructor?.payer == null) return promise.reject("payer is null");
+    if (channel_manager_constructor?.payer == null) return promise.reject("payer is null, probably trying to pay invoice without having graph sync enabled");
 
     val parsedInvoice = Invoice.from_str(bolt11)
     if (parsedInvoice !is Result_InvoiceNoneZ.Result_InvoiceNoneZ_OK) {
@@ -523,10 +522,24 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     }
 
     if (event is Event.PaymentPathFailed) {
-      println("ReactNativeLDK: " + "payment failed, payment_hash: " + byteArrayToHex(event.payment_hash));
+      println("ReactNativeLDK: " + "payment path failed, payment_hash: " + byteArrayToHex(event.payment_hash));
+      if (channel_manager_constructor?.payer == null) {
+        println("ReactNativeLDK: " + "abandoning payment");
+        // since we aparently dont sync graph, payment was probably initiated via trying to pay a specific route - and that route failed!
+        // so no reason to wait for a timeout, we abandon payment immediately
+        channel_manager?.abandon_payment(event.payment_id);
+      }
       val params = Arguments.createMap();
       params.putString("payment_hash", byteArrayToHex(event.payment_hash));
       params.putString("rejected_by_dest", event.rejected_by_dest.toString());
+      this.sendEvent(MARKER_PAYMENT_PATH_FAILED, params);
+    }
+
+    if (event is Event.PaymentFailed) {
+      println("ReactNativeLDK: " + "payment failed, payment_hash: " + byteArrayToHex(event.payment_hash));
+      val params = Arguments.createMap();
+      params.putString("payment_hash", byteArrayToHex(event.payment_hash));
+      params.putString("payment_id", byteArrayToHex(event.payment_id));
       this.sendEvent(MARKER_PAYMENT_FAILED, params);
     }
 
@@ -575,7 +588,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     }
 
     if (event is Event.PaymentForwarded) {
-      // todo. one day, when ldk is a full routing node...
+      // we don't route as we are a light mobile node
     }
 
     if (event is Event.ChannelClosed) {

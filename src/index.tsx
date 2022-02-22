@@ -44,6 +44,12 @@ interface PaymentFailedMsg {
   payment_hash: string;
 }
 
+const MARKER_PAYMENT_PATH_FAILED = 'payment_path_failed';
+interface PaymentPathFailedMsg {
+  rejected_by_dest: boolean;
+  payment_hash: string;
+}
+
 const MARKER_PAYMENT_RECEIVED = 'payment_received';
 interface PaymentReceivedMsg {
   payment_hash: string;
@@ -86,6 +92,7 @@ class RnLdkImplementation {
   sentPayments: PaymentSentMsg[] = [];
   receivedPayments: PaymentReceivedMsg[] = [];
   failedPayments: PaymentFailedMsg[] = [];
+  failedPathPayments: PaymentPathFailedMsg[] = [];
   channelsClosed: ChannelClosedMsg[] = [];
   logs: LogMsg[] = [];
 
@@ -139,6 +146,19 @@ class RnLdkImplementation {
     console.warn('payment failed:', event);
     this.logToGeneralLog('payment failed:', event);
     this.failedPayments.push(event);
+  }
+
+  /**
+   * Called by native code when LDK failed to send payment _to_a_path_.
+   * Should not be called directly.
+   *
+   * @param event
+   */
+  _paymentPathFailed(event: PaymentPathFailedMsg) {
+    // TODO: figure out what to do with it
+    console.warn('payment path failed:', event);
+    this.logToGeneralLog('payment path failed:', event);
+    this.failedPathPayments.push(event);
   }
 
   /**
@@ -922,6 +942,10 @@ eventEmitter.addListener(MARKER_PERSIST_MANAGER, async (event: PersistManagerMsg
 
 eventEmitter.addListener(MARKER_PAYMENT_FAILED, (event: PaymentFailedMsg) => {
   RnLdk._paymentFailed(event);
+});
+
+eventEmitter.addListener(MARKER_PAYMENT_PATH_FAILED, (event: PaymentPathFailedMsg) => {
+  RnLdk._paymentPathFailed(event);
 });
 
 eventEmitter.addListener(MARKER_PAYMENT_RECEIVED, (event: PaymentReceivedMsg) => {
