@@ -107,8 +107,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     // INITIALIZE PERSIST ##########################################################################
     // What it's used for: persisting crucial channel data in a timely manner
     val persister = Persist.new_impl(object : PersistInterface {
-      override fun persist_new_channel(id: OutPoint?, data: ChannelMonitor?, update_id: MonitorUpdateId?): Result_NoneChannelMonitorUpdateErrZ? {
-        if (id == null || data == null) return null;
+      override fun persist_new_channel(id: OutPoint, data: ChannelMonitor, update_id: MonitorUpdateId): Result_NoneChannelMonitorUpdateErrZ {
         val channel_monitor_bytes = data.write()
         println("ReactNativeLDK: persist_new_channel")
         val params = Arguments.createMap()
@@ -118,8 +117,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         return Result_NoneChannelMonitorUpdateErrZ.ok();
       }
 
-      override fun update_persisted_channel(id: OutPoint?, update: ChannelMonitorUpdate?, data: ChannelMonitor?, update_id: MonitorUpdateId?): Result_NoneChannelMonitorUpdateErrZ? {
-        if (id == null || data == null) return null;
+      override fun update_persisted_channel(id: OutPoint, update: ChannelMonitorUpdate, data: ChannelMonitor, update_id: MonitorUpdateId): Result_NoneChannelMonitorUpdateErrZ {
         val channel_monitor_bytes = data.write()
         println("ReactNativeLDK: update_persisted_channel");
         val params = Arguments.createMap()
