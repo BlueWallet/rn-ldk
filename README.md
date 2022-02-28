@@ -48,7 +48,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const entropy = 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'; // change that
 RnLdk.setStorage(AsyncStorage);
 RnLdk.setRefundAddressScript('76a91419129d53e6319baf19dba059bead166df90ab8f588ac'); // 13HaCAB4jf7FYSZexJxoczyDDnutzZigjS
-RnLdk.start(entropy).then(console.warn);
+await RnLdk.start(entropy).then(console.warn);
 
 // lets create a channel
 
