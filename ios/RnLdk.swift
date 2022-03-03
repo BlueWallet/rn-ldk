@@ -119,7 +119,9 @@ let broadcaster = MyBroadcasterInterface()
 let persister = MyPersister()
 let filter = MyFilter()
 let channel_manager_persister = MyChannelManagerPersister()
-
+var router: NetworkGraph? = nil; // optional, used only in graph sync; if nil - no sync
+var scorer: MultiThreadedLockableScore? = nil; // optional, used only in graph sync; if nil - no sync
+var networkGraphPath: String = ""
 
 @objc(RnLdk)
 class RnLdk: NSObject {
@@ -129,7 +131,7 @@ class RnLdk: NSObject {
     }
     
     @objc
-    func start(_ entropyHex: String, blockchainTipHeight: NSNumber, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    func start(_ entropyHex: String, blockchainTipHeight: NSNumber, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, writablePath: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         
         // Bindings.setLogThreshold(severity: .DEBUG)
         
@@ -169,6 +171,8 @@ class RnLdk: NSObject {
             channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: userConfig, current_blockchain_tip_hash: hexStringToByteArray(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, net_graph: nil, tx_broadcaster: broadcaster, logger: logger)
         }
         
+        
+        
         guard let channel_manager_constructor = channel_manager_constructor  else {
             let error = NSError(domain: "start channel_manager_constructor failed", code: 1, userInfo: nil)
             reject("start", "channel_manager_constructor failed",  error)
@@ -188,9 +192,35 @@ class RnLdk: NSObject {
         }
         peer_handler = TCPPeerHandler(peerManager: peerManager)
         
+        
+        print("ReactNativeLDK: using network graph path: \(networkGraphPath)");
+        let fileManager = FileManager()
+        if fileManager.fileExists(atPath: networkGraphPath), let file = try? Data(contentsOf: URL(fileURLWithPath: networkGraphPath)){
+            print("ReactNativeLDK: loading network graph...");
+            let serialized_graph = file.base64EncodedString()
+            
+            let readResult = NetworkGraph(genesis_hash: hexStringToByteArray(serialized_graph))
+            
+            router = readResult
+            print("ReactNativeLDK: loaded network graph ok")
+        } else {
+            // firif (networkGraphPath != "") {st run, creating from scratch
+            print("ReactNativeLDK: network graph first run, creating from scratch")
+              router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed())
+        }
+
+        scorer = MultiThreadedLockableScore(score: Score())
+        
+        // INITIALIZE THE CHANNELMANAGER ###############################################################
+            // What it's used for: managing channel state
+
+            // this is gona be fee policy for __incoming__ channels. they are set upfront globally:
+        
+        
+
         resolve("hello ldk")
+        }
     }
-    
     
     @objc
     func getVersion(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {

@@ -7,6 +7,7 @@ RCT_EXTERN_METHOD(start:(NSString *)entropyHex
                   blockchainTipHashHex:(NSString *)blockchainTipHashHex
                   serializedChannelManagerHex:(NSString *)serializedChannelManagerHex
                   monitorHexes:(NSString *)monitorHexes
+                  writablePath:(NSString *)writablePath
                   resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(getVersion:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
