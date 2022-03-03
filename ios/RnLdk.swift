@@ -132,90 +132,87 @@ class RnLdk: NSObject {
     
     private func initChannelManager() {
         // INITIALIZE THE CHANNELMANAGER ###############################################################
-            // What it's used for: managing channel state
+        // What it's used for: managing channel state
 
-            // this is gona be fee policy for __incoming__ channels. they are set upfront globally:
+        // this is gona be fee policy for __incoming__ channels. they are set upfront globally:
         
-        var uc = UserConfig()
-        var newChannelConfig = ChannelConfig()
+        let uc = UserConfig()
+        let newChannelConfig = ChannelConfig()
         newChannelConfig.set_forwarding_fee_proportional_millionths(val: 10000)
         newChannelConfig.set_forwarding_fee_base_msat(val: 1000)
         newChannelConfig.set_announced_channel(val: false) // new channels are private
 
-        var handshake = ChannelHandshakeConfig()
+        let handshake = ChannelHandshakeConfig()
         handshake.set_minimum_depth(val: 1)
         uc.set_own_channel_config(val: handshake)
 
         uc.set_channel_options(val: newChannelConfig)
-        var newLim = ChannelHandshakeLimits()
+        let newLim = ChannelHandshakeLimits()
         newLim.set_force_announced_channel_preference(val: true) // new channels are private
-
         uc.set_peer_channel_config_limits(val: newLim)
-
     }
     
     @objc
     func start(_ entropyHex: String, blockchainTipHeight: NSNumber, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, writablePath: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         
-        // Bindings.setLogThreshold(severity: .DEBUG)
         
-//        chain_monitor = ChainMonitor.init(chain_source: Option_FilterZ(value: filter), broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister)
-//        guard let chainMonitor = chain_monitor else {
-//            let error = NSError(domain: "start chainMonitor failed", code: 1, userInfo: nil)
-//            return reject("start", "chainMonitor guard Failed",  error)
-//        }
-//        let seed = hexStringToByteArray(entropyHex)
-//        let timestamp_seconds = UInt64(NSDate().timeIntervalSince1970)
-//        let timestamp_nanos = UInt32.init(truncating: NSNumber(value: timestamp_seconds * 1000 * 1000))
-//        keys_manager = KeysManager(seed: seed, starting_time_secs: timestamp_seconds, starting_time_nanos: timestamp_nanos)
-//        guard let keysInterface = keys_manager?.as_KeysInterface() else {
-//            let error = NSError(domain: "start as_KeysInterface failed", code: 1, userInfo: nil)
-//            return reject("start", "Failed",  error)
-//        }
-//        _ = keysInterface.get_node_secret()
-//        _ = keysInterface.get_secure_random_bytes()
-//        let userConfig = UserConfig.init()
-//
-//        if (!serializedChannelManagerHex.isEmpty) {
-//            var serializedChannelMonitors: [[UInt8]] = []
-//            let hexesArr = monitorHexes.split(separator: ",")
-//            for hex in hexesArr {
-//                serializedChannelMonitors.append(hexStringToByteArray(String(hex)))
-//            }
-//
-//            let serialized_channel_manager: [UInt8] = hexStringToByteArray(serializedChannelManagerHex)
-//
-//            do {
-//                channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: serializedChannelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, net_graph: nil, tx_broadcaster: broadcaster, logger: logger)
-//            } catch {
-//                reject("start", "Failed",  error)
-//                return
-//            }
-//        } else {
-//            channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: userConfig, current_blockchain_tip_hash: hexStringToByteArray(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, net_graph: nil, tx_broadcaster: broadcaster, logger: logger)
-//        }
-//
-//
-//
-//        guard let channel_manager_constructor = channel_manager_constructor  else {
-//            let error = NSError(domain: "start channel_manager_constructor failed", code: 1, userInfo: nil)
-//            reject("start", "channel_manager_constructor failed",  error)
-//            return
-//        }
-//        channel_manager = channel_manager_constructor.channelManager
-//        channel_manager_constructor.chain_sync_completed(persister: channel_manager_persister, scorer: nil)
-//        peer_manager = channel_manager_constructor.peerManager
-//
-//        //        let ignorer = IgnoringMessageHandler()
-//        //        let messageHandler = MessageHandler(chan_handler_arg: channel_manager!.as_ChannelMessageHandler(), route_handler_arg:  ignorer.as_RoutingMessageHandler())
-//        //        peer_manager = PeerManager(message_handler: messageHandler, our_node_secret: nodeSecret, ephemeral_random_data: secureRandomBytes, logger: logger)
-//
-//        guard let peerManager = peer_manager else {
-//            let error = NSError(domain: "peerManager failed", code: 1, userInfo: nil)
-//            return reject("start", "peerManager failed",  error)
-//        }
-//        peer_handler = TCPPeerHandler(peerManager: peerManager)
-//
+        chain_monitor = ChainMonitor.init(chain_source: Option_FilterZ(value: filter), broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister)
+        guard let chainMonitor = chain_monitor else {
+            let error = NSError(domain: "start chainMonitor failed", code: 1, userInfo: nil)
+            return reject("start", "chainMonitor guard Failed",  error)
+        }
+        let seed = hexStringToByteArray(entropyHex)
+        let timestamp_seconds = UInt64(NSDate().timeIntervalSince1970)
+        let timestamp_nanos = UInt32.init(truncating: NSNumber(value: timestamp_seconds * 1000 * 1000))
+        keys_manager = KeysManager(seed: seed, starting_time_secs: timestamp_seconds, starting_time_nanos: timestamp_nanos)
+        guard let keysInterface = keys_manager?.as_KeysInterface() else {
+            let error = NSError(domain: "start as_KeysInterface failed", code: 1, userInfo: nil)
+            return reject("start", "Failed",  error)
+        }
+        _ = keysInterface.get_node_secret()
+        _ = keysInterface.get_secure_random_bytes()
+        let userConfig = UserConfig.init()
+
+        if (!serializedChannelManagerHex.isEmpty) {
+            var serializedChannelMonitors: [[UInt8]] = []
+            let hexesArr = monitorHexes.split(separator: ",")
+            for hex in hexesArr {
+                serializedChannelMonitors.append(hexStringToByteArray(String(hex)))
+            }
+
+            let serialized_channel_manager: [UInt8] = hexStringToByteArray(serializedChannelManagerHex)
+
+            do {
+                channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: serializedChannelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, net_graph: nil, tx_broadcaster: broadcaster, logger: logger)
+            } catch {
+                reject("start", "Failed",  error)
+                return
+            }
+        } else {
+            channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: userConfig, current_blockchain_tip_hash: hexStringToByteArray(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, net_graph: nil, tx_broadcaster: broadcaster, logger: logger)
+        }
+
+
+
+        guard let channel_manager_constructor = channel_manager_constructor  else {
+            let error = NSError(domain: "start channel_manager_constructor failed", code: 1, userInfo: nil)
+            reject("start", "channel_manager_constructor failed",  error)
+            return
+        }
+        channel_manager = channel_manager_constructor.channelManager
+        channel_manager_constructor.chain_sync_completed(persister: channel_manager_persister, scorer: nil)
+        peer_manager = channel_manager_constructor.peerManager
+
+        //        let ignorer = IgnoringMessageHandler()
+        //        let messageHandler = MessageHandler(chan_handler_arg: channel_manager!.as_ChannelMessageHandler(), route_handler_arg:  ignorer.as_RoutingMessageHandler())
+        //        peer_manager = PeerManager(message_handler: messageHandler, our_node_secret: nodeSecret, ephemeral_random_data: secureRandomBytes, logger: logger)
+
+        guard let peerManager = peer_manager else {
+            let error = NSError(domain: "peerManager failed", code: 1, userInfo: nil)
+            return reject("start", "peerManager failed",  error)
+        }
+        peer_handler = TCPPeerHandler(peerManager: peerManager)
+
 //
 //        print("ReactNativeLDK: using network graph path: \(networkGraphPath)");
 //        let fileManager = FileManager()
@@ -233,7 +230,7 @@ class RnLdk: NSObject {
 //              router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed())
 //        }
 //
-//        scorer = MultiThreadedLockableScore(score: Score())
+        scorer = MultiThreadedLockableScore(score: Scorer().as_Score())
         initChannelManager()
 
         resolve("hello ldk")
@@ -857,7 +854,7 @@ func handleEvent(event: Event) {
     }
     
     if event.getValueAsPaymentForwarded() != nil {
-        // todo. one day, when ldk is a full routing node...
+        // we don't route as we are a light mobile node
     }
     
     if let channelClosed = event.getValueAsChannelClosed() {
