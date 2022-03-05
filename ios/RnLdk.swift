@@ -155,6 +155,9 @@ class RnLdk: NSObject {
     @objc
     func start(_ entropyHex: String, blockchainTipHeight: NSNumber, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, writablePath: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         
+        if !writablePath.isEmpty {
+            networkGraphPath = writablePath + "/network_graph.bin"
+        }
         
         chain_monitor = ChainMonitor.init(chain_source: Option_FilterZ(value: filter), broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister)
         guard let chainMonitor = chain_monitor else {
@@ -203,9 +206,6 @@ class RnLdk: NSObject {
         channel_manager_constructor.chain_sync_completed(persister: channel_manager_persister, scorer: nil)
         peer_manager = channel_manager_constructor.peerManager
 
-        //        let ignorer = IgnoringMessageHandler()
-        //        let messageHandler = MessageHandler(chan_handler_arg: channel_manager!.as_ChannelMessageHandler(), route_handler_arg:  ignorer.as_RoutingMessageHandler())
-        //        peer_manager = PeerManager(message_handler: messageHandler, our_node_secret: nodeSecret, ephemeral_random_data: secureRandomBytes, logger: logger)
 
         guard let peerManager = peer_manager else {
             let error = NSError(domain: "peerManager failed", code: 1, userInfo: nil)
@@ -214,24 +214,27 @@ class RnLdk: NSObject {
         peer_handler = TCPPeerHandler(peerManager: peerManager)
 
 //
-//        print("ReactNativeLDK: using network graph path: \(networkGraphPath)");
-//        let fileManager = FileManager()
-//        if fileManager.fileExists(atPath: networkGraphPath), let file = try? Data(contentsOf: URL(fileURLWithPath: networkGraphPath)) {
-//            print("ReactNativeLDK: loading network graph...");
-//            let serialized_graph = file.base64EncodedString()
-//
-//            let readResult = NetworkGraph(genesis_hash: hexStringToByteArray(serialized_graph))
-//
-//            router = readResult
-//            print("ReactNativeLDK: loaded network graph ok")
-//        } else {
-//            // firif (networkGraphPath != "") {st run, creating from scratch
-//            print("ReactNativeLDK: network graph first run, creating from scratch")
-//              router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed())
-//        }
-//
+        print("ReactNativeLDK: using network graph path: \(networkGraphPath)");
+        let fileManager = FileManager()
+        if fileManager.fileExists(atPath: networkGraphPath), let file = try? Data(contentsOf: URL(fileURLWithPath: networkGraphPath)) {
+            print("ReactNativeLDK: loading network graph...");
+            let serialized_graph = file.base64EncodedString()
+
+            let readResult = NetworkGraph(genesis_hash: hexStringToByteArray(serialized_graph))
+
+            router = readResult
+            print("ReactNativeLDK: loaded network graph ok")
+        } else {
+            // firif (networkGraphPath != "") {st run, creating from scratch
+            print("ReactNativeLDK: network graph first run, creating from scratch")
+              router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed())
+        }
+
         scorer = MultiThreadedLockableScore(score: Scorer().as_Score())
         initChannelManager()
+        if !serializedChannelManagerHex.isEmpty {
+            
+        }
 
         resolve("hello ldk")
 
