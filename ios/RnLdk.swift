@@ -484,7 +484,34 @@ class RnLdk: NSObject {
     
     @objc
     func payInvoice(bolt11: String, amtSat: Int, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard let payer = channel_manager_constructor?.channelManager.as_Payer() else {
+            let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
+            return reject("payInvoice", "payer is null, probably trying to pay invoice without having graph sync enabled", error)
+        }
+
+        let parsedInvoice = Invoice.from_str(s: bolt11)
+        if !parsedInvoice.isOk() {
+             let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
+             return reject("payInvoice", "cant parse invoice", error);
+         }
         
+        var sendRes = true
+        if amtSat != 0 {
+    
+        }
+
+//         let sendRes = (amtSat != 0) {
+//           payer.pay_zero_value_invoice(parsedInvoice.res, amtSat.toLong() * 1000)
+//         } else {
+//           channel_manager_constructor!!.payer!!.pay_invoice(parsedInvoice.res)
+//         }
+//
+//         if (sendRes !is Result_PaymentIdPaymentErrorZ.Result_PaymentIdPaymentErrorZ_OK) {
+//             let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
+//             reject("PayInvoice", "Failed", error)
+//         }
+
+        resolve(true)
     }
     
     @objc
