@@ -479,6 +479,11 @@ class RnLdk: NSObject {
     }
     
     @objc
+    func payInvoice(bolt11: String, amtSat: Int, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        
+    }
+    
+    @objc
     func listPeers(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let peer_manager = peer_manager else {
             let error = NSError(domain: "listPeers", code: 1, userInfo: nil)

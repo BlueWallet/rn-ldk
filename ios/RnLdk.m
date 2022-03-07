@@ -73,6 +73,10 @@ RCT_EXTERN_METHOD(setRefundAddressScript:(NSString *)refundAddressScriptHex
 RCT_EXTERN_METHOD(openChannelStep2:(NSString *)txhex
                   resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(payInvoice:(NSString *)bolt11
+                  (nonull NSNumber)amtSat
+                  resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(listUsableChannels:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 
