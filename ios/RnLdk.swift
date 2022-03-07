@@ -122,6 +122,7 @@ let channel_manager_persister = MyChannelManagerPersister()
 var router: NetworkGraph? = nil // optional, used only in graph sync; if nil - no sync
 var scorer: MultiThreadedLockableScore? = nil // optional, used only in graph sync; if nil - no sync
 var networkGraphPath: String = ""
+var providedWritablePath: String = ""
 
 @objc(RnLdk)
 class RnLdk: NSObject {
@@ -159,7 +160,7 @@ class RnLdk: NSObject {
         if !writablePath.isEmpty {
             networkGraphPath = writablePath + "/network_graph.bin"
         }
-        
+        providedWritablePath = writablePath
         chain_monitor = ChainMonitor.init(chain_source: Option_FilterZ(value: filter), broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister)
         guard let chainMonitor = chain_monitor else {
             let error = NSError(domain: "start chainMonitor failed", code: 1, userInfo: nil)
@@ -270,7 +271,10 @@ class RnLdk: NSObject {
     
     @objc
     func saveNetworkGraph(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        
+        guard let router = router, let url = URL(string: "\(providedWritablePath)/network_graph.bin"), let _ = try? Data(router.write()).write(to: url) else {
+            let error = NSError(domain: "saveNetworkGraph failed", code: 1, userInfo: nil)
+            return reject("saveNetworkGraph", "saveNetworkGraph failed",  error)
+        }
         resolve(true)
     }
 
