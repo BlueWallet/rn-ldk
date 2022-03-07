@@ -174,8 +174,6 @@ class RnLdk: NSObject {
             let error = NSError(domain: "start as_KeysInterface failed", code: 1, userInfo: nil)
             return reject("start", "Failed",  error)
         }
-        _ = keysInterface.get_node_secret()
-        _ = keysInterface.get_secure_random_bytes()
         let userConfig = UserConfig.init()
         
         if (!serializedChannelManagerHex.isEmpty) {
@@ -446,13 +444,12 @@ class RnLdk: NSObject {
                 reject("sendPayment", "Failed to load",  error)
             }
         }
-        
-        let payee = Payee(pubkey: hexStringToByteArray(destPubkeyHex))
+        let payee = PaymentParameters(payee_pubkey: hexStringToByteArray(destPubkeyHex))
         let route = Route(
             paths_arg: [
                 path
             ],
-            payee_arg: payee
+            payment_params_arg: payee
         )
         
         let payment_hash = hexStringToByteArray(paymentHashHex)
@@ -484,34 +481,33 @@ class RnLdk: NSObject {
     
     @objc
     func payInvoice(bolt11: String, amtSat: Int, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        guard let payer = channel_manager_constructor?.channelManager.as_Payer() else {
+        guard let payer = channel_manager_constructor?.payer else {
             let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
             return reject("payInvoice", "payer is null, probably trying to pay invoice without having graph sync enabled", error)
         }
 
         let parsedInvoice = Invoice.from_str(s: bolt11)
-        if !parsedInvoice.isOk() {
+        
+        guard let parsedInvoiceValue = parsedInvoice.getValue(), !parsedInvoice.isOk() else {
              let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
              return reject("payInvoice", "cant parse invoice", error);
          }
         
-        var sendRes = true
+        
         if amtSat != 0 {
-    
+            let sendRes = payer.pay_zero_value_invoice(invoice: parsedInvoiceValue, amount_msats: UInt64(amtSat * 1000))
+            if sendRes.isOk()  {
+                resolve(true)
+            }
+        } else {
+            let sendRes = payer.pay_invoice(invoice: parsedInvoiceValue)
+            if sendRes.isOk() {
+                resolve(true)
+            }
         }
 
-//         let sendRes = (amtSat != 0) {
-//           payer.pay_zero_value_invoice(parsedInvoice.res, amtSat.toLong() * 1000)
-//         } else {
-//           channel_manager_constructor!!.payer!!.pay_invoice(parsedInvoice.res)
-//         }
-//
-//         if (sendRes !is Result_PaymentIdPaymentErrorZ.Result_PaymentIdPaymentErrorZ_OK) {
-//             let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
-//             reject("PayInvoice", "Failed", error)
-//         }
-
-        resolve(true)
+         let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
+         return reject("PayInvoice", "Failed", error)
     }
     
     @objc
