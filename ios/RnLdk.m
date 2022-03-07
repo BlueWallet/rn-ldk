@@ -93,4 +93,6 @@ RCT_EXTERN_METHOD(getMaturingBalance:(RCTPromiseResolveBlock)resolve reject:(RCT
 
 RCT_EXTERN_METHOD(getMaturingHeight:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(saveNetworkGraph:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 @end
