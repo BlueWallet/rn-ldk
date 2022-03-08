@@ -414,11 +414,12 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     }
 
 
+    val payee = PaymentParameters.from_node_id(hexStringToByteArray(destPubkeyHex));
     val route = Route.of(
       arrayOf(
         path
       ),
-      Payee.from_node_id(hexStringToByteArray(destPubkeyHex))
+      payee
     );
 
     val payment_hash = hexStringToByteArray(paymentHashHex);
