@@ -119,7 +119,10 @@ let broadcaster = MyBroadcasterInterface()
 let persister = MyPersister()
 let filter = MyFilter()
 let channel_manager_persister = MyChannelManagerPersister()
-
+var router: NetworkGraph? = nil // optional, used only in graph sync; if nil - no sync
+var scorer: MultiThreadedLockableScore? = nil // optional, used only in graph sync; if nil - no sync
+var networkGraphPath: String = ""
+var providedWritablePath: String = ""
 
 @objc(RnLdk)
 class RnLdk: NSObject {
@@ -128,11 +131,36 @@ class RnLdk: NSObject {
         return false
     }
     
+    private func initChannelManager() -> UserConfig {
+        // INITIALIZE THE CHANNELMANAGER ###############################################################
+        // What it's used for: managing channel state
+        
+        // this is gona be fee policy for __incoming__ channels. they are set upfront globally:
+        
+        let uc = UserConfig()
+        let newChannelConfig = ChannelConfig()
+        newChannelConfig.set_forwarding_fee_proportional_millionths(val: 10000)
+        newChannelConfig.set_forwarding_fee_base_msat(val: 1000)
+        newChannelConfig.set_announced_channel(val: false) // new channels are private
+        
+        let handshake = ChannelHandshakeConfig()
+        handshake.set_minimum_depth(val: 1)
+        uc.set_own_channel_config(val: handshake)
+        
+        uc.set_channel_options(val: newChannelConfig)
+        let newLim = ChannelHandshakeLimits()
+        newLim.set_force_announced_channel_preference(val: true) // new channels are private
+        uc.set_peer_channel_config_limits(val: newLim)
+        return uc
+    }
+    
     @objc
-    func start(_ entropyHex: String, blockchainTipHeight: NSNumber, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    func start(_ entropyHex: String, blockchainTipHeight: NSNumber, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, writablePath: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         
-        // Bindings.setLogThreshold(severity: .DEBUG)
-        
+        if !writablePath.isEmpty {
+            networkGraphPath = writablePath + "/network_graph.bin"
+        }
+        providedWritablePath = writablePath
         chain_monitor = ChainMonitor.init(chain_source: Option_FilterZ(value: filter), broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister)
         guard let chainMonitor = chain_monitor else {
             let error = NSError(domain: "start chainMonitor failed", code: 1, userInfo: nil)
@@ -146,8 +174,6 @@ class RnLdk: NSObject {
             let error = NSError(domain: "start as_KeysInterface failed", code: 1, userInfo: nil)
             return reject("start", "Failed",  error)
         }
-        _ = keysInterface.get_node_secret()
-        _ = keysInterface.get_secure_random_bytes()
         let userConfig = UserConfig.init()
         
         if (!serializedChannelManagerHex.isEmpty) {
@@ -169,18 +195,11 @@ class RnLdk: NSObject {
             channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: userConfig, current_blockchain_tip_hash: hexStringToByteArray(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, net_graph: nil, tx_broadcaster: broadcaster, logger: logger)
         }
         
-        guard let channel_manager_constructor = channel_manager_constructor  else {
-            let error = NSError(domain: "start channel_manager_constructor failed", code: 1, userInfo: nil)
-            reject("start", "channel_manager_constructor failed",  error)
-            return
-        }
-        channel_manager = channel_manager_constructor.channelManager
-        channel_manager_constructor.chain_sync_completed(persister: channel_manager_persister, scorer: nil)
-        peer_manager = channel_manager_constructor.peerManager
         
-        //        let ignorer = IgnoringMessageHandler()
-        //        let messageHandler = MessageHandler(chan_handler_arg: channel_manager!.as_ChannelMessageHandler(), route_handler_arg:  ignorer.as_RoutingMessageHandler())
-        //        peer_manager = PeerManager(message_handler: messageHandler, our_node_secret: nodeSecret, ephemeral_random_data: secureRandomBytes, logger: logger)
+        channel_manager = channel_manager_constructor?.channelManager
+        channel_manager_constructor?.chain_sync_completed(persister: channel_manager_persister, scorer: scorer)
+        peer_manager = channel_manager_constructor?.peerManager
+        
         
         guard let peerManager = peer_manager else {
             let error = NSError(domain: "peerManager failed", code: 1, userInfo: nil)
@@ -188,10 +207,75 @@ class RnLdk: NSObject {
         }
         peer_handler = TCPPeerHandler(peerManager: peerManager)
         
+        
+        // INITIALIZE THE KEYSMANAGER ##################################################################
+        // What it's used for: providing keys for signing lightning transactions
+        keys_manager = KeysManager(seed: hexStringToByteArray(entropyHex), starting_time_secs: UInt64(Date().timeIntervalSince1970) / 1000, starting_time_nanos: UInt32(Date().timeIntervalSince1970) * 1000)
+        
+        
+        // READ CHANNELMONITOR STATE FROM DISK #########################################################
+        
+        // Initialize the hashmap where we'll store the `ChannelMonitor`s read from disk.
+        // This hashmap will later be given to the `ChannelManager` on initialization.
+        
+        
+        
+        var channelMonitors = [[UInt8]]()
+        
+        if !monitorHexes.isEmpty {
+            print("ReactNativeLDK: initing channel monitors...");
+            let channelMonitorsHexes = monitorHexes.split(separator: ",")
+            var channel_monitor_list = [[UInt8]]()
+            channelMonitorsHexes.forEach { subString in
+                channel_monitor_list.append(hexStringToByteArray(String(subString)))
+            }
+            channelMonitors = channel_monitor_list
+        }
+        
+        // initialize graph sync #########################################################################
+        
+        print("ReactNativeLDK: using network graph path: \(networkGraphPath)");
+        let fileManager = FileManager()
+        if fileManager.fileExists(atPath: networkGraphPath), let file = try? Data(contentsOf: URL(fileURLWithPath: networkGraphPath)) {
+            print("ReactNativeLDK: loading network graph...");
+            let serialized_graph = file.base64EncodedString()
+            
+            let readResult = NetworkGraph(genesis_hash: hexStringToByteArray(serialized_graph))
+            
+            router = readResult
+            print("ReactNativeLDK: loaded network graph ok")
+        } else {
+            // firif (networkGraphPath != "") {st run, creating from scratch
+            print("ReactNativeLDK: network graph first run, creating from scratch")
+            router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed())
+        }
+        
+        scorer = MultiThreadedLockableScore(score: Scorer().as_Score())
+        let uc = initChannelManager()
+        
+        
+        if !serializedChannelManagerHex.isEmpty {
+            if let keys_manager = keys_manager {
+                channel_manager_constructor = try? ChannelManagerConstructor(channel_manager_serialized: hexStringToByteArray(serializedChannelManagerHex), channel_monitors_serialized: channelMonitors, keys_interface: keys_manager.as_KeysInterface(), fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, net_graph: router, tx_broadcaster: broadcaster, logger: logger)
+            }
+        } else {
+            if let keys_manager = keys_manager, let blockchainTipHashHex = UInt8(blockchainTipHashHex) {
+                channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: uc, current_blockchain_tip_hash:[blockchainTipHashHex], current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keys_manager.as_KeysInterface(), fee_estimator: feeEstimator, chain_monitor: chainMonitor, net_graph: router, tx_broadcaster: broadcaster, logger: logger)
+            }
+        }
         resolve("hello ldk")
+        
     }
     
-    
+    @objc
+    func saveNetworkGraph(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard let router = router, let url = URL(string: "\(providedWritablePath)/network_graph.bin"), let _ = try? Data(router.write()).write(to: url) else {
+            let error = NSError(domain: "saveNetworkGraph failed", code: 1, userInfo: nil)
+            return reject("saveNetworkGraph", "saveNetworkGraph failed",  error)
+        }
+        resolve(true)
+    }
+
     @objc
     func getVersion(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         resolve("\(Bindings.swift_ldk_c_bindings_get_compiled_version()), \(Bindings.swift_ldk_get_compiled_version())")
@@ -360,13 +444,12 @@ class RnLdk: NSObject {
                 reject("sendPayment", "Failed to load",  error)
             }
         }
-        
-        let payee = Payee(pubkey: hexStringToByteArray(destPubkeyHex))
+        let payee = PaymentParameters(payee_pubkey: hexStringToByteArray(destPubkeyHex))
         let route = Route(
             paths_arg: [
                 path
             ],
-            payee_arg: payee
+            payment_params_arg: payee
         )
         
         let payment_hash = hexStringToByteArray(paymentHashHex)
@@ -394,6 +477,37 @@ class RnLdk: NSObject {
             let error = NSError(domain: "addInvoice", code: 1, userInfo: nil)
             reject("addInvoice", "Failed", error)
         }
+    }
+    
+    @objc
+    func payInvoice(bolt11: String, amtSat: Int, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard let payer = channel_manager_constructor?.payer else {
+            let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
+            return reject("payInvoice", "payer is null, probably trying to pay invoice without having graph sync enabled", error)
+        }
+
+        let parsedInvoice = Invoice.from_str(s: bolt11)
+        
+        guard let parsedInvoiceValue = parsedInvoice.getValue(), !parsedInvoice.isOk() else {
+             let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
+             return reject("payInvoice", "cant parse invoice", error);
+         }
+        
+        
+        if amtSat != 0 {
+            let sendRes = payer.pay_zero_value_invoice(invoice: parsedInvoiceValue, amount_msats: UInt64(amtSat * 1000))
+            if sendRes.isOk()  {
+                resolve(true)
+            }
+        } else {
+            let sendRes = payer.pay_invoice(invoice: parsedInvoiceValue)
+            if sendRes.isOk() {
+                resolve(true)
+            }
+        }
+
+         let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
+         return reject("PayInvoice", "Failed", error)
     }
     
     @objc
@@ -656,7 +770,7 @@ class RnLdk: NSObject {
             if let claimableAwaitingConfirmations = balance.getValueAsClaimableAwaitingConfirmations()  {
                 print("ReactNativeLDK: ClaimableAwaitingConfirmations = \(claimableAwaitingConfirmations.getClaimable_amount_satoshis()) \(claimableAwaitingConfirmations.getConfirmation_height())")
                 if claimableAwaitingConfirmations.getConfirmation_height() > maxHeight {
-                  maxHeight = claimableAwaitingConfirmations.getConfirmation_height()
+                    maxHeight = claimableAwaitingConfirmations.getConfirmation_height()
                 }
             }
             
@@ -809,7 +923,7 @@ func handleEvent(event: Event) {
     }
     
     if event.getValueAsPaymentForwarded() != nil {
-        // todo. one day, when ldk is a full routing node...
+        // we don't route as we are a light mobile node
     }
     
     if let channelClosed = event.getValueAsChannelClosed() {

@@ -7,6 +7,7 @@ RCT_EXTERN_METHOD(start:(NSString *)entropyHex
                   blockchainTipHashHex:(NSString *)blockchainTipHashHex
                   serializedChannelManagerHex:(NSString *)serializedChannelManagerHex
                   monitorHexes:(NSString *)monitorHexes
+                  writablePath:(NSString *)writablePath
                   resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(getVersion:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
@@ -72,6 +73,10 @@ RCT_EXTERN_METHOD(setRefundAddressScript:(NSString *)refundAddressScriptHex
 RCT_EXTERN_METHOD(openChannelStep2:(NSString *)txhex
                   resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(payInvoice:(NSString *)bolt11
+                  (nonull NSNumber)amtSat
+                  resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(listUsableChannels:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 
@@ -91,5 +96,7 @@ RCT_EXTERN_METHOD(stop:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectB
 RCT_EXTERN_METHOD(getMaturingBalance:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(getMaturingHeight:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(saveNetworkGraph:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 @end
