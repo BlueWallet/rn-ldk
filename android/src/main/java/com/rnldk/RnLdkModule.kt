@@ -298,7 +298,9 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun saveNetworkGraph(promise: Promise) {
-    File(networkGraphPath).writeBytes(router!!.write());
+    if (networkGraphPath != "") {
+      File(networkGraphPath).writeBytes(router!!.write());
+    }
     promise.resolve(true);
   }
 
