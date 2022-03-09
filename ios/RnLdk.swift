@@ -159,6 +159,7 @@ class RnLdk: NSObject {
         if !writablePath.isEmpty {
             networkGraphPath = writablePath + "/network_graph.bin"
         }
+        print(networkGraphPath)
         chain_monitor = ChainMonitor.init(chain_source: Option_FilterZ(value: filter), broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister)
         guard let chainMonitor = chain_monitor else {
             let error = NSError(domain: "start chainMonitor failed", code: 1, userInfo: nil)
@@ -262,15 +263,22 @@ class RnLdk: NSObject {
     @objc
     func saveNetworkGraph(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         if !networkGraphPath.isEmpty {
-          guard let router = router, let url = URL(string: "\(networkGraphPath)"), let _ = try? Data(router.write()).write(to: url) else {
-              let error = NSError(domain: "saveNetworkGraph failed", code: 1, userInfo: nil)
-              return reject("saveNetworkGraph", "saveNetworkGraph failed",  error)
-          }
+            guard let router = router else {
+                let error = NSError(domain: "saveNetworkGraph failed", code: 1, userInfo: nil)
+                return reject("saveNetworkGraph", "saveNetworkGraph router not available.",  error)
+            }
+            do {
+                let url = URL(fileURLWithPath: networkGraphPath)
+                try Data(router.write()).write(to: url)
+                resolve(true)
+            }
+            catch {
+                print(error)
+                reject("saveNetworkGraph", "saveNetworkGraph failed",  error)
+            }
         }
-
-        resolve(true)
     }
-
+    
     @objc
     func getVersion(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         resolve("\(Bindings.swift_ldk_c_bindings_get_compiled_version()), \(Bindings.swift_ldk_get_compiled_version())")
@@ -480,13 +488,13 @@ class RnLdk: NSObject {
             let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
             return reject("payInvoice", "payer is null, probably trying to pay invoice without having graph sync enabled", error)
         }
-
+        
         let parsedInvoice = Invoice.from_str(s: bolt11)
         
         guard let parsedInvoiceValue = parsedInvoice.getValue(), !parsedInvoice.isOk() else {
-             let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
-             return reject("payInvoice", "cant parse invoice", error);
-         }
+            let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
+            return reject("payInvoice", "cant parse invoice", error);
+        }
         
         
         if amtSat != 0 {
@@ -500,9 +508,9 @@ class RnLdk: NSObject {
                 resolve(true)
             }
         }
-
-         let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
-         return reject("PayInvoice", "Failed", error)
+        
+        let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
+        return reject("PayInvoice", "Failed", error)
     }
     
     @objc
