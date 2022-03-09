@@ -205,12 +205,6 @@ class RnLdk: NSObject {
         }
         peer_handler = TCPPeerHandler(peerManager: peerManager)
         
-        
-        // INITIALIZE THE KEYSMANAGER ##################################################################
-        // What it's used for: providing keys for signing lightning transactions
-        keys_manager = KeysManager(seed: hexStringToByteArray(entropyHex), starting_time_secs: UInt64(Date().timeIntervalSince1970) / 1000, starting_time_nanos: UInt32(Date().timeIntervalSince1970) * 1000)
-        
-        
         // READ CHANNELMONITOR STATE FROM DISK #########################################################
         
         // Initialize the hashmap where we'll store the `ChannelMonitor`s read from disk.
