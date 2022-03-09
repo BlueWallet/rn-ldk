@@ -6,7 +6,7 @@
 	<array>
 		<dict>
 			<key>LibraryIdentifier</key>
-			<string>ios-x86_64-maccatalyst</string>
+			<string>ios-x86_64-simulator</string>
 			<key>LibraryPath</key>
 			<string>LDKFramework.framework</string>
 			<key>SupportedArchitectures</key>
@@ -16,7 +16,7 @@
 			<key>SupportedPlatform</key>
 			<string>ios</string>
 			<key>SupportedPlatformVariant</key>
-			<string>maccatalyst</string>
+			<string>simulator</string>
 		</dict>
 		<dict>
 			<key>LibraryIdentifier</key>
