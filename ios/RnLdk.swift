@@ -161,6 +161,7 @@ class RnLdk: NSObject {
         }
         print(networkGraphPath)
         chain_monitor = ChainMonitor.init(chain_source: Option_FilterZ(value: filter), broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister)
+        
         guard let chainMonitor = chain_monitor else {
             let error = NSError(domain: "start chainMonitor failed", code: 1, userInfo: nil)
             return reject("start", "chainMonitor guard Failed",  error)
@@ -185,13 +186,13 @@ class RnLdk: NSObject {
             let serialized_channel_manager: [UInt8] = hexStringToByteArray(serializedChannelManagerHex)
             
             do {
-                channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: serializedChannelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, net_graph: nil, tx_broadcaster: broadcaster, logger: logger)
+                channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: serializedChannelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, net_graph: router, tx_broadcaster: broadcaster, logger: logger)
             } catch {
-                reject("start", "Failed",  error)
+                reject("channel_manager_constructor", "channel_manager_constructor init Failed",  error)
                 return
             }
         } else {
-            channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: userConfig, current_blockchain_tip_hash: hexStringToByteArray(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, net_graph: nil, tx_broadcaster: broadcaster, logger: logger)
+            channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: userConfig, current_blockchain_tip_hash: hexStringToByteArray(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, net_graph: router, tx_broadcaster: broadcaster, logger: logger)
         }
         
         
@@ -231,12 +232,16 @@ class RnLdk: NSObject {
         let fileManager = FileManager()
         if fileManager.fileExists(atPath: networkGraphPath), let file = try? Data(contentsOf: URL(fileURLWithPath: networkGraphPath)) {
             print("ReactNativeLDK: loading network graph...");
-            let serialized_graph = file.base64EncodedString()
+            let readResult = NetworkGraph.read(ser: [UInt8](file))
             
-            let readResult = NetworkGraph(genesis_hash: hexStringToByteArray(serialized_graph))
-            
-            router = readResult
-            print("ReactNativeLDK: loaded network graph ok")
+            if readResult.isOk() {
+                router = readResult.getValue()
+                print("ReactNativeLDK: loaded network graph ok")
+            } else {
+                print("ReactNativeLDK: network graph failed to load, creating from scratch")
+                print(String(describing: readResult.getError()))
+                router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed())
+            }
         } else {
             // firif (networkGraphPath != "") {st run, creating from scratch
             print("ReactNativeLDK: network graph first run, creating from scratch")
