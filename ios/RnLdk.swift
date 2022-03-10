@@ -176,6 +176,30 @@ class RnLdk: NSObject {
         }
         
         scorer = MultiThreadedLockableScore(score: Scorer().as_Score())
+        
+        
+        // initialize graph sync #########################################################################
+        
+        print("ReactNativeLDK: using network graph path: \(networkGraphPath)");
+        let fileManager = FileManager()
+        if fileManager.fileExists(atPath: networkGraphPath), let file = try? Data(contentsOf: URL(fileURLWithPath: networkGraphPath)) {
+            print("ReactNativeLDK: loading network graph...");
+            let readResult = NetworkGraph.read(ser: [UInt8](file))
+            
+            if readResult.isOk() {
+                router = readResult.getValue()
+                print("ReactNativeLDK: loaded network graph ok")
+            } else {
+                print("ReactNativeLDK: network graph failed to load, creating from scratch")
+                print(String(describing: readResult.getError()))
+                router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed())
+            }
+        } else {
+            // firif (networkGraphPath != "") {st run, creating from scratch
+            print("ReactNativeLDK: network graph first run, creating from scratch")
+            router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed())
+        }
+        
         let uc = initChannelManager()
         
         if (!serializedChannelManagerHex.isEmpty) {
@@ -225,28 +249,6 @@ class RnLdk: NSObject {
                 channel_monitor_list.append(hexStringToByteArray(String(subString)))
             }
             channelMonitors = channel_monitor_list
-        }
-        
-        // initialize graph sync #########################################################################
-        
-        print("ReactNativeLDK: using network graph path: \(networkGraphPath)");
-        let fileManager = FileManager()
-        if fileManager.fileExists(atPath: networkGraphPath), let file = try? Data(contentsOf: URL(fileURLWithPath: networkGraphPath)) {
-            print("ReactNativeLDK: loading network graph...");
-            let readResult = NetworkGraph.read(ser: [UInt8](file))
-            
-            if readResult.isOk() {
-                router = readResult.getValue()
-                print("ReactNativeLDK: loaded network graph ok")
-            } else {
-                print("ReactNativeLDK: network graph failed to load, creating from scratch")
-                print(String(describing: readResult.getError()))
-                router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed())
-            }
-        } else {
-            // firif (networkGraphPath != "") {st run, creating from scratch
-            print("ReactNativeLDK: network graph first run, creating from scratch")
-            router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed())
         }
     
         resolve("hello ldk")
