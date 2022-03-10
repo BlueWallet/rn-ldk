@@ -174,7 +174,9 @@ class RnLdk: NSObject {
             let error = NSError(domain: "start as_KeysInterface failed", code: 1, userInfo: nil)
             return reject("start", "Failed",  error)
         }
-        let userConfig = UserConfig.init()
+        
+        scorer = MultiThreadedLockableScore(score: Scorer().as_Score())
+        let uc = initChannelManager()
         
         if (!serializedChannelManagerHex.isEmpty) {
             var serializedChannelMonitors: [[UInt8]] = []
@@ -192,9 +194,8 @@ class RnLdk: NSObject {
                 return
             }
         } else {
-            channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: userConfig, current_blockchain_tip_hash: hexStringToByteArray(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, net_graph: router, tx_broadcaster: broadcaster, logger: logger)
+            channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: uc, current_blockchain_tip_hash: hexStringToByteArray(blockchainTipHashHex), current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, net_graph: router, tx_broadcaster: broadcaster, logger: logger)
         }
-        
         
         channel_manager = channel_manager_constructor?.channelManager
         channel_manager_constructor?.chain_sync_completed(persister: channel_manager_persister, scorer: scorer)
@@ -247,20 +248,7 @@ class RnLdk: NSObject {
             print("ReactNativeLDK: network graph first run, creating from scratch")
             router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed())
         }
-        
-        scorer = MultiThreadedLockableScore(score: Scorer().as_Score())
-        let uc = initChannelManager()
-        
-        
-        if !serializedChannelManagerHex.isEmpty {
-            if let keys_manager = keys_manager {
-                channel_manager_constructor = try? ChannelManagerConstructor(channel_manager_serialized: hexStringToByteArray(serializedChannelManagerHex), channel_monitors_serialized: channelMonitors, keys_interface: keys_manager.as_KeysInterface(), fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, net_graph: router, tx_broadcaster: broadcaster, logger: logger)
-            }
-        } else {
-            if let keys_manager = keys_manager, let blockchainTipHashHex = UInt8(blockchainTipHashHex) {
-                channel_manager_constructor = ChannelManagerConstructor(network: LDKNetwork_Bitcoin, config: uc, current_blockchain_tip_hash:[blockchainTipHashHex], current_blockchain_tip_height: UInt32(truncating: blockchainTipHeight), keys_interface: keys_manager.as_KeysInterface(), fee_estimator: feeEstimator, chain_monitor: chainMonitor, net_graph: router, tx_broadcaster: broadcaster, logger: logger)
-            }
-        }
+    
         resolve("hello ldk")
         
     }
