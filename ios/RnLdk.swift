@@ -42,8 +42,13 @@ class MyFeeEstimator: FeeEstimator {
 
 class MyLogger: Logger {
     override func log(record: Record) {
+        let level = record.get_level()
+        if level == LDKLevel_Gossip {
+            return
+        }
         let recordString = "\(record.get_args())"
         print("ReactNativeLDK: \(recordString)")
+        if level == LDKLevel_Trace || level == LDKLevel_Debug { return }
         sendEvent(eventName: MARKER_LOG, eventBody: ["line" : recordString])
     }
 }
