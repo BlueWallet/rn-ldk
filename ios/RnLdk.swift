@@ -188,16 +188,13 @@ class RnLdk: NSObject {
         // Initialize the hashmap where we'll store the `ChannelMonitor`s read from disk.
         // This hashmap will later be given to the `ChannelManager` on initialization.
         
-        var channelMonitors = [[UInt8]]()
-        
+        var channelMonitorsSet = Set<[UInt8]>()
         if !monitorHexes.isEmpty {
             print("ReactNativeLDK: initing channel monitors...");
             let channelMonitorsHexes = monitorHexes.split(separator: ",")
-            var channel_monitor_list = [[UInt8]]()
-            channelMonitorsHexes.forEach { subString in
-                channel_monitor_list.append(hexStringToByteArray(String(subString)))
+            for subString in channelMonitorsHexes {
+                channelMonitorsSet.insert(hexStringToByteArray(String(subString)))
             }
-            channelMonitors = channel_monitor_list
         }
     
         
@@ -229,8 +226,11 @@ class RnLdk: NSObject {
             let serialized_channel_manager: [UInt8] = hexStringToByteArray(serializedChannelManagerHex)
             
             do {
-                channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: channelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, net_graph: router, tx_broadcaster: broadcaster, logger: logger)
+                print(Array(channelMonitorsSet))
+                channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: Array(channelMonitorsSet), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, net_graph: router, tx_broadcaster: broadcaster, logger: logger)
             } catch {
+                print("channel_manager_constructor init error:")
+                print(error)
                 reject("channel_manager_constructor", "channel_manager_constructor init Failed",  error)
                 return
             }
@@ -477,7 +477,7 @@ class RnLdk: NSObject {
     }
     
     @objc
-    func payInvoice(bolt11: String, amtSat: Int, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    func payInvoice(_ bolt11: String, amtSat: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let payer = channel_manager_constructor?.payer else {
             let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
             return reject("payInvoice", "payer is null, probably trying to pay invoice without having graph sync enabled", error)
@@ -485,21 +485,27 @@ class RnLdk: NSObject {
         
         let parsedInvoice = Invoice.from_str(s: bolt11)
         
-        guard let parsedInvoiceValue = parsedInvoice.getValue(), !parsedInvoice.isOk() else {
+        guard let parsedInvoiceValue = parsedInvoice.getValue(), parsedInvoice.isOk() else {
             let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
             return reject("payInvoice", "cant parse invoice", error);
         }
         
-        
+        print(amtSat)
         if amtSat != 0 {
-            let sendRes = payer.pay_zero_value_invoice(invoice: parsedInvoiceValue, amount_msats: UInt64(amtSat * 1000))
+            let sendRes = payer.pay_zero_value_invoice(invoice: parsedInvoiceValue, amount_msats: UInt64(truncating: amtSat) * 1000)
             if sendRes.isOk()  {
                 resolve(true)
+            } else {
+                print("pay_zero_value_invoice error")
+                print(String(describing: sendRes.getError()))
             }
         } else {
             let sendRes = payer.pay_invoice(invoice: parsedInvoiceValue)
             if sendRes.isOk() {
                 resolve(true)
+            } else {
+                print("pay_invoice error")
+                print(String(describing: sendRes.getError()))
             }
         }
         

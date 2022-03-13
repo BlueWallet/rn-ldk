@@ -75,7 +75,8 @@ RCT_EXTERN_METHOD(openChannelStep2:(NSString *)txhex
 
 RCT_EXTERN_METHOD(payInvoice:(NSString *)bolt11
                   amtSat:(nonnull NSNumber)amtSat
-                  resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(listUsableChannels:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
