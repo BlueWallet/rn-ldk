@@ -183,6 +183,24 @@ class RnLdk: NSObject {
         scorer = MultiThreadedLockableScore(score: Scorer().as_Score())
         
         
+        // READ CHANNELMONITOR STATE FROM DISK #########################################################
+        
+        // Initialize the hashmap where we'll store the `ChannelMonitor`s read from disk.
+        // This hashmap will later be given to the `ChannelManager` on initialization.
+        
+        var channelMonitors = [[UInt8]]()
+        
+        if !monitorHexes.isEmpty {
+            print("ReactNativeLDK: initing channel monitors...");
+            let channelMonitorsHexes = monitorHexes.split(separator: ",")
+            var channel_monitor_list = [[UInt8]]()
+            channelMonitorsHexes.forEach { subString in
+                channel_monitor_list.append(hexStringToByteArray(String(subString)))
+            }
+            channelMonitors = channel_monitor_list
+        }
+    
+        
         // initialize graph sync #########################################################################
         
         print("ReactNativeLDK: using network graph path: \(networkGraphPath)");
@@ -208,16 +226,10 @@ class RnLdk: NSObject {
         let uc = initChannelManager()
         
         if (!serializedChannelManagerHex.isEmpty) {
-            var serializedChannelMonitors: [[UInt8]] = []
-            let hexesArr = monitorHexes.split(separator: ",")
-            for hex in hexesArr {
-                serializedChannelMonitors.append(hexStringToByteArray(String(hex)))
-            }
-            
             let serialized_channel_manager: [UInt8] = hexStringToByteArray(serializedChannelManagerHex)
             
             do {
-                channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: serializedChannelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, net_graph: router, tx_broadcaster: broadcaster, logger: logger)
+                channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: channelMonitors, keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, net_graph: router, tx_broadcaster: broadcaster, logger: logger)
             } catch {
                 reject("channel_manager_constructor", "channel_manager_constructor init Failed",  error)
                 return
@@ -237,25 +249,7 @@ class RnLdk: NSObject {
         }
         peer_handler = TCPPeerHandler(peerManager: peerManager)
         
-        // READ CHANNELMONITOR STATE FROM DISK #########################################################
         
-        // Initialize the hashmap where we'll store the `ChannelMonitor`s read from disk.
-        // This hashmap will later be given to the `ChannelManager` on initialization.
-        
-        
-        
-        var channelMonitors = [[UInt8]]()
-        
-        if !monitorHexes.isEmpty {
-            print("ReactNativeLDK: initing channel monitors...");
-            let channelMonitorsHexes = monitorHexes.split(separator: ",")
-            var channel_monitor_list = [[UInt8]]()
-            channelMonitorsHexes.forEach { subString in
-                channel_monitor_list.append(hexStringToByteArray(String(subString)))
-            }
-            channelMonitors = channel_monitor_list
-        }
-    
         resolve("hello ldk")
         
     }
