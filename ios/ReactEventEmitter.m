@@ -16,7 +16,7 @@ static ReactEventEmitter *sharedInstance;
 RCT_EXPORT_MODULE();
 
 + (BOOL)requiresMainQueueSetup {
-    return YES;
+    return NO;
 }
 
 + (ReactEventEmitter *)sharedInstance {
