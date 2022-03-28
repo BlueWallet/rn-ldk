@@ -477,41 +477,47 @@ class RnLdk: NSObject {
     }
     
     @objc
-    func payInvoice(_ bolt11: String, amtSat: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        guard let payer = channel_manager_constructor?.payer else {
-            let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
-            return reject("payInvoice", "payer is null, probably trying to pay invoice without having graph sync enabled", error)
-        }
-        
-        let parsedInvoice = Invoice.from_str(s: bolt11)
-        
-        guard let parsedInvoiceValue = parsedInvoice.getValue(), parsedInvoice.isOk() else {
-            let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
-            return reject("payInvoice", "cant parse invoice", error);
-        }
-        
-        print(amtSat)
-        if amtSat != 0 {
-            let sendRes = payer.pay_zero_value_invoice(invoice: parsedInvoiceValue, amount_msats: UInt64(truncating: amtSat) * 1000)
-            if sendRes.isOk()  {
-                resolve(true)
-            } else {
-                print("pay_zero_value_invoice error")
-                print(String(describing: sendRes.getError()))
+        func payInvoice(_ bolt11: String, amtSat: NSNumber, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+
+            guard let payer = channel_manager_constructor?.payer else {
+                let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
+                return reject("payInvoice", "payer is null, probably trying to pay invoice without having graph sync enabled", error)
             }
-        } else {
-            let sendRes = payer.pay_invoice(invoice: parsedInvoiceValue)
-            if sendRes.isOk() {
-                resolve(true)
-            } else {
-                print("pay_invoice error")
-                print(String(describing: sendRes.getError()))
+
+            let parsedInvoice = Invoice.from_str(s: bolt11)
+
+            guard let parsedInvoiceValue = parsedInvoice.getValue(), parsedInvoice.isOk() else {
+                let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
+                return reject("payInvoice", "cant parse invoice", error);
             }
+            
+            if let invoicedAmount = parsedInvoiceValue.amount_milli_satoshis().getValue() {
+                let sendRes = payer.pay_invoice(invoice: parsedInvoiceValue)
+                if sendRes.isOk() {
+                    resolve(true)
+                } else {
+                    print("pay_invoice error")
+                    print(String(describing: sendRes.getError()))
+                }
+            } else {
+                if amtSat == 0 {
+                    let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
+                    return reject("payInvoice", "amtSat must be positive for invoice that does not specify an amount", error);
+                }
+                let unsignedAmount = UInt64(truncating: amtSat)
+                let amountInMillisatoshis = unsignedAmount * 1000
+                let sendRes = payer.pay_zero_value_invoice(invoice: parsedInvoiceValue, amount_msats: amountInMillisatoshis)
+                if sendRes.isOk()  {
+                    resolve(true)
+                } else {
+                    print("pay_zero_value_invoice error")
+                    print(String(describing: sendRes.getError()))
+                }
+            }
+
+            let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
+            return reject("PayInvoice", "Failed", error)
         }
-        
-        let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
-        return reject("PayInvoice", "Failed", error)
-    }
     
     @objc
     func listPeers(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
