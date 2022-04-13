@@ -82,7 +82,7 @@ class MyPersister: Persist {
     }
 }
 
-class MyChannelManagerPersister : ChannelManagerPersister, ExtendedChannelManagerPersister {
+class MyChannelManagerPersister : Persister, ExtendedChannelManagerPersister {
     func handle_event(event: Event) {
         handleEvent(event: event)
     }
