@@ -66,6 +66,8 @@ struct nativeScorerOpaque;
 typedef struct nativeScorerOpaque LDKnativeScorer;
 struct nativeScoringParametersOpaque;
 typedef struct nativeScoringParametersOpaque LDKnativeScoringParameters;
+struct nativeProbabilisticScorerOpaque;
+typedef struct nativeProbabilisticScorerOpaque LDKnativeProbabilisticScorer;
 struct nativeProbabilisticScoringParametersOpaque;
 typedef struct nativeProbabilisticScoringParametersOpaque LDKnativeProbabilisticScoringParameters;
 struct nativeInitFeaturesOpaque;

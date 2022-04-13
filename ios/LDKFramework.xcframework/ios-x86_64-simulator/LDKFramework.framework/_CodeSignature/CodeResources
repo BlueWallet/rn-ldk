@@ -6,7 +6,7 @@
 	<dict>
 		<key>Headers/LDKFramework-Swift.h</key>
 		<data>
-		sSaBVnP5mgVbsaaywZSAhIbY254=
+		NGkXSN4aUnIyqnJU5TyanGIVC7Y=
 		</data>
 		<key>Headers/LDKFramework.h</key>
 		<data>
@@ -18,47 +18,35 @@
 		</data>
 		<key>Headers/ldk_rust_types.h</key>
 		<data>
-		r3fLvT4nrd4u7nxaiBOhlymnKyU=
+		ct0RzXPTCAvSh27AODmnvMr0btw=
 		</data>
 		<key>Headers/ldk_ver.h</key>
 		<data>
-		AbCcDgd2M0sNkFMIIHxcqHrUTFw=
+		sfUSyixB8+viRyHJ/HTGqcNHAkQ=
 		</data>
 		<key>Headers/lightning.h</key>
 		<data>
-		91K7NWlHJlOHbJD4thZm0Fmr4Fo=
+		AMeQvgoXn7RGu4p2Y+rufIaCzVk=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		pTxrurQQ5EDmIh+ZGjdPF+wYQJY=
+		3+W0hub3zShZddNvVIXmUdNhGF0=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		AuRlz8LfwWm5HjM1cFvTlBp2ogU=
+		t2tadIyNBbI4Km6ZC37dpQAxez4=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		q9hAaYfUtDvRyys6rhuqbhZxRyQ=
+		4AakuBuzcqTzzj2K88Yp5FxyvIY=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		LD2IbkbXifJt4UMQMX7F6Ne57iI=
-		</data>
-		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftdoc</key>
-		<data>
-		AuRlz8LfwWm5HjM1cFvTlBp2ogU=
-		</data>
-		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftinterface</key>
-		<data>
-		q9hAaYfUtDvRyys6rhuqbhZxRyQ=
-		</data>
-		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftmodule</key>
-		<data>
-		LD2IbkbXifJt4UMQMX7F6Ne57iI=
+		J1b139e//kzPlCmHE6m4eNlusvk=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
-		MLlCx0Wu1FpH0fSCW9RITgBPSr0=
+		ysRfaZ1XquyQTpHoNSH94McSFck=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -67,7 +55,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			GwialMscAxCwd5uJV2OdOIovdi1jIJsCxNx0prxtA0M=
+			VNGBM/mupxTMIMKgBKYLE6uubHevzTULNUFc5OQxUwc=
 			</data>
 		</dict>
 		<key>Headers/LDKFramework.h</key>
@@ -88,70 +76,49 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			uVS23K91ToNQVD86mhbsftgPLSucJ5E1oi8wAJHqnMI=
+			f1NHKFDRYYH9g9t7SQHiXbhXOEvnve1YLoX1RqbFwKQ=
 			</data>
 		</dict>
 		<key>Headers/ldk_ver.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			SQhV71nnNrku/M/1xk3L4oy5nLHRVQVZJPRib0/B/Sg=
+			+MYrYHF0jzZZkXELFTHqL0EQKwGKJx3PKTBK8kQMVzk=
 			</data>
 		</dict>
 		<key>Headers/lightning.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			CMFnOJvqWV5IN9HGaVhB5ukoy/AF+dwYA8aTOccYy3Q=
+			lMIhOliEzIjsUW2xdEKAF6Q/LCXqCyTmnS5C5LcuQNA=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			ji+o93C7zrowHzroD1cqwJwCFLFUhNflkcSAL/pM/ZM=
+			lNiKw8EJ68b6+tkmSK3qGSGaUr+bBPsRmXJ+z6QWGPU=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			YZquzlH+DozM08lqzogylpg2xqtlc7QuWAm4uw6ZIS0=
+			6bD1p7+jw5yhYp6dNOhfuHPGmiJ4OQYp7ydt151sQNo=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			iijB+iYl+gzQC2WIBC7qwHjIc1bbiBsL1n+9yVtZ58s=
-			</data>
-		</dict>
-		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftdoc</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			ji+o93C7zrowHzroD1cqwJwCFLFUhNflkcSAL/pM/ZM=
-			</data>
-		</dict>
-		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftinterface</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			YZquzlH+DozM08lqzogylpg2xqtlc7QuWAm4uw6ZIS0=
-			</data>
-		</dict>
-		<key>Modules/LDKFramework.swiftmodule/x86_64.swiftmodule</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			iijB+iYl+gzQC2WIBC7qwHjIc1bbiBsL1n+9yVtZ58s=
+			pUzg8HM9RttxlB0m4a+Mm/rrvQe/QmsALoE+R+6PeDw=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			eSKfie+1ESJgvP4dfsfHltWUBhbPmjJU6CKgXxsNSVg=
+			ynKwyaLB+TGkriFWUXYtuN3Tt7QTcF4l1EXH7RDXPVM=
 			</data>
 		</dict>
 	</dict>
