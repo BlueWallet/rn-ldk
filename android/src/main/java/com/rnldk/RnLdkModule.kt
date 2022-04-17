@@ -142,6 +142,13 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
           that.sendEvent(MARKER_PERSIST_MANAGER, params);
         }
       }
+
+      override fun persist_network_graph(network_graph: ByteArray?) {
+        println("ReactNativeLDK: persist_network_graph");
+        if (networkGraphPath != "") {
+          File(networkGraphPath).writeBytes(router!!.write());
+        }
+      }
     }
 
     // INITIALIZE THE CHAINMONITOR #################################################################
@@ -262,7 +269,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
           fee_estimator,
           chain_monitor,
           tx_filter,
-          router,
+          router!!.write(),
           tx_broadcaster,
           logger
         );
@@ -439,7 +446,8 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     if (channel_manager_constructor?.payer == null) return promise.reject("payer is null, probably trying to pay invoice without having graph sync enabled");
 
     val parsedInvoice = Invoice.from_str(bolt11)
-    if (parsedInvoice !is Result_InvoiceNoneZ.Result_InvoiceNoneZ_OK) {
+
+    if (parsedInvoice !is Result_InvoiceParseOrSemanticErrorZ.Result_InvoiceParseOrSemanticErrorZ_OK) {
       return promise.reject("cant parse invoice");
     }
 
