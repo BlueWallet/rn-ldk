@@ -111,7 +111,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         val channel_monitor_bytes = data.write()
         println("ReactNativeLDK: persist_new_channel")
         val params = Arguments.createMap()
-        params.putString("id", byteArrayToHex(id.to_channel_id()))
+        params.putString("id", byteArrayToHex(id.write()))
         params.putString("data", byteArrayToHex(channel_monitor_bytes))
         that.sendEvent(MARKER_PERSIST, params);
         return Result_NoneChannelMonitorUpdateErrZ.ok();
