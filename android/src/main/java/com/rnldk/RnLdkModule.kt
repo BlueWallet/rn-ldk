@@ -117,7 +117,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         return Result_NoneChannelMonitorUpdateErrZ.ok();
       }
 
-      override fun update_persisted_channel(id: OutPoint, update: ChannelMonitorUpdate, data: ChannelMonitor, update_id: MonitorUpdateId): Result_NoneChannelMonitorUpdateErrZ {
+      override fun update_persisted_channel(id: OutPoint, update: ChannelMonitorUpdate?, data: ChannelMonitor, update_id: MonitorUpdateId): Result_NoneChannelMonitorUpdateErrZ {
         val channel_monitor_bytes = data.write()
         println("ReactNativeLDK: update_persisted_channel");
         val params = Arguments.createMap()
