@@ -145,8 +145,8 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
       override fun persist_network_graph(network_graph: ByteArray?) {
         println("ReactNativeLDK: persist_network_graph");
-        if (networkGraphPath != "") {
-          File(networkGraphPath).writeBytes(router!!.write());
+        if (networkGraphPath != "" && network_graph !== null) {
+          File(networkGraphPath).writeBytes(network_graph);
         }
       }
     }
@@ -274,6 +274,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
           logger
         );
         channel_manager = channel_manager_constructor!!.channel_manager;
+        router = channel_manager_constructor!!.net_graph;
         channel_manager_constructor!!.chain_sync_completed(channel_manager_persister, scorer);
         peer_manager = channel_manager_constructor!!.peer_manager;
         nio_peer_handler = channel_manager_constructor!!.nio_peer_handler;
@@ -292,6 +293,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
           logger
         );
         channel_manager = channel_manager_constructor!!.channel_manager;
+        router = channel_manager_constructor!!.net_graph;
         channel_manager_constructor!!.chain_sync_completed(channel_manager_persister, scorer);
         peer_manager = channel_manager_constructor!!.peer_manager;
         nio_peer_handler = channel_manager_constructor!!.nio_peer_handler;
@@ -444,6 +446,8 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   @ReactMethod
   fun payInvoice(bolt11: String, amtSat: Int, promise: Promise) {
     if (channel_manager_constructor?.payer == null) return promise.reject("payer is null, probably trying to pay invoice without having graph sync enabled");
+
+    println("paying $bolt11 for $amtSat sat");
 
     val parsedInvoice = Invoice.from_str(bolt11)
 
