@@ -460,6 +460,56 @@ typedef struct LDKStr {
 } LDKStr;
 
 /**
+ * Represents an error returned from the bech32 library during validation of some bech32 data
+ */
+typedef enum LDKBech32Error_Tag {
+   /**
+    * String does not contain the separator character
+    */
+   LDKBech32Error_MissingSeparator,
+   /**
+    * The checksum does not match the rest of the data
+    */
+   LDKBech32Error_InvalidChecksum,
+   /**
+    * The data or human-readable part is too long or too short
+    */
+   LDKBech32Error_InvalidLength,
+   /**
+    * Some part of the string contains an invalid character
+    */
+   LDKBech32Error_InvalidChar,
+   /**
+    * Some part of the data has an invalid value
+    */
+   LDKBech32Error_InvalidData,
+   /**
+    * The bit conversion failed due to a padding issue
+    */
+   LDKBech32Error_InvalidPadding,
+   /**
+    * The whole string must be of one case
+    */
+   LDKBech32Error_MixedCase,
+   /**
+    * Must be last for serialization purposes
+    */
+   LDKBech32Error_Sentinel,
+} LDKBech32Error_Tag;
+
+typedef struct LDKBech32Error {
+   LDKBech32Error_Tag tag;
+   union {
+      struct {
+         uint32_t invalid_char;
+      };
+      struct {
+         uint8_t invalid_data;
+      };
+   };
+} LDKBech32Error;
+
+/**
  * A serialized transaction, in (pointer, length) form.
  *
  * This type optionally owns its own memory, and thus the semantics around access change based on
@@ -7138,56 +7188,6 @@ typedef struct LDKCResult_PaymentIdPaymentErrorZ {
 } LDKCResult_PaymentIdPaymentErrorZ;
 
 /**
- * Represents an error returned from the bech32 library during validation of some bech32 data
- */
-typedef enum LDKBech32Error_Tag {
-   /**
-    * String does not contain the separator character
-    */
-   LDKBech32Error_MissingSeparator,
-   /**
-    * The checksum does not match the rest of the data
-    */
-   LDKBech32Error_InvalidChecksum,
-   /**
-    * The data or human-readable part is too long or too short
-    */
-   LDKBech32Error_InvalidLength,
-   /**
-    * Some part of the string contains an invalid character
-    */
-   LDKBech32Error_InvalidChar,
-   /**
-    * Some part of the data has an invalid value
-    */
-   LDKBech32Error_InvalidData,
-   /**
-    * The bit conversion failed due to a padding issue
-    */
-   LDKBech32Error_InvalidPadding,
-   /**
-    * The whole string must be of one case
-    */
-   LDKBech32Error_MixedCase,
-   /**
-    * Must be last for serialization purposes
-    */
-   LDKBech32Error_Sentinel,
-} LDKBech32Error_Tag;
-
-typedef struct LDKBech32Error {
-   LDKBech32Error_Tag tag;
-   union {
-      struct {
-         uint32_t invalid_char;
-      };
-      struct {
-         uint8_t invalid_data;
-      };
-   };
-} LDKBech32Error;
-
-/**
  * Sub-errors which don't have specific information in them use this type.
  */
 typedef struct LDKError {
@@ -12478,6 +12478,16 @@ extern const uint8_t TAG_FEATURES;
 struct LDKStr _ldk_get_compiled_version(void);
 
 struct LDKStr _ldk_c_bindings_get_compiled_version(void);
+
+/**
+ * Creates a new Bech32Error which has the same data as `orig`
+ */
+struct LDKBech32Error Bech32Error_clone(const struct LDKBech32Error *NONNULL_PTR orig);
+
+/**
+ * Releases any memory held by the given `Bech32Error` (which is currently none)
+ */
+void Bech32Error_free(struct LDKBech32Error o);
 
 /**
  * Frees the data buffer, if data_is_owned is set and datalen > 0.
