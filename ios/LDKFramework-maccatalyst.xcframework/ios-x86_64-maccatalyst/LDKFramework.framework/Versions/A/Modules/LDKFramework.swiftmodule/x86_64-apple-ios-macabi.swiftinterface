@@ -813,6 +813,7 @@ import _Concurrency
   public func getValueType() -> LDKFramework.Bech32Error.Bech32ErrorValueType?
   public func getValueAsInvalidChar() -> Swift.UInt32?
   public func getValueAsInvalidData() -> Swift.UInt8?
+  public func clone() -> LDKFramework.Bech32Error
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Option_u32Z : LDKFramework.NativeTypeWrapper {
@@ -4772,12 +4773,17 @@ public class TCPPeerHandler {
 @_hasMissingDesignatedInitializers public class ChannelManagerConstructor : LDKFramework.NativeTypeWrapper {
   final public let channelManager: LDKFramework.ChannelManager
   final public let channel_manager_latest_block_hash: [Swift.UInt8]?
-  public var payer: LDKFramework.InvoicePayer?
+  public var net_graph: LDKFramework.NetworkGraph? {
+    get
+  }
+  public var payer: LDKFramework.InvoicePayer? {
+    get
+  }
   final public let peerManager: LDKFramework.PeerManager
   public var channel_monitors: [(LDKFramework.ChannelMonitor, [Swift.UInt8])] {
     get
   }
-  public init(channel_manager_serialized: [Swift.UInt8], channel_monitors_serialized: [[Swift.UInt8]], keys_interface: LDKFramework.KeysInterface, fee_estimator: LDKFramework.FeeEstimator, chain_monitor: LDKFramework.ChainMonitor, filter: LDKFramework.Filter?, net_graph: LDKFramework.NetworkGraph?, tx_broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger) throws
+  public init(channel_manager_serialized: [Swift.UInt8], channel_monitors_serialized: [[Swift.UInt8]], keys_interface: LDKFramework.KeysInterface, fee_estimator: LDKFramework.FeeEstimator, chain_monitor: LDKFramework.ChainMonitor, filter: LDKFramework.Filter?, net_graph_serialized: [Swift.UInt8]?, tx_broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger) throws
   public init(network: LDKFramework.LDKNetwork, config: LDKFramework.UserConfig, current_blockchain_tip_hash: [Swift.UInt8], current_blockchain_tip_height: Swift.UInt32, keys_interface: LDKFramework.KeysInterface, fee_estimator: LDKFramework.FeeEstimator, chain_monitor: LDKFramework.ChainMonitor, net_graph: LDKFramework.NetworkGraph?, tx_broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger)
   public func chain_sync_completed(persister: LDKFramework.ExtendedChannelManagerPersister, scorer: LDKFramework.MultiThreadedLockableScore?)
   public func interrupt(tcpPeerHandler: LDKFramework.TCPPeerHandler? = nil)
