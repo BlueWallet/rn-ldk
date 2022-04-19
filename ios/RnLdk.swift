@@ -92,6 +92,22 @@ class MyChannelManagerPersister : Persister, ExtendedChannelManagerPersister {
         sendEvent(eventName: "persist_manager", eventBody: ["channel_manager_bytes": bytesToHex(bytes: channel_manager_bytes)])
         return Result_NoneErrorZ.ok()
     }
+    
+    override func persist_graph(network_graph: NetworkGraph) -> Result_NoneErrorZ {
+        print("ReactNativeLDK: persist_network_graph");
+        if (!networkGraphPath.isEmpty) {
+            do {
+                let url = URL(fileURLWithPath: networkGraphPath)
+                try Data(network_graph.write()).write(to: url)
+                print("ReactNativeLDK: persist_network_graph: Write Success");
+            }
+            catch {
+                print(error)
+                print("ReactNativeLDK: persist_network_graph: Write Error");
+            }
+          }
+    }
+    
 }
 
 class MyFilter: Filter {
