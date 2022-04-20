@@ -259,6 +259,7 @@ class RnLdk: NSObject {
         }
         
         channel_manager = channel_manager_constructor?.channelManager
+        router = channel_manager_constructor?.net_graph
         channel_manager_constructor?.chain_sync_completed(persister: channel_manager_persister, scorer: scorer)
         peer_manager = channel_manager_constructor?.peerManager
         
@@ -781,6 +782,7 @@ class RnLdk: NSObject {
         peer_handler = nil
         chain_monitor = nil
         channel_manager_constructor = nil
+        router = nil
         
         resolve(true)
     }
