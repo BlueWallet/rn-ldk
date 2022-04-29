@@ -242,12 +242,12 @@ class RnLdk: NSObject {
         
         let uc = initChannelManager()
         
-        if let router = router, !serializedChannelManagerHex.isEmpty {
+        if let net_graph_serialized = router?.write(), !serializedChannelManagerHex.isEmpty {
             let serialized_channel_manager: [UInt8] = hexStringToByteArray(serializedChannelManagerHex)
             
             do {
                 print(Array(channelMonitorsSet))
-                channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: Array(channelMonitorsSet), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, net_graph: router, tx_broadcaster: broadcaster, logger: logger)
+                channel_manager_constructor = try ChannelManagerConstructor(channel_manager_serialized: serialized_channel_manager, channel_monitors_serialized: Array(channelMonitorsSet), keys_interface: keysInterface, fee_estimator: feeEstimator, chain_monitor: chainMonitor, filter: filter, net_graph_serialized: net_graph_serialized, tx_broadcaster: broadcaster, logger: logger)
             } catch {
                 print("channel_manager_constructor init error:")
                 print(error)
