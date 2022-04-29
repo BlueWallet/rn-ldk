@@ -2672,6 +2672,13 @@ import _Concurrency
   @objc deinit
   public func clone() -> LDKFramework.Result_RevokeAndACKDecodeErrorZ
 }
+public class TCPPeerHandler {
+  public init(peerManager: LDKFramework.PeerManager)
+  public func bind(address: Swift.String, port: Swift.UInt16) -> Swift.Bool
+  public func connect(address: Swift.String, port: Swift.UInt16, theirNodeId: [Swift.UInt8]) -> Swift.Bool
+  public func interrupt()
+  @objc deinit
+}
 @_hasMissingDesignatedInitializers public class Result_ChannelConfigDecodeErrorZ : LDKFramework.NativeTypeWrapper {
   public init()
   public init(pointer: LDKFramework.LDKCResult_ChannelConfigDecodeErrorZ)
@@ -4779,17 +4786,11 @@ import _Concurrency
   public init(channel_manager_serialized: [Swift.UInt8], channel_monitors_serialized: [[Swift.UInt8]], keys_interface: LDKFramework.KeysInterface, fee_estimator: LDKFramework.FeeEstimator, chain_monitor: LDKFramework.ChainMonitor, filter: LDKFramework.Filter?, net_graph_serialized: [Swift.UInt8]?, tx_broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger) throws
   public init(network: LDKFramework.LDKNetwork, config: LDKFramework.UserConfig, current_blockchain_tip_hash: [Swift.UInt8], current_blockchain_tip_height: Swift.UInt32, keys_interface: LDKFramework.KeysInterface, fee_estimator: LDKFramework.FeeEstimator, chain_monitor: LDKFramework.ChainMonitor, net_graph: LDKFramework.NetworkGraph?, tx_broadcaster: LDKFramework.BroadcasterInterface, logger: LDKFramework.Logger)
   public func chain_sync_completed(persister: LDKFramework.ExtendedChannelManagerPersister, scorer: LDKFramework.MultiThreadedLockableScore?)
-  public func interrupt()
-  public func getTCPPeerHandler() -> LDKFramework.TCPPeerHandler
+  public func interrupt(tcpPeerHandler: LDKFramework.TCPPeerHandler? = nil)
   @objc deinit
 }
 public protocol ExtendedChannelManagerPersister : LDKFramework.Persister {
   func handle_event(event: LDKFramework.Event)
-}
-@_hasMissingDesignatedInitializers public class TCPPeerHandler {
-  public func bind(address: Swift.String, port: Swift.UInt16) -> Swift.Bool
-  public func connect(address: Swift.String, port: Swift.UInt16, theirNodeId: [Swift.UInt8]) -> Swift.Bool
-  @objc deinit
 }
 @_hasMissingDesignatedInitializers public class Result_ChannelPublicKeysDecodeErrorZ : LDKFramework.NativeTypeWrapper {
   public init()
