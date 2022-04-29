@@ -262,14 +262,7 @@ class RnLdk: NSObject {
         router = channel_manager_constructor?.net_graph
         channel_manager_constructor?.chain_sync_completed(persister: channel_manager_persister, scorer: scorer)
         peer_manager = channel_manager_constructor?.peerManager
-        
-        
-        guard let peerManager = peer_manager else {
-            let error = NSError(domain: "peerManager failed", code: 1, userInfo: nil)
-            return reject("start", "peerManager failed",  error)
-        }
-        peer_handler = TCPPeerHandler(peerManager: peerManager)
-        
+        peer_handler = channel_manager_constructor?.getTCPPeerHandler()
         
         resolve("hello ldk")
         
@@ -773,7 +766,7 @@ class RnLdk: NSObject {
     
     @objc
     func stop(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        channel_manager_constructor?.interrupt(tcpPeerHandler: peer_handler)
+        channel_manager_constructor?.interrupt()
         
         channel_manager = nil
         peer_manager = nil
