@@ -38,11 +38,11 @@
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		xy0cnVqu0pKpGwd6ANeDb48yCIU=
+		3+ZSMFhvdyt6Z7pKUaK7EO89lN4=
 		</data>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		jaSssTGFEuu2nXtRz9KwWwPeRlg=
+		n4/PQHlIOSQK/EsS24XY4wwFD1s=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -104,14 +104,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			9sW660CuN9V3yC1Y1pwaXAFNBNRH+b3vpany6nk1j9U=
+			rqEQzm8M374nECzn9Tb5YkCwvKg3+03rJ03UXZksyzA=
 			</data>
 		</dict>
 		<key>Modules/LDKFramework.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			91cZ2bEh2ka61JGXeUgMUtwWj7e4RjOrvo5DieEYQfs=
+			9y6wHIZCgjU63KInLdkhw6odSl89pZhlVc0rwtsHAHc=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
