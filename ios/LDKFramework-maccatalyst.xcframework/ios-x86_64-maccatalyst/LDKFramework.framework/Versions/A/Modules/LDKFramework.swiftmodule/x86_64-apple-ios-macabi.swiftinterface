@@ -5404,7 +5404,7 @@ public typealias Txid = [Swift.UInt8]
     @objc deinit
   }
   public class func LDKTransaction_to_array(nativeType: LDKFramework.LDKTransaction, deallocate: Swift.Bool = true) -> [Swift.UInt8]
-  public class func LDKStr_to_string(nativeType: LDKFramework.LDKStr) -> Swift.String
+  public class func LDKStr_to_string(nativeType: LDKFramework.LDKStr, deallocate: Swift.Bool = true) -> Swift.String
   public class func UnsafeIntPointer_to_string(nativeType: Swift.UnsafePointer<Swift.Int8>) -> Swift.String
   public class func string_to_unsafe_int8_pointer(string: Swift.String) -> Swift.UnsafePointer<Swift.Int8>
   public class func string_to_unsafe_uint8_pointer(string: Swift.String) -> Swift.UnsafePointer<Swift.UInt8>
