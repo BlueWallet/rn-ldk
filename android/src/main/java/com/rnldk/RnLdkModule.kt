@@ -52,6 +52,7 @@ var router: NetworkGraph? = null; // optional, used only in graph sync; if null 
 var scorer: MultiThreadedLockableScore? = null; // optional, used only in graph sync; if null - no sync
 
 var networkGraphPath = "";
+var scorerPath = "";
 
 class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
@@ -68,6 +69,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   fun start(entropyHex: String, blockchainTipHeight: Int, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, writablePath: String, promise: Promise) {
     println("ReactNativeLDK: " + "start")
     if (writablePath != "") networkGraphPath = writablePath + "/network_graph.bin";
+    if (writablePath != "") scorerPath = writablePath + "/scorer.bin";
 
     val that = this;
 
@@ -149,6 +151,13 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
           File(networkGraphPath).writeBytes(network_graph);
         }
       }
+
+      override fun persist_scorer(p0: ByteArray?) {
+        println("ReactNativeLDK: persist_scorer");
+        if (scorerPath != "" && p0 !== null) {
+          File(scorerPath).writeBytes(p0);
+        }
+      }
     }
 
     // INITIALIZE THE CHAINMONITOR #################################################################
@@ -214,7 +223,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       if (f.exists()) {
         println("ReactNativeLDK: loading network graph...");
         val serialized_graph = File(networkGraphPath).readBytes()
-        val readResult = NetworkGraph.read(serialized_graph)
+        val readResult = NetworkGraph.read(serialized_graph, logger)
         if (readResult is Result_NetworkGraphDecodeErrorZ.Result_NetworkGraphDecodeErrorZ_OK) {
           router = readResult.res
           println("ReactNativeLDK: loaded network graph ok")
@@ -225,15 +234,30 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
           }
           // error, creating from scratch
           println("ReactNativeLDK: network graph error, creating from scratch")
-          router = NetworkGraph.of(hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversedArray())
+          router = NetworkGraph.of(hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversedArray(), logger)
         }
       } else {
         // first run, creating from scratch
         println("ReactNativeLDK: network graph first run, creating from scratch")
-        router = NetworkGraph.of(hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversedArray())
+        router = NetworkGraph.of(hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversedArray(), logger)
       }
 
-      scorer = MultiThreadedLockableScore.of(Scorer.with_default().as_Score())
+
+
+      var probab_scorer = ProbabilisticScorer.of(ProbabilisticScoringParameters.with_default(), router, logger);
+      val sf = File(scorerPath);
+      if (sf.exists()) {
+        val scorer_bytes = File(scorerPath).readBytes();
+        val scorerReadResult = ProbabilisticScorer.read(scorer_bytes, ProbabilisticScoringParameters.with_default(), router, logger);
+        if (scorerReadResult is Result_ProbabilisticScorerDecodeErrorZ.Result_ProbabilisticScorerDecodeErrorZ_OK) {
+          println("ReactNativeLDK: loaded scorer ok");
+          probab_scorer = scorerReadResult.res;
+        } else {
+          println("ReactNativeLDK: loaded scorer failed");
+        }
+      }
+
+      scorer = MultiThreadedLockableScore.of(probab_scorer.as_Score());
     }
 
     // INITIALIZE THE CHANNELMANAGER ###############################################################
@@ -244,17 +268,19 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     val newChannelConfig = ChannelConfig.with_default()
     newChannelConfig.set_forwarding_fee_proportional_millionths(10000);
     newChannelConfig.set_forwarding_fee_base_msat(1000);
-    newChannelConfig.set_announced_channel(false); // new channels are private
 
     val handshake = ChannelHandshakeConfig.with_default();
     handshake.set_minimum_depth(1);
-    uc.set_own_channel_config(handshake);
+    handshake.set_announced_channel(false);
+    uc.set_channel_handshake_config(handshake);
+    uc.set_accept_inbound_channels(true);
 
-    uc.set_channel_options(newChannelConfig);
+    uc.set_channel_config(newChannelConfig);
     val newLim = ChannelHandshakeLimits.with_default()
     newLim.set_force_announced_channel_preference(true) // new channels are private
+    newLim.set_trust_own_funding_0conf(true);
 
-    uc.set_peer_channel_config_limits(newLim)
+    uc.set_channel_handshake_limits(newLim);
     //
 
 
@@ -480,7 +506,8 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       keys_manager?.as_KeysInterface(),
       Currency.LDKCurrency_Bitcoin,
       amountStruct,
-      description
+      description,
+      24 * 3600
     );
 
     if (invoice is Result_InvoiceSignOrCreationErrorZ.Result_InvoiceSignOrCreationErrorZ_OK) {
@@ -578,7 +605,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       if (paymentPreimage != null) {
         params.putString("payment_preimage", byteArrayToHex(paymentPreimage));
       }
-      params.putString("amt", event.amt.toString());
+      params.putString("amt", event.amount_msat.toString());
       this.sendEvent(MARKER_PAYMENT_RECEIVED, params);
     }
 
@@ -595,6 +622,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         params.putString("output_script", byteArrayToHex(event.output_script));
         params.putString("temporary_channel_id", byteArrayToHex(event.temporary_channel_id));
         params.putString("user_channel_id", event.user_channel_id.toString());
+        params.putString("counterparty_node_id", event.counterparty_node_id.toString());
         temporary_channel_id = event.temporary_channel_id;
         this.sendEvent(MARKER_FUNDING_GENERATION_READY, params);
       }
@@ -602,6 +630,14 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     if (event is Event.PaymentForwarded) {
       // we don't route as we are a light mobile node
+    }
+
+    if (event is Event.PaymentClaimed) {
+      // do we even want an event for a successfull incoming ln payment..?
+    }
+
+    if (event is Event.HTLCHandlingFailed) {
+      // wtf is even happened here?
     }
 
     if (event is Event.ChannelClosed) {
@@ -650,8 +686,8 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
-  fun closeChannelCooperatively(channelIdHex: String, promise: Promise) {
-    val close_result = channel_manager?.close_channel(hexStringToByteArray(channelIdHex))
+  fun closeChannelCooperatively(channelIdHex: String, counterpartyNodeIdHex: String, promise: Promise) {
+    val close_result = channel_manager?.close_channel(hexStringToByteArray(channelIdHex), hexStringToByteArray(counterpartyNodeIdHex));
     if (close_result is Result_NoneAPIErrorZ_OK) {
       promise.resolve(true);
     } else {
@@ -660,8 +696,8 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
-  fun closeChannelForce(channelIdHex: String, promise: Promise) {
-    val close_result = channel_manager?.force_close_channel(hexStringToByteArray(channelIdHex));
+  fun closeChannelForce(channelIdHex: String, counterpartyNodeIdHex: String, promise: Promise) {
+    val close_result = channel_manager?.force_close_broadcasting_latest_txn(hexStringToByteArray(channelIdHex), hexStringToByteArray(counterpartyNodeIdHex));
     if (close_result is Result_NoneAPIErrorZ_OK) {
       promise.resolve(true);
     } else {
@@ -687,10 +723,10 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   }
 
   @ReactMethod
-  fun openChannelStep2(txhex: String, promise: Promise) {
+  fun openChannelStep2(txhex: String, counterpartyNodeIdHex: String, promise: Promise) {
     if (temporary_channel_id == null) return promise.reject("openChannelStep2 failed: channel opening is not initiated..?");
 
-    val funding_res = channel_manager?.funding_transaction_generated(temporary_channel_id, hexStringToByteArray(txhex));
+    val funding_res = channel_manager?.funding_transaction_generated(temporary_channel_id, hexStringToByteArray(counterpartyNodeIdHex), hexStringToByteArray(txhex));
     // funding_transaction_generated should only generate an error if the
     // transaction didn't meet the required format (or the counterparty already
     // closed the channel on us):
@@ -783,7 +819,6 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     channelObject += "\"outbound_capacity_msat\":" + it._outbound_capacity_msat + ",";
     channelObject += "\"short_channel_id\":" + "\"" + short_channel_id + "\",";
     channelObject += "\"is_usable\":" + it._is_usable + ",";
-    channelObject += "\"is_funding_locked\":" + it._is_funding_locked + ",";
     channelObject += "\"is_outbound\":" + it._is_outbound + ",";
     channelObject += "\"is_public\":" + it._is_public + ",";
     channelObject += "\"remote_node_id\":" + "\"" + byteArrayToHex(it._counterparty._node_id) + "\","; // @deprecated fixme
