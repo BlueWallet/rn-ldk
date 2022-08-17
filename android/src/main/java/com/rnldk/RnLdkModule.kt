@@ -586,27 +586,15 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     if (event is Event.PaymentReceived) {
       println("ReactNativeLDK: " + "payment received, payment_hash: " + byteArrayToHex(event.payment_hash));
       var paymentPreimage: ByteArray? = null;
-      var paymentSecret: ByteArray? = null;
 
       if (event.purpose is PaymentPurpose.InvoicePayment) {
         paymentPreimage = (event.purpose as PaymentPurpose.InvoicePayment).payment_preimage;
-        paymentSecret = (event.purpose as PaymentPurpose.InvoicePayment).payment_secret;
         channel_manager?.claim_funds(paymentPreimage);
       } else if (event.purpose is PaymentPurpose.SpontaneousPayment) {
         paymentPreimage = (event.purpose as PaymentPurpose.SpontaneousPayment).spontaneous_payment;
         channel_manager?.claim_funds(paymentPreimage);
       }
-
-      val params = Arguments.createMap();
-      params.putString("payment_hash", byteArrayToHex(event.payment_hash));
-      if (paymentSecret != null) {
-        params.putString("payment_secret", byteArrayToHex(paymentSecret));
-      }
-      if (paymentPreimage != null) {
-        params.putString("payment_preimage", byteArrayToHex(paymentPreimage));
-      }
-      params.putString("amt", event.amount_msat.toString());
-      this.sendEvent(MARKER_PAYMENT_RECEIVED, params);
+      // we dont throw an event here because we have a separate event that notifies us that claim was actually successful
     }
 
     if (event is Event.PendingHTLCsForwardable) {
@@ -633,7 +621,26 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     }
 
     if (event is Event.PaymentClaimed) {
-      // do we even want an event for a successfull incoming ln payment..?
+      var paymentPreimage: ByteArray? = null;
+      var paymentSecret: ByteArray? = null;
+
+      if (event.purpose is PaymentPurpose.InvoicePayment) {
+        paymentPreimage = (event.purpose as PaymentPurpose.InvoicePayment).payment_preimage;
+        paymentSecret = (event.purpose as PaymentPurpose.InvoicePayment).payment_secret;
+      } else if (event.purpose is PaymentPurpose.SpontaneousPayment) {
+        paymentPreimage = (event.purpose as PaymentPurpose.SpontaneousPayment).spontaneous_payment;
+      }
+
+      val params = Arguments.createMap();
+      params.putString("payment_hash", byteArrayToHex(event.payment_hash));
+      if (paymentSecret != null) {
+        params.putString("payment_secret", byteArrayToHex(paymentSecret));
+      }
+      if (paymentPreimage != null) {
+        params.putString("payment_preimage", byteArrayToHex(paymentPreimage));
+      }
+      params.putString("amt", event.amount_msat.toString());
+      this.sendEvent(MARKER_PAYMENT_RECEIVED, params);
     }
 
     if (event is Event.HTLCHandlingFailed) {
