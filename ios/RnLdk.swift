@@ -1,5 +1,5 @@
 import Foundation
-import LDKFramework
+import LightningDevKit
 
 // borrowed from JS:
 let MARKER_LOG = "log"
@@ -147,6 +147,7 @@ let channel_manager_persister = MyChannelManagerPersister()
 var router: NetworkGraph? = nil // optional, used only in graph sync; if nil - no sync
 var scorer: MultiThreadedLockableScore? = nil // optional, used only in graph sync; if nil - no sync
 var networkGraphPath: String = ""
+var scorerPath = ""
 
 @objc(RnLdk)
 class RnLdk: NSObject {
@@ -183,6 +184,8 @@ class RnLdk: NSObject {
         
         if !writablePath.isEmpty {
             networkGraphPath = writablePath + "/network_graph.bin"
+            scorerPath = writablePath + "/scorer.bin"
+
         }
         print(networkGraphPath)
         chain_monitor = ChainMonitor.init(chain_source: Option_FilterZ(value: filter), broadcaster: broadcaster, logger: logger, feeest: feeEstimator, persister: persister)
@@ -567,7 +570,7 @@ class RnLdk: NSObject {
     }
     
     @objc
-    func closeChannelCooperatively(_ channelIdHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    func closeChannelCooperatively(_ channelIdHex: String, counterpartyNodeIdHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let close_result = channel_manager?.close_channel(channel_id: hexStringToByteArray(channelIdHex)), close_result.isOk() else {
             let error = NSError(domain: "closeChannelCooperatively", code: 1, userInfo: nil)
             return reject("closeChannelCooperatively", "Failed",  error)
@@ -576,7 +579,7 @@ class RnLdk: NSObject {
     }
     
     @objc
-    func closeChannelForce(_ channelIdHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    func closeChannelForce(_ channelIdHex: String, counterpartyNodeIdHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let close_result = channel_manager?.force_close_channel(channel_id: hexStringToByteArray(channelIdHex)) else {
             let error = NSError(domain: "closeChannelForce", code: 1, userInfo: nil)
             return reject("closeChannelForce", "Failed",  error)
@@ -618,11 +621,12 @@ class RnLdk: NSObject {
     }
     
     @objc
-    func openChannelStep2(_ txhex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    func openChannelStep2(_ txhex: String, counterpartyNodeIdHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let temporary_channel_id = temporary_channel_id else {
             let error = NSError(domain: "openChannelStep2", code: 1, userInfo: nil)
             return reject("openChannelStep2", "Not initialized",  error)
         }
+        
         
         guard let funding_res = channel_manager?.funding_transaction_generated(temporary_channel_id: temporary_channel_id, funding_transaction: hexStringToByteArray(txhex)) else {
             print("ReactNativeLDK: funding_res = false")
@@ -706,7 +710,6 @@ class RnLdk: NSObject {
         channelObject += "\"outbound_capacity_msat\":" + String(it.get_outbound_capacity_msat()) + ","
         channelObject += "\"short_channel_id\":" + "\"" + String(short_channel_id) + "\","
         channelObject += "\"is_usable\":" + (it.get_is_usable() ? "true" : "false") + ","
-        channelObject += "\"is_funding_locked\":" + (it.get_is_funding_locked() ? "true" : "false") + ","
         channelObject += "\"is_outbound\":" + (it.get_is_outbound() ? "true" : "false") + ","
         channelObject += "\"is_public\":" + (it.get_is_public() ? "true" : "false") + ","
         channelObject += "\"remote_node_id\":" + "\"" + bytesToHex(bytes: it.get_counterparty().get_node_id()) + "\"," // @deprecated fixme

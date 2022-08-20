@@ -56,6 +56,7 @@
 		8415C89E26EAC369004BD1A4 /* RnLdkExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = RnLdkExample.entitlements; path = RnLdkExample/RnLdkExample.entitlements; sourceTree = "<group>"; };
 		8415C89F26EAC467004BD1A4 /* RnLdkExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RnLdkExample-Bridging-Header.h"; sourceTree = "<group>"; };
 		8415C8A026EAC468004BD1A4 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		848FB6AB28B12A1300407DAF /* LightningDevKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = LightningDevKit.xcframework; path = ../../ios/LightningDevKit.xcframework; sourceTree = "<group>"; };
 		CA3E69C5B9553B26FBA2DF04 /* libPods-RnLdkExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RnLdkExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E00ACF0FDA8BF921659E2F9A /* Pods-RnLdkExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RnLdkExample.release.xcconfig"; path = "Target Support Files/Pods-RnLdkExample/Pods-RnLdkExample.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -132,6 +133,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				848FB6AB28B12A1300407DAF /* LightningDevKit.xcframework */,
 				6D2C7F7026617CA6002939FA /* SwiftSocket.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
