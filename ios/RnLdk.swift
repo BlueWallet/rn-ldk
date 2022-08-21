@@ -202,26 +202,25 @@ class RnLdk: NSObject {
         let timestamp_seconds = UInt64(NSDate().timeIntervalSince1970)
         let timestamp_nanos = UInt32.init(truncating: NSNumber(value: timestamp_seconds * 1000 * 1000))
         keys_manager = KeysManager(seed: seed, starting_time_secs: timestamp_seconds, starting_time_nanos: timestamp_nanos)
-        guard let keysInterface = keys_manager?.as_KeysInterface(), let router = router else {
+        guard let keysInterface = keys_manager?.as_KeysInterface(), let internalRouter = router else {
             let error = NSError(domain: "start as_KeysInterface failed", code: 1, userInfo: nil)
             return reject("start", "Failed",  error)
         }
         
-        scorer = ProbabilisticScorer(params: ProbabilisticScorer_as_Score(ProbabilisticScoringParameters_default()), network_graph: router, logger: logger)
-        
-//        val sf = File(scorerPath);
-//              if (sf.exists()) {
-//                val scorer_bytes = File(scorerPath).readBytes();
-//                val scorerReadResult = ProbabilisticScorer.read(scorer_bytes, ProbabilisticScoringParameters.with_default(), router, logger);
-//                if (scorerReadResult is Result_ProbabilisticScorerDecodeErrorZ.Result_ProbabilisticScorerDecodeErrorZ_OK) {
-//                  println("ReactNativeLDK: loaded scorer ok");
-//                  probab_scorer = scorerReadResult.res;
-//                } else {
-//                  println("ReactNativeLDK: loaded scorer failed");
-//                }
-//              }
+        var probabilisticScorer = ProbabilisticScorer(params: ProbabilisticScoringParameters(), network_graph: internalRouter, logger: logger)
+        let fileManager = FileManager()
+        if fileManager.fileExists(atPath: scorerPath), let file = try? Data(contentsOf: URL(fileURLWithPath: scorerPath)) {
+            let scorerReadResult = ProbabilisticScorer.read(ser: [UInt8](file), arg_a: ProbabilisticScoringParameters(), arg_b: internalRouter, arg_c: logger)
+            if let readResult = scorerReadResult.getValue() {
+                print("ReactNativeLDK: loaded scorer ok")
+                probabilisticScorer = readResult
+            } else {
+                print("ReactNativeLDK: loaded scorer failed")
+            }
+        }
+       
 
-        scorer = MultiThreadedLockableScore.of(probab_scorer.as_Score());
+        scorer = MultiThreadedLockableScore(score: probabilisticScorer.as_Score())
         
         // READ CHANNELMONITOR STATE FROM DISK #########################################################
         
@@ -241,7 +240,6 @@ class RnLdk: NSObject {
         // initialize graph sync #########################################################################
         
         print("ReactNativeLDK: using network graph path: \(networkGraphPath)");
-        let fileManager = FileManager()
         if fileManager.fileExists(atPath: networkGraphPath), let file = try? Data(contentsOf: URL(fileURLWithPath: networkGraphPath)) {
             print("ReactNativeLDK: loading network graph...");
             let readResult = NetworkGraph.read(ser: [UInt8](file), arg: logger)
@@ -328,13 +326,13 @@ class RnLdk: NSObject {
         for it in channel_manager.as_Confirm().get_relevant_txids() {
             if (!first) { json += "," }
             first = false
-            json += "\"" + bytesToHex32Reversed(bytes: it.data) + "\"" // reversed
+            json += "\"" + bytesToHex32Reversed(bytes: it) + "\"" // reversed
         }
         
         for it in chain_monitor.as_Confirm().get_relevant_txids() {
             if (!first) { json += "," }
             first = false
-            json += "\"" + bytesToHex32Reversed(bytes: it.data) + "\"" // reversed
+            json += "\"" + bytesToHex32Reversed(bytes: it) + "\"" // reversed
         }
         json += "]"
         resolve(json)
@@ -588,7 +586,7 @@ class RnLdk: NSObject {
     
     @objc
     func closeChannelCooperatively(_ channelIdHex: String, counterpartyNodeIdHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        guard let close_result = channel_manager?.close_channel(channel_id: hexStringToByteArray(channelIdHex)), close_result.isOk() else {
+        guard let close_result = channel_manager?.close_channel(channel_id: hexStringToByteArray(channelIdHex), counterparty_node_id: hexStringToByteArray(counterpartyNodeIdHex)), close_result.isOk() else {
             let error = NSError(domain: "closeChannelCooperatively", code: 1, userInfo: nil)
             return reject("closeChannelCooperatively", "Failed",  error)
         }
@@ -597,7 +595,7 @@ class RnLdk: NSObject {
     
     @objc
     func closeChannelForce(_ channelIdHex: String, counterpartyNodeIdHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        guard let close_result = channel_manager?.force_close_channel(channel_id: hexStringToByteArray(channelIdHex)) else {
+        guard let close_result = channel_manager?.force_close_broadcasting_latest_txn(channel_id: hexStringToByteArray(channelIdHex), counterparty_node_id: hexStringToByteArray(counterpartyNodeIdHex)) else {
             let error = NSError(domain: "closeChannelForce", code: 1, userInfo: nil)
             return reject("closeChannelForce", "Failed",  error)
         }
@@ -645,7 +643,7 @@ class RnLdk: NSObject {
         }
         
         
-        guard let funding_res = channel_manager?.funding_transaction_generated(temporary_channel_id: temporary_channel_id, funding_transaction: hexStringToByteArray(txhex)) else {
+        guard let funding_res = channel_manager?.funding_transaction_generated(temporary_channel_id: temporary_channel_id, counterparty_node_id: hexStringToByteArray(counterpartyNodeIdHex), funding_transaction: hexStringToByteArray(txhex)) else {
             print("ReactNativeLDK: funding_res = false")
             let error = NSError(domain: "openChannelStep2", code: 1, userInfo: nil)
             reject("openChannelStep2", "Failed",  error)
