@@ -20,9 +20,9 @@ var feerate_slow = 7500 // estimate fee rate in BTC/kB
 
 var refund_address_script = "76a91419129d53e6319baf19dba059bead166df90ab8f588ac"
 
-var channel_manager: LDKFramework.ChannelManager?
-var peer_manager: LDKFramework.PeerManager?
-var keys_manager: LDKFramework.KeysManager?
+var channel_manager: LightningDevKit.ChannelManager?
+var peer_manager: LightningDevKit.PeerManager?
+var keys_manager: LightningDevKit.KeysManager?
 var temporary_channel_id: [UInt8]? = nil
 var peer_handler: TCPPeerHandler?
 var chain_monitor: ChainMonitor?
@@ -166,18 +166,22 @@ class RnLdk: NSObject {
         let newChannelConfig = ChannelConfig()
         newChannelConfig.set_forwarding_fee_proportional_millionths(val: 10000)
         newChannelConfig.set_forwarding_fee_base_msat(val: 1000)
-        newChannelConfig.set_announced_channel(val: false) // new channels are private
         
         let handshake = ChannelHandshakeConfig()
         handshake.set_minimum_depth(val: 1)
-        uc.set_own_channel_config(val: handshake)
+        handshake.set_announced_channel(val: false)
+        uc.set_channel_handshake_config(val: handshake)
+        uc.set_accept_inbound_channels(val: true)
+        uc.set_channel_config(val: newChannelConfig)
         
-        uc.set_channel_options(val: newChannelConfig)
         let newLim = ChannelHandshakeLimits()
         newLim.set_force_announced_channel_preference(val: true) // new channels are private
-        uc.set_peer_channel_config_limits(val: newLim)
+        newLim.set_trust_own_funding_0conf(val: true)
+        uc.set_channel_handshake_limits(val: newLim)
         return uc
     }
+    
+    
     
     @objc
     func start(_ entropyHex: String, blockchainTipHeight: NSNumber, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, writablePath: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
@@ -198,13 +202,26 @@ class RnLdk: NSObject {
         let timestamp_seconds = UInt64(NSDate().timeIntervalSince1970)
         let timestamp_nanos = UInt32.init(truncating: NSNumber(value: timestamp_seconds * 1000 * 1000))
         keys_manager = KeysManager(seed: seed, starting_time_secs: timestamp_seconds, starting_time_nanos: timestamp_nanos)
-        guard let keysInterface = keys_manager?.as_KeysInterface() else {
+        guard let keysInterface = keys_manager?.as_KeysInterface(), let router = router else {
             let error = NSError(domain: "start as_KeysInterface failed", code: 1, userInfo: nil)
             return reject("start", "Failed",  error)
         }
         
-        scorer = MultiThreadedLockableScore(score: Scorer().as_Score())
+        scorer = ProbabilisticScorer(params: ProbabilisticScorer_as_Score(ProbabilisticScoringParameters_default()), network_graph: router, logger: logger)
         
+//        val sf = File(scorerPath);
+//              if (sf.exists()) {
+//                val scorer_bytes = File(scorerPath).readBytes();
+//                val scorerReadResult = ProbabilisticScorer.read(scorer_bytes, ProbabilisticScoringParameters.with_default(), router, logger);
+//                if (scorerReadResult is Result_ProbabilisticScorerDecodeErrorZ.Result_ProbabilisticScorerDecodeErrorZ_OK) {
+//                  println("ReactNativeLDK: loaded scorer ok");
+//                  probab_scorer = scorerReadResult.res;
+//                } else {
+//                  println("ReactNativeLDK: loaded scorer failed");
+//                }
+//              }
+
+        scorer = MultiThreadedLockableScore.of(probab_scorer.as_Score());
         
         // READ CHANNELMONITOR STATE FROM DISK #########################################################
         
@@ -227,7 +244,7 @@ class RnLdk: NSObject {
         let fileManager = FileManager()
         if fileManager.fileExists(atPath: networkGraphPath), let file = try? Data(contentsOf: URL(fileURLWithPath: networkGraphPath)) {
             print("ReactNativeLDK: loading network graph...");
-            let readResult = NetworkGraph.read(ser: [UInt8](file))
+            let readResult = NetworkGraph.read(ser: [UInt8](file), arg: logger)
             
             if readResult.isOk() {
                 router = readResult.getValue()
@@ -235,12 +252,12 @@ class RnLdk: NSObject {
             } else {
                 print("ReactNativeLDK: network graph failed to load, creating from scratch")
                 print(String(describing: readResult.getError()))
-                router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed())
+                router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed(), logger: logger)
             }
         } else {
             // firif (networkGraphPath != "") {st run, creating from scratch
             print("ReactNativeLDK: network graph first run, creating from scratch")
-            router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed())
+            router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed(), logger: logger)
         }
         
         let uc = initChannelManager()
@@ -483,7 +500,7 @@ class RnLdk: NSObject {
             let error = NSError(domain: "addInvoice", code: 1, userInfo: nil)
             return  reject("addInvoice", "No channel_manager initialized",  error)
         }
-        let invoiceResult = Bindings.createInvoiceFromChannelManager(channelManager: channel_manager, keysManager: keys_manager.as_KeysInterface(), network: LDKCurrency_Bitcoin, amountMsat: UInt64(truncating: amtMsat), description: description)
+        let invoiceResult = Bindings.swift_create_invoice_from_channelmanager(channelmanager: channel_manager, keys_manager: keys_manager.as_KeysInterface(), network: LDKCurrency_Bitcoin, amt_msat: Bindings.Option_u64Z(value: UInt64(exactly: amtMsat)), description: description, invoice_expiry_delta_secs: 24 * 3600)
         
         if let invoice = invoiceResult.getValue() {
             resolve(invoice.to_str())
