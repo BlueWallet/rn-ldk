@@ -204,7 +204,7 @@ class RnLdk: NSObject {
     
     @objc
     func start(_ entropyHex: String, blockchainTipHeight: NSNumber, blockchainTipHashHex: String, serializedChannelManagerHex: String, monitorHexes: String, writablePath: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        
+        let fileManager = FileManager()
         if !writablePath.isEmpty {
             networkGraphPath = writablePath + "/network_graph.bin"
             scorerPath = writablePath + "/scorer.bin"
@@ -221,13 +221,35 @@ class RnLdk: NSObject {
         let timestamp_seconds = UInt64(NSDate().timeIntervalSince1970)
         let timestamp_nanos = UInt32.init(truncating: NSNumber(value: timestamp_seconds * 1000 * 1000))
         keys_manager = KeysManager(seed: seed, starting_time_secs: timestamp_seconds, starting_time_nanos: timestamp_nanos)
+        
+        // initialize graph sync #########################################################################
+        
+        print("ReactNativeLDK: using network graph path: \(networkGraphPath)");
+        if fileManager.fileExists(atPath: networkGraphPath), let file = try? Data(contentsOf: URL(fileURLWithPath: networkGraphPath)) {
+            print("ReactNativeLDK: loading network graph...");
+            let readResult = NetworkGraph.read(ser: [UInt8](file), arg: logger)
+            
+            if readResult.isOk() {
+                router = readResult.getValue()
+                print("ReactNativeLDK: loaded network graph ok")
+            } else {
+                print("ReactNativeLDK: network graph failed to load, creating from scratch")
+                print(String(describing: readResult.getError()))
+                router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed(), logger: logger)
+            }
+        } else {
+            // firif (networkGraphPath != "") {st run, creating from scratch
+            print("ReactNativeLDK: network graph first run, creating from scratch")
+            router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed(), logger: logger)
+        }
+        
+        
         guard let keysInterface = keys_manager?.as_KeysInterface(), let internalRouter = router else {
             let error = NSError(domain: "start as_KeysInterface failed", code: 1, userInfo: nil)
-            return reject("start", "Failed",  error)
+            return reject("start", "start Failed",  error)
         }
         
         var probabilisticScorer = ProbabilisticScorer(params: ProbabilisticScoringParameters(), network_graph: internalRouter, logger: logger)
-        let fileManager = FileManager()
         if fileManager.fileExists(atPath: scorerPath), let file = try? Data(contentsOf: URL(fileURLWithPath: scorerPath)) {
             let scorerReadResult = ProbabilisticScorer.read(ser: [UInt8](file), arg_a: ProbabilisticScoringParameters(), arg_b: internalRouter, arg_c: logger)
             if let readResult = scorerReadResult.getValue() {
@@ -255,28 +277,6 @@ class RnLdk: NSObject {
             }
         }
     
-        
-        // initialize graph sync #########################################################################
-        
-        print("ReactNativeLDK: using network graph path: \(networkGraphPath)");
-        if fileManager.fileExists(atPath: networkGraphPath), let file = try? Data(contentsOf: URL(fileURLWithPath: networkGraphPath)) {
-            print("ReactNativeLDK: loading network graph...");
-            let readResult = NetworkGraph.read(ser: [UInt8](file), arg: logger)
-            
-            if readResult.isOk() {
-                router = readResult.getValue()
-                print("ReactNativeLDK: loaded network graph ok")
-            } else {
-                print("ReactNativeLDK: network graph failed to load, creating from scratch")
-                print(String(describing: readResult.getError()))
-                router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed(), logger: logger)
-            }
-        } else {
-            // firif (networkGraphPath != "") {st run, creating from scratch
-            print("ReactNativeLDK: network graph first run, creating from scratch")
-            router = NetworkGraph(genesis_hash: hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversed(), logger: logger)
-        }
-        
         let uc = initChannelManager()
         
         if let net_graph_serialized = router?.write(), !serializedChannelManagerHex.isEmpty {
@@ -508,7 +508,7 @@ class RnLdk: NSObject {
             resolve(true)
         } else {
             let error = NSError(domain: "sendPayment", code: 1, userInfo: nil)
-            reject("sendPayment", "Failed",  error)
+            reject("sendPayment", "sendPayment Failed",  error)
         }
     }
     
@@ -524,7 +524,7 @@ class RnLdk: NSObject {
             resolve(invoice.to_str())
         } else {
             let error = NSError(domain: "addInvoice", code: 1, userInfo: nil)
-            reject("addInvoice", "Failed", error)
+            reject("addInvoice", "addInvoice Failed", error)
         }
     }
     
@@ -568,7 +568,7 @@ class RnLdk: NSObject {
             }
 
             let error = NSError(domain: "payInvoice", code: 1, userInfo: nil)
-            return reject("PayInvoice", "Failed", error)
+            return reject("PayInvoice", "PayInvoice Failed", error)
         }
     
     @objc
@@ -608,7 +608,7 @@ class RnLdk: NSObject {
     func closeChannelCooperatively(_ channelIdHex: String, counterpartyNodeIdHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let close_result = channel_manager?.close_channel(channel_id: hexStringToByteArray(channelIdHex), counterparty_node_id: hexStringToByteArray(counterpartyNodeIdHex)), close_result.isOk() else {
             let error = NSError(domain: "closeChannelCooperatively", code: 1, userInfo: nil)
-            return reject("closeChannelCooperatively", "Failed",  error)
+            return reject("closeChannelCooperatively", "closeChannelCooperatively Failed",  error)
         }
         resolve(true)
     }
@@ -617,13 +617,13 @@ class RnLdk: NSObject {
     func closeChannelForce(_ channelIdHex: String, counterpartyNodeIdHex: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let close_result = channel_manager?.force_close_broadcasting_latest_txn(channel_id: hexStringToByteArray(channelIdHex), counterparty_node_id: hexStringToByteArray(counterpartyNodeIdHex)) else {
             let error = NSError(domain: "closeChannelForce", code: 1, userInfo: nil)
-            return reject("closeChannelForce", "Failed",  error)
+            return reject("closeChannelForce", "closeChannelForce Failed",  error)
         }
         if (close_result.isOk()) {
             resolve(true)
         } else {
             let error = NSError(domain: "closeChannelForce", code: 1, userInfo: nil)
-            reject("closeChannelForce", "Failed",  error)
+            reject("closeChannelForce", "closeChannelForce Failed",  error)
         }
     }
     
@@ -651,7 +651,7 @@ class RnLdk: NSObject {
         } else {
             print("ReactNativeLDK: create_channel_result = false")
             let error = NSError(domain: "openChannelStep1", code: 1, userInfo: nil)
-            reject("openChannelStep1", "Failed",  error)
+            reject("openChannelStep1", "openChannelStep1 Failed",  error)
         }
     }
     
@@ -666,7 +666,7 @@ class RnLdk: NSObject {
         guard let funding_res = channel_manager?.funding_transaction_generated(temporary_channel_id: temporary_channel_id, counterparty_node_id: hexStringToByteArray(counterpartyNodeIdHex), funding_transaction: hexStringToByteArray(txhex)) else {
             print("ReactNativeLDK: funding_res = false")
             let error = NSError(domain: "openChannelStep2", code: 1, userInfo: nil)
-            reject("openChannelStep2", "Failed",  error)
+            reject("openChannelStep2", "openChannelStep2 Failed",  error)
             return
         }
         // funding_transaction_generated should only generate an error if the
@@ -675,7 +675,7 @@ class RnLdk: NSObject {
         if !funding_res.isOk()  {
             print("ReactNativeLDK: funding_res = false")
             let error = NSError(domain: "openChannelStep2", code: 1, userInfo: nil)
-            reject("openChannelStep2", "Failed",  error)
+            reject("openChannelStep2", "openChannelStep2 Failed",  error)
             return
         }
         
