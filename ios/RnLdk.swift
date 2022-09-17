@@ -93,6 +93,23 @@ class MyChannelManagerPersister : Persister, ExtendedChannelManagerPersister {
         return Result_NoneErrorZ.ok()
     }
     
+    override func persist_scorer(scorer: Bindings.MultiThreadedLockableScore) -> Bindings.Result_NoneErrorZ {
+        print("ReactNativeLDK: persist_scorer");
+        if !scorerPath.isEmpty {
+            do {
+                let url = URL(fileURLWithPath: scorerPath)
+                try Data(scorer.write()).write(to: url)
+                print("ReactNativeLDK: persist_scorer: Write Success");
+                return Result_NoneErrorZ.ok()
+            }
+            catch {
+                print(error)
+                print("ReactNativeLDK: persist_scorer: Write Error");
+                return Result_NoneErrorZ.ok()
+            }
+        }
+    }
+    
     override func persist_graph(network_graph: NetworkGraph) -> Result_NoneErrorZ {
         print("ReactNativeLDK: persist_network_graph");
         if (!networkGraphPath.isEmpty) {
@@ -743,7 +760,8 @@ class RnLdk: NSObject {
         channelObject += "\"unspendable_punishment_reserve\":" + String(unspendable_punishment_reserve) + ","
         channelObject += "\"confirmations_required\":" + String(confirmations_required) + ","
         channelObject += "\"force_close_spend_delay\":" + String(force_close_spend_delay) + ","
-        channelObject += "\"user_id\":" + String(it.get_user_channel_id())
+        channelObject += "\"user_id\":" + String(it.get_user_channel_id()) + ","
+        channelObject += "\"counterparty_node_id\":" + bytesToHex(bytes: it.get_counterparty().get_node_id())
         channelObject += "}"
         
         return channelObject
@@ -966,6 +984,30 @@ func handleEvent(event: Event) {
     
     if event.getValueAsPaymentForwarded() != nil {
         // we don't route as we are a light mobile node
+    }
+    
+    if let value = event.getValueAsPaymentClaimed() {
+        var params = [String: String]()
+        var paymentSecret: [UInt8]?
+        var paymentPreimage: [UInt8]?
+        
+        if let invoicePayment = value.getPurpose().getValueAsInvoicePayment() {
+            paymentPreimage = invoicePayment.getPayment_preimage()
+            paymentSecret = invoicePayment.getPayment_secret()
+        } else if let invoiceSpontanous = value.getPurpose().getValueAsSpontaneousPayment() {
+            paymentPreimage = invoiceSpontanous
+        }
+        
+        
+        params["payment_hash"] = bytesToHex(bytes: value.getPayment_hash())
+        if let paymentSecret = paymentSecret {
+            params["payment_secret"] = bytesToHex(bytes: paymentSecret)
+        }
+        if let paymentPreimage = paymentPreimage {
+            params["payment_preimage"] = bytesToHex(bytes: paymentPreimage)
+        }
+        params["amt"] = String(value.getAmount_msat())
+        sendEvent(eventName: MARKER_PAYMENT_RECEIVED, eventBody: params)
     }
     
     if let channelClosed = event.getValueAsChannelClosed() {
