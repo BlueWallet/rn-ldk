@@ -108,6 +108,8 @@ class MyChannelManagerPersister : Persister, ExtendedChannelManagerPersister {
                 return Result_NoneErrorZ.ok()
             }
         }
+        print("ReactNativeLDK: persist_scorer: scorerPath isEmpty Error");
+        return Result_NoneErrorZ.ok()
     }
     
     override func persist_graph(network_graph: NetworkGraph) -> Result_NoneErrorZ {
@@ -343,13 +345,14 @@ class RnLdk: NSObject {
         for it in channel_manager.as_Confirm().get_relevant_txids() {
             if (!first) { json += "," }
             first = false
-            json += "\"" + bytesToHex32Reversed(bytes: it) + "\"" // reversed
+            
+            json += "\"" + bytesToHex32Reversed(bytes: array_to_tuple32(array: it)) + "\"" // reversed
         }
         
         for it in chain_monitor.as_Confirm().get_relevant_txids() {
             if (!first) { json += "," }
             first = false
-            json += "\"" + bytesToHex32Reversed(bytes: it) + "\"" // reversed
+            json += "\"" + bytesToHex32Reversed(bytes: array_to_tuple32(array: it)) + "\"" // reversed
         }
         json += "]"
         resolve(json)
@@ -1130,4 +1133,8 @@ func bytesToHex32Reversed(bytes: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt
     bytesArray.append(bytes.31)
     
     return bytesToHex(bytes: bytesArray.reversed())
+}
+
+private func array_to_tuple32(array: [UInt8]) -> (UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8,UInt8) {
+                return (array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7], array[8], array[9], array[10], array[11], array[12], array[13], array[14], array[15], array[16], array[17], array[18], array[19], array[20], array[21], array[22], array[23], array[24], array[25], array[26], array[27], array[28], array[29], array[30], array[31])
 }
