@@ -69,6 +69,7 @@ interface FundingGenerationReadyMsg {
   output_script: string;
   temporary_channel_id: string;
   user_channel_id: string;
+  counterparty_node_id: string;
 }
 
 type ClosureReason = 'ProcessingError' | 'OutdatedChannelManager' | 'HolderForceClosed' | 'DisconnectedPeer' | 'CounterpartyForceClosed' | 'CooperativeClosure' | 'CommitmentTxConfirmed';
@@ -242,12 +243,17 @@ class RnLdkImplementation {
    */
   async _broadcast(event: BroadcastMsg) {
     this.logToGeneralLog('broadcasting', event);
-    const response = await fetch('https://blockstream.info/api/tx', {
-      method: 'POST',
-      body: event.txhex,
-    });
-
-    return await response.text();
+    try {
+      const response = await fetch('https://blockstream.info/api/tx', {
+        method: 'POST',
+        body: event.txhex,
+      });
+      return await response.text();
+    } catch (e) {
+      console.error(e);
+      // @ts-ignore
+      return e.message;
+    }
   }
 
   private reverseTxid(hex: string): string {
@@ -434,25 +440,26 @@ class RnLdkImplementation {
    * finalize opening a channel.
    *
    * @param txhex
+   * @param counterpartyNodeIdHex
    *
    * @returns boolean Success or not
    */
-  async openChannelStep2(txhex: string) {
+  async openChannelStep2(txhex: string, counterpartyNodeIdHex: string) {
     if (!this.started) throw new Error('LDK not yet started');
-    console.warn('submitting to ldk', { txhex });
-    this.logToGeneralLog('submitting to ldk', { txhex });
-    return RnLdkNative.openChannelStep2(txhex);
+    console.warn('submitting to ldk', { txhex, counterpartyNodeIdHex });
+    this.logToGeneralLog('submitting to ldk', { txhex, counterpartyNodeIdHex });
+    return RnLdkNative.openChannelStep2(txhex, counterpartyNodeIdHex);
   }
 
-  async closeChannelCooperatively(channelIdHex: string) {
+  async closeChannelCooperatively(channelIdHex: string, counterpartyNodeIdHex: string) {
     if (!this.started) throw new Error('LDK not yet started');
-    this.logToGeneralLog(`closing channel cooperatively, channel id: ${channelIdHex}`);
-    return RnLdkNative.closeChannelCooperatively(channelIdHex);
+    this.logToGeneralLog(`closing channel cooperatively, channel id: ${channelIdHex} ${counterpartyNodeIdHex}`);
+    return RnLdkNative.closeChannelCooperatively(channelIdHex, counterpartyNodeIdHex);
   }
 
-  async closeChannelForce(channelIdHex: string) {
+  async closeChannelForce(channelIdHex: string, counterpartyNodeIdHex: string) {
     if (!this.started) throw new Error('LDK not yet started');
-    this.logToGeneralLog(`force-closing channel, channel id: ${channelIdHex}`);
+    this.logToGeneralLog(`force-closing channel, channel id: ${channelIdHex} ${counterpartyNodeIdHex}`);
     return RnLdkNative.closeChannelForce(channelIdHex);
   }
 

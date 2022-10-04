@@ -57,9 +57,11 @@ RCT_EXTERN_METHOD(getNodeId:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRe
 
 
 RCT_EXTERN_METHOD(closeChannelCooperatively:(NSString *)channelIdHex
+                  counterpartyNodeIdHex:(NSString *)counterpartyNodeIdHex
                   resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(closeChannelForce:(NSString *)channelIdHex
+                  counterpartyNodeIdHex:(NSString *)counterpartyNodeIdHex
                   resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(openChannelStep1:(NSString *)pubkey
@@ -71,6 +73,7 @@ RCT_EXTERN_METHOD(setRefundAddressScript:(NSString *)refundAddressScriptHex
                   resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(openChannelStep2:(NSString *)txhex
+                  counterpartyNodeIdHex:(NSString *)counterpartyNodeIdHex
                   resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(payInvoice:(NSString *)bolt11
