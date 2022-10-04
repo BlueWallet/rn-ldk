@@ -243,12 +243,17 @@ class RnLdkImplementation {
    */
   async _broadcast(event: BroadcastMsg) {
     this.logToGeneralLog('broadcasting', event);
-    const response = await fetch('https://blockstream.info/api/tx', {
-      method: 'POST',
-      body: event.txhex,
-    });
-
-    return await response.text();
+    try {
+      const response = await fetch('https://blockstream.info/api/tx', {
+        method: 'POST',
+        body: event.txhex,
+      });
+      return await response.text();
+    } catch (e) {
+      console.error(e);
+      // @ts-ignore
+      return e.message;
+    }
   }
 
   private reverseTxid(hex: string): string {
