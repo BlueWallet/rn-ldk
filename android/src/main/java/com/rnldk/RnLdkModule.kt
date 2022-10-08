@@ -175,7 +175,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         that.sendEvent(MARKER_REGISTER_TX, params);
       }
 
-      override fun register_output(output: WatchedOutput): Option_C2Tuple_usizeTransactionZZ {
+      override fun register_output(output: WatchedOutput) {
         println("ReactNativeLDK: register_output");
         val params = Arguments.createMap()
         val blockHash = output._block_hash;
@@ -185,7 +185,6 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         params.putString("index", output._outpoint._index.toString())
         params.putString("script_pubkey", byteArrayToHex(output._script_pubkey))
         that.sendEvent(MARKER_REGISTER_OUTPUT, params);
-        return Option_C2Tuple_usizeTransactionZZ.none();
       }
     })
 
@@ -571,7 +570,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       }
       val params = Arguments.createMap();
       params.putString("payment_hash", byteArrayToHex(event.payment_hash));
-      params.putString("rejected_by_dest", event.rejected_by_dest.toString());
+      params.putString("payment_failed_permanently", event.payment_failed_permanently.toString());
       this.sendEvent(MARKER_PAYMENT_PATH_FAILED, params);
     }
 
@@ -828,6 +827,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     channelObject += "\"is_usable\":" + it._is_usable + ",";
     channelObject += "\"is_outbound\":" + it._is_outbound + ",";
     channelObject += "\"is_public\":" + it._is_public + ",";
+    channelObject += "\"is_channel_ready\":" + it._is_channel_ready + ",";
     channelObject += "\"remote_node_id\":" + "\"" + byteArrayToHex(it._counterparty._node_id) + "\","; // @deprecated fixme
     val fundingTxoTxid = it._funding_txo?._txid;
     if (fundingTxoTxid is ByteArray) {
@@ -893,8 +893,16 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         println("ReactNativeLDK: ContentiousClaimable = " + it.claimable_amount_satoshis + " " + it.timeout_height);
       }
 
-      if (it is Balance.MaybeClaimableHTLCAwaitingTimeout) {
-        println("ReactNativeLDK: MaybeClaimableHTLCAwaitingTimeout = " + it.claimable_amount_satoshis + " " + it.claimable_height);
+      if (it is Balance.MaybeTimeoutClaimableHTLC) {
+        println("ReactNativeLDK: MaybeTimeoutClaimableHTLC = " + it.claimable_amount_satoshis + " " + it.claimable_height);
+      }
+
+      if (it is Balance.MaybePreimageClaimableHTLC) {
+        println("ReactNativeLDK: MaybePreimageClaimableHTLC = " + it.claimable_amount_satoshis + " " + it.expiry_height);
+      }
+
+      if (it is Balance.CounterpartyRevokedOutputClaimable) {
+        println("ReactNativeLDK: CounterpartyRevokedOutputClaimable = " + it.claimable_amount_satoshis);
       }
     }
 
@@ -926,8 +934,8 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         }
       }
 
-      if (it is Balance.MaybeClaimableHTLCAwaitingTimeout) {
-        println("ReactNativeLDK: MaybeClaimableHTLCAwaitingTimeout = " + it.claimable_amount_satoshis + " " + it.claimable_height);
+      if (it is Balance.MaybeTimeoutClaimableHTLC) {
+        println("ReactNativeLDK: MaybeTimeoutClaimableHTLC = " + it.claimable_amount_satoshis + " " + it.claimable_height);
         maxHeight = when (it.claimable_height > maxHeight) {
           true -> it.claimable_height
           false -> maxHeight
