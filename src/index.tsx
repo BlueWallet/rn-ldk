@@ -462,8 +462,6 @@ class RnLdkImplementation {
    *
    * @param txhex
    * @param counterpartyNodeIdHex
-   *
-   * @returns boolean Success or not
    */
   async openChannelStep2(txhex: string, counterpartyNodeIdHex: string) {
     if (!this.started) throw new Error('LDK not yet started');
@@ -739,12 +737,12 @@ class RnLdkImplementation {
    *
    * @returns string[]
    */
-  async getAllKeys() {
+  async getAllKeys(): Promise<string[]> {
     if (!this.storage) throw new Error('No storage');
     return this.storage.getAllKeys();
   }
 
-  async addInvoice(amtMsat: number, description: string = '') {
+  async addInvoice(amtMsat: number, description: string = ''): Promise<string> {
     if (!this.started) throw new Error('LDK not yet started');
     this.logToGeneralLog(`adding invoice for ${amtMsat} msat, decription=${description}`);
     return RnLdkNative.addInvoice(amtMsat, description);
@@ -800,7 +798,7 @@ class RnLdkImplementation {
     if (!payment_secret) throw new Error('No payment_secret');
 
     for (const channel of usableChannels) {
-      if (parseInt(channel.outbound_capacity_msat, 10) >= parseInt(decoded.millisatoshis, 10)) {
+      if (channel.outbound_capacity_msat >= parseInt(decoded.millisatoshis, 10)) {
         if (channel.remote_node_id === decoded.payeeNodeKey) {
           // we are paying to our direct neighbor
           return RnLdkNative.sendPayment(decoded.payeeNodeKey, payment_hash, payment_secret, channel.short_channel_id, parseInt(decoded.millisatoshis, 10), min_final_cltv_expiry, '');
@@ -901,7 +899,7 @@ class RnLdkImplementation {
     return true;
   }
 
-  getLogs() {
+  getLogs(): LogMsg[] {
     return this.logs;
   }
 
