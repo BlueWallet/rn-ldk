@@ -18,5 +18,4 @@ Pod::Spec.new do |s|
   
 
   s.dependency "React-Core"
-  s.vendored_frameworks = "ios/LightningDevKit.xcframework"
 end
