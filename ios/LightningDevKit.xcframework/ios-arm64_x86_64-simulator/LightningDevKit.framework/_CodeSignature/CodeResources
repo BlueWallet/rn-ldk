@@ -18,19 +18,19 @@
 		</data>
 		<key>Headers/ldk_rust_types.h</key>
 		<data>
-		DdJqlv1turyDNasVeYdzNWdK8YM=
+		BcvUIf+HfiJdUc9KqBGRuM8KCCw=
 		</data>
 		<key>Headers/ldk_ver.h</key>
 		<data>
-		VDtMA5Amt/kJ1UHgW/0OFj0Drb0=
+		DKQCZeY8IMHJq+W7ynkgJTyR0W4=
 		</data>
 		<key>Headers/lightning.h</key>
 		<data>
-		ZBQAyAc/D49YeUjBqE3JqyIMNj4=
+		2Ml7J+NzBRtaKjRGANNsTK1LvA0=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		5y189aeoLe7WAJlGZY1M/isoJ4Y=
+		E/ObzFgXNyc0f5dc7Y0sCmSk0oc=
 		</data>
 		<key>Modules/LightningDevKit.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -38,11 +38,11 @@
 		</data>
 		<key>Modules/LightningDevKit.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		v6t66DDgkdimzf7IpvvM9Giy9yw=
+		+wKuQgV/ZQr9wcTiyP+jV3c8rLM=
 		</data>
 		<key>Modules/LightningDevKit.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		UOfNj6JjDof5k/9ui5hvoxwMv9g=
+		lxgMqwUM87/228Kfs1LRjxnBWGU=
 		</data>
 		<key>Modules/LightningDevKit.swiftmodule/arm64.swiftdoc</key>
 		<data>
@@ -50,11 +50,11 @@
 		</data>
 		<key>Modules/LightningDevKit.swiftmodule/arm64.swiftinterface</key>
 		<data>
-		v6t66DDgkdimzf7IpvvM9Giy9yw=
+		+wKuQgV/ZQr9wcTiyP+jV3c8rLM=
 		</data>
 		<key>Modules/LightningDevKit.swiftmodule/arm64.swiftmodule</key>
 		<data>
-		UOfNj6JjDof5k/9ui5hvoxwMv9g=
+		lxgMqwUM87/228Kfs1LRjxnBWGU=
 		</data>
 		<key>Modules/LightningDevKit.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -62,11 +62,11 @@
 		</data>
 		<key>Modules/LightningDevKit.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		cNt2cTkyZCu37jh8tVR8AzAtdZU=
+		9VA2L9q831TDxlMxulJIEmqwQpg=
 		</data>
 		<key>Modules/LightningDevKit.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		FxMTTaEQnoHAdZ1FbVy9WLsQZAk=
+		HdVRAOBDqpTez37dAgkBaICkI+E=
 		</data>
 		<key>Modules/LightningDevKit.swiftmodule/x86_64.swiftdoc</key>
 		<data>
@@ -74,11 +74,11 @@
 		</data>
 		<key>Modules/LightningDevKit.swiftmodule/x86_64.swiftinterface</key>
 		<data>
-		cNt2cTkyZCu37jh8tVR8AzAtdZU=
+		9VA2L9q831TDxlMxulJIEmqwQpg=
 		</data>
 		<key>Modules/LightningDevKit.swiftmodule/x86_64.swiftmodule</key>
 		<data>
-		FxMTTaEQnoHAdZ1FbVy9WLsQZAk=
+		HdVRAOBDqpTez37dAgkBaICkI+E=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -112,21 +112,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			1ohc/at68l4DpZdz+I+qRP3g/iccDRW/Tuis1HH4J+k=
+			mIXi61LP94/ZtNDdEwVFi6dUG1lro/FObzNsUyV0eSQ=
 			</data>
 		</dict>
 		<key>Headers/ldk_ver.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			+xArDSjD8/9y7MRscOHSmhmMnWaZCVAvq4ONiqZ2w68=
+			9ODm3f6/qzpi/OHsWwfhFUMW2q0b+MiOdlGkurqRceA=
 			</data>
 		</dict>
 		<key>Headers/lightning.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			7upflvcaaRFVMatTdzoC4ggQW4iGl7wlEaQkFbhFI58=
+			dRBZn/resFva7YZb/QDFBCun6p5vlRRcVx2tkV+IHYo=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
@@ -140,14 +140,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			3bQZszL6sZ27IziIOOWmp0zrJHfDRWmKPZh3KFzlPMw=
+			G5a740nc8r0S6PJn0tPzhMiMyHPdBnET2YTBS3llWNg=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Qaj0ArKT/074D/lUlZPnvx7i5fou6ehP/a4J/l/O1DM=
+			jHNLkUQOmrV25psvRBHTAdMVXuxs9M1ru3v/JvXYPxM=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/arm64.swiftdoc</key>
@@ -161,14 +161,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			3bQZszL6sZ27IziIOOWmp0zrJHfDRWmKPZh3KFzlPMw=
+			G5a740nc8r0S6PJn0tPzhMiMyHPdBnET2YTBS3llWNg=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/arm64.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Qaj0ArKT/074D/lUlZPnvx7i5fou6ehP/a4J/l/O1DM=
+			jHNLkUQOmrV25psvRBHTAdMVXuxs9M1ru3v/JvXYPxM=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
@@ -182,14 +182,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			UqMw4ZcB5Vi766FBw3DEhO2zuabWMXQ010rU8+6Vrjk=
+			obh4jqem33KjlXnQdN2+b5k8iu86CH0SKUsiaHac8Iw=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			u7uY01j6hnoWbHDALYoPxLXlUsi7OWK66swokYchUXU=
+			4NZz+3ZD7ScIxlIKkyNCE757FzueEmRNAM5A1JYbDK0=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/x86_64.swiftdoc</key>
@@ -203,14 +203,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			UqMw4ZcB5Vi766FBw3DEhO2zuabWMXQ010rU8+6Vrjk=
+			obh4jqem33KjlXnQdN2+b5k8iu86CH0SKUsiaHac8Iw=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/x86_64.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			u7uY01j6hnoWbHDALYoPxLXlUsi7OWK66swokYchUXU=
+			4NZz+3ZD7ScIxlIKkyNCE757FzueEmRNAM5A1JYbDK0=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
