@@ -81,7 +81,7 @@ interface ChannelClosedMsg {
   text?: string;
 }
 
-interface ChannelDetails {
+export interface ChannelDetails {
   channel_id: string;
   channel_value_satoshis: number;
   inbound_capacity_msat: number;
