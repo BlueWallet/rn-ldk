@@ -12,7 +12,7 @@ Some of the features include:
 * Encrypted channel backups are stored in cloud. Mnemonic backup phrase is all you need to restore your lightning wallet and all channels on another device and start using it in seconds! Use same channels on several devices, if you wish
 * Synced to blockchain via Electrum, sync takes seconds, even on low-bandwidth connections
 * Routing is provided via API, no graph sync (optional)
-* Create a channel with any node on the Lightning network, no limitations (to keep the netwok decentralized)
+* Create a channel with any node on the Lightning network, no limitations (to keep the network decentralized)
 
 ### Technicalities
 
