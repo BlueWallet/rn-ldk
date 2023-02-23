@@ -6,6 +6,7 @@ import org.json.JSONArray
 import org.ldk.batteries.ChannelManagerConstructor
 import org.ldk.batteries.ChannelManagerConstructor.EventHandler
 import org.ldk.batteries.NioPeerHandler
+import org.ldk.enums.ChannelMonitorUpdateStatus
 import org.ldk.enums.ConfirmationTarget
 import org.ldk.enums.Currency
 import org.ldk.enums.Network
@@ -15,6 +16,7 @@ import org.ldk.structs.Filter.FilterInterface
 import org.ldk.structs.Persist
 import org.ldk.structs.Persist.PersistInterface
 import org.ldk.structs.Result_NoneAPIErrorZ.Result_NoneAPIErrorZ_OK
+import org.ldk.util.UInt128
 import java.io.File
 import java.io.IOException
 import java.net.InetSocketAddress
@@ -50,6 +52,7 @@ var keys_manager: KeysManager? = null;
 var channel_manager_constructor: ChannelManagerConstructor? = null;
 var router: NetworkGraph? = null; // optional, used only in graph sync; if null - no sync
 var scorer: MultiThreadedLockableScore? = null; // optional, used only in graph sync; if null - no sync
+var logger: Logger? = null;
 
 var networkGraphPath = "";
 var scorerPath = "";
@@ -87,7 +90,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     // INITIALIZE THE LOGGER #######################################################################
     // What it's used for: LDK logging
-    val logger = Logger.new_impl { arg: Record ->
+    logger = Logger.new_impl { arg: Record ->
       if (arg._level == org.ldk.enums.Level.LDKLevel_Gossip) return@new_impl;
       println("ReactNativeLDK: " + arg._args)
       if (arg._level == org.ldk.enums.Level.LDKLevel_Trace) return@new_impl;
@@ -109,24 +112,24 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     // INITIALIZE PERSIST ##########################################################################
     // What it's used for: persisting crucial channel data in a timely manner
     val persister = Persist.new_impl(object : PersistInterface {
-      override fun persist_new_channel(id: OutPoint, data: ChannelMonitor, update_id: MonitorUpdateId): Result_NoneChannelMonitorUpdateErrZ {
+      override fun persist_new_channel(id: OutPoint, data: ChannelMonitor, update_id: MonitorUpdateId): ChannelMonitorUpdateStatus {
         val channel_monitor_bytes = data.write()
         println("ReactNativeLDK: persist_new_channel")
         val params = Arguments.createMap()
         params.putString("id", byteArrayToHex(id.write()))
         params.putString("data", byteArrayToHex(channel_monitor_bytes))
         that.sendEvent(MARKER_PERSIST, params);
-        return Result_NoneChannelMonitorUpdateErrZ.ok();
+        return ChannelMonitorUpdateStatus.LDKChannelMonitorUpdateStatus_Completed;
       }
 
-      override fun update_persisted_channel(id: OutPoint, update: ChannelMonitorUpdate?, data: ChannelMonitor, update_id: MonitorUpdateId): Result_NoneChannelMonitorUpdateErrZ {
+      override fun update_persisted_channel(id: OutPoint, update: ChannelMonitorUpdate?, data: ChannelMonitor, update_id: MonitorUpdateId): ChannelMonitorUpdateStatus {
         val channel_monitor_bytes = data.write()
         println("ReactNativeLDK: update_persisted_channel");
         val params = Arguments.createMap()
         params.putString("id", byteArrayToHex(id.write()))
         params.putString("data", byteArrayToHex(channel_monitor_bytes))
         that.sendEvent(MARKER_PERSIST, params);
-        return Result_NoneChannelMonitorUpdateErrZ.ok();
+        return ChannelMonitorUpdateStatus.LDKChannelMonitorUpdateStatus_Completed;
       }
     })
 
@@ -366,12 +369,12 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     channel_manager?.as_Confirm()?._relevant_txids?.iterator()?.forEach {
       if (!first) json += ",";
       first = false;
-      json += "\"" + byteArrayToHex(it.reversedArray()) + "\"";
+      json += "\"" + byteArrayToHex(it._a.reversedArray()) + "\"";
     }
     chain_monitor?.as_Confirm()?._relevant_txids?.iterator()?.forEach {
       if (!first) json += ",";
       first = false;
-      json += "\"" + byteArrayToHex(it.reversedArray()) + "\"";
+      json += "\"" + byteArrayToHex(it._a.reversedArray()) + "\"";
     }
     json += "]";
     promise.resolve(json);
@@ -421,9 +424,9 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     var path = arrayOf(
       RouteHop.of(
         hexStringToByteArray(destPubkeyHex),
-        NodeFeatures.known(),
+        NodeFeatures.empty(),
         shortChannelId.toLong(),
-        ChannelFeatures.known(),
+        ChannelFeatures.empty(),
         paymentValueMsat.toLong(),
         finalCltvValue
       )
@@ -439,9 +442,9 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
         path = path.plusElement(
           RouteHop.of(
             hexStringToByteArray(hopJson.getString("pubkey")),
-            NodeFeatures.known(),
+            NodeFeatures.empty(),
             hopJson.getString("short_channel_id").toLong(),
-            ChannelFeatures.known(),
+            ChannelFeatures.empty(),
             hopJson.getString("fee_msat").toLong(),
             hopJson.getString("cltv_expiry_delta").toInt()
           )
@@ -460,8 +463,8 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     val payment_hash = hexStringToByteArray(paymentHashHex);
     val payment_secret = hexStringToByteArray(paymentSecretHex);
-    val payment_res = channel_manager?.send_payment(route, payment_hash, payment_secret);
-    if (payment_res is Result_PaymentIdPaymentSendFailureZ.Result_PaymentIdPaymentSendFailureZ_OK) {
+    val payment_res = channel_manager?.send_payment(route, payment_hash, payment_secret, payment_hash);
+    if (payment_res is Result_NonePaymentSendFailureZ.Result_NonePaymentSendFailureZ_OK) {
       promise.resolve(true);
     } else {
       promise.reject("sendPayment failed");
@@ -503,6 +506,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     val invoice = UtilMethods.create_invoice_from_channelmanager(
       channel_manager,
       keys_manager?.as_KeysInterface(),
+      logger,
       Currency.LDKCurrency_Bitcoin,
       amountStruct,
       description,
@@ -582,8 +586,8 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       this.sendEvent(MARKER_PAYMENT_FAILED, params);
     }
 
-    if (event is Event.PaymentReceived) {
-      println("ReactNativeLDK: " + "payment received, payment_hash: " + byteArrayToHex(event.payment_hash));
+    if (event is Event.PaymentClaimable) {
+      println("ReactNativeLDK: " + "payment claimable, payment_hash: " + byteArrayToHex(event.payment_hash));
       var paymentPreimage: ByteArray? = null;
 
       if (event.purpose is PaymentPurpose.InvoicePayment) {
@@ -620,6 +624,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     }
 
     if (event is Event.PaymentClaimed) {
+      println("ReactNativeLDK: " + "payment claimed, payment_hash: " + byteArrayToHex(event.payment_hash));
       var paymentPreimage: ByteArray? = null;
       var paymentSecret: ByteArray? = null;
 
@@ -716,7 +721,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     temporary_channel_id = null;
     val peer_node_pubkey = hexStringToByteArray(pubkey);
     val create_channel_result = channel_manager?.create_channel(
-      peer_node_pubkey, channelValue.toLong(), 0, 42, null
+      peer_node_pubkey, channelValue.toLong(), 0, UInt128(42), null
     );
 
     if (create_channel_result !is Result__u832APIErrorZ.Result__u832APIErrorZ_OK) {
