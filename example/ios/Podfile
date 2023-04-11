@@ -6,7 +6,7 @@ platform :ios, '13.0'
 target 'RnLdkExample' do
   config = use_native_modules!
 
-  use_react_native!(:path => config["reactNativePath"])
+  use_react_native!(:path => config[:reactNativePath])
 
   pod 'rn-ldk', :path => '../..'
   use_react_native!(

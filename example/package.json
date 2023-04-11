@@ -11,13 +11,13 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.16.1",
     "crypto-js": "^3.1.9-1",
-    "react": "17.0.2",
-    "react-native": "0.67.5",
+    "react": "18.2.0",
+    "react-native": "0.71.6",
     "react-native-fs": "^2.19.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/runtime": "^7.12.5",
+    "@babel/core": "7.21.0",
+    "@babel/runtime": "7.21.0",
     "babel-plugin-module-resolver": "^4.0.0",
     "metro-react-native-babel-preset": "^0.64.0"
   }
