@@ -40,13 +40,13 @@ interface PaymentSentMsg {
 
 const MARKER_PAYMENT_FAILED = 'payment_failed';
 interface PaymentFailedMsg {
-  rejected_by_dest: boolean;
+  payment_failed_permanently: boolean;
   payment_hash: string;
 }
 
 const MARKER_PAYMENT_PATH_FAILED = 'payment_path_failed';
 interface PaymentPathFailedMsg {
-  rejected_by_dest: boolean;
+  payment_failed_permanently: boolean;
   payment_hash: string;
 }
 
@@ -79,6 +79,27 @@ interface ChannelClosedMsg {
   channel_id: string;
   user_channel_id: number;
   text?: string;
+}
+
+export interface ChannelDetails {
+  channel_id: string;
+  channel_value_satoshis: number;
+  inbound_capacity_msat: number;
+  outbound_capacity_msat: number;
+  short_channel_id: string;
+  is_usable: boolean;
+  is_outbound: boolean;
+  is_public: boolean;
+  is_channel_ready: boolean;
+  remote_node_id: string;
+  funding_txo_txid?: string;
+  funding_txo_index?: number;
+  counterparty_unspendable_punishment_reserve: number;
+  counterparty_node_id: string;
+  unspendable_punishment_reserve: number;
+  confirmations_required: number;
+  force_close_spend_delay: number;
+  user_id: number;
 }
 
 class RnLdkImplementation {
@@ -441,8 +462,6 @@ class RnLdkImplementation {
    *
    * @param txhex
    * @param counterpartyNodeIdHex
-   *
-   * @returns boolean Success or not
    */
   async openChannelStep2(txhex: string, counterpartyNodeIdHex: string) {
     if (!this.started) throw new Error('LDK not yet started');
@@ -475,7 +494,7 @@ class RnLdkImplementation {
   /**
    * @returns Array<{}>
    */
-  async listUsableChannels() {
+  async listUsableChannels(): Promise<ChannelDetails[]> {
     if (!this.started) throw new Error('LDK not yet started');
     this.logToGeneralLog('listing usable channels');
     const str = await RnLdkNative.listUsableChannels();
@@ -485,18 +504,18 @@ class RnLdkImplementation {
   /**
    * @returns Array<{}>
    */
-  async listChannels() {
+  async listChannels(): Promise<ChannelDetails[]> {
     if (!this.started) throw new Error('LDK not yet started');
     this.logToGeneralLog('listing channels');
     const str = await RnLdkNative.listChannels();
     return JSON.parse(str);
   }
 
-  async getMaturingBalance() {
+  async getMaturingBalance(): Promise<number> {
     return RnLdkNative.getMaturingBalance();
   }
 
-  async getMaturingHeight() {
+  async getMaturingHeight(): Promise<number> {
     return RnLdkNative.getMaturingHeight();
   }
 
@@ -718,12 +737,12 @@ class RnLdkImplementation {
    *
    * @returns string[]
    */
-  async getAllKeys() {
+  async getAllKeys(): Promise<string[]> {
     if (!this.storage) throw new Error('No storage');
     return this.storage.getAllKeys();
   }
 
-  async addInvoice(amtMsat: number, description: string = '') {
+  async addInvoice(amtMsat: number, description: string = ''): Promise<string> {
     if (!this.started) throw new Error('LDK not yet started');
     this.logToGeneralLog(`adding invoice for ${amtMsat} msat, decription=${description}`);
     return RnLdkNative.addInvoice(amtMsat, description);
@@ -779,7 +798,7 @@ class RnLdkImplementation {
     if (!payment_secret) throw new Error('No payment_secret');
 
     for (const channel of usableChannels) {
-      if (parseInt(channel.outbound_capacity_msat, 10) >= parseInt(decoded.millisatoshis, 10)) {
+      if (channel.outbound_capacity_msat >= parseInt(decoded.millisatoshis, 10)) {
         if (channel.remote_node_id === decoded.payeeNodeKey) {
           // we are paying to our direct neighbor
           return RnLdkNative.sendPayment(decoded.payeeNodeKey, payment_hash, payment_secret, channel.short_channel_id, parseInt(decoded.millisatoshis, 10), min_final_cltv_expiry, '');
@@ -880,7 +899,7 @@ class RnLdkImplementation {
     return true;
   }
 
-  getLogs() {
+  getLogs(): LogMsg[] {
     return this.logs;
   }
 
