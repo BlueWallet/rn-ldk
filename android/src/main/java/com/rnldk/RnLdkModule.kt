@@ -236,12 +236,12 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
           }
           // error, creating from scratch
           println("ReactNativeLDK: network graph error, creating from scratch")
-          router = NetworkGraph.of(hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversedArray(), logger)
+          router = NetworkGraph.of(Network.LDKNetwork_Bitcoin, logger)
         }
       } else {
         // first run, creating from scratch
         println("ReactNativeLDK: network graph first run, creating from scratch")
-        router = NetworkGraph.of(hexStringToByteArray("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f").reversedArray(), logger)
+        router = NetworkGraph.of(Network.LDKNetwork_Bitcoin, logger)
       }
 
 
@@ -293,17 +293,20 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
           hexStringToByteArray(serializedChannelManagerHex),
           channelMonitors,
           uc,
-          keys_manager?.as_KeysInterface(),
+          keys_manager,
           fee_estimator,
           chain_monitor,
           tx_filter,
           router!!.write(),
+          org.ldk.structs.ProbabilisticScoringParameters.with_default(),
+          scorer?.write(),
+          null,
           tx_broadcaster,
           logger
         );
         channel_manager = channel_manager_constructor!!.channel_manager;
         router = channel_manager_constructor!!.net_graph;
-        channel_manager_constructor!!.chain_sync_completed(channel_manager_persister, scorer);
+        channel_manager_constructor!!.chain_sync_completed(channel_manager_persister, scorer !== null);
         peer_manager = channel_manager_constructor!!.peer_manager;
         nio_peer_handler = channel_manager_constructor!!.nio_peer_handler;
       } else {
@@ -313,16 +316,18 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
           uc,
           hexStringToByteArray(blockchainTipHashHex),
           blockchainTipHeight,
-          keys_manager?.as_KeysInterface(),
+          keys_manager,
           fee_estimator,
           chain_monitor,
           router,
+          org.ldk.structs.ProbabilisticScoringParameters.with_default(),
+          null,
           tx_broadcaster,
           logger
         );
         channel_manager = channel_manager_constructor!!.channel_manager;
         router = channel_manager_constructor!!.net_graph;
-        channel_manager_constructor!!.chain_sync_completed(channel_manager_persister, scorer);
+        channel_manager_constructor!!.chain_sync_completed(channel_manager_persister, scorer !== null);
         peer_manager = channel_manager_constructor!!.peer_manager;
         nio_peer_handler = channel_manager_constructor!!.nio_peer_handler;
       }
@@ -402,7 +407,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
   fun disconnectByNodeId(pubkeyHex: String, promise: Promise) {
     println("ReactNativeLDK: disconnecting peer " + pubkeyHex);
     try {
-      peer_manager?.disconnect_by_node_id(hexStringToByteArray(pubkeyHex), false);
+      peer_manager?.disconnect_by_node_id(hexStringToByteArray(pubkeyHex));
       promise.resolve(true);
     } catch (e: IOException) {
       promise.reject("disconnect_by_node_id exception: " + e.message);
@@ -453,7 +458,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     }
 
 
-    val payee = PaymentParameters.from_node_id(hexStringToByteArray(destPubkeyHex));
+    val payee = PaymentParameters.from_node_id(hexStringToByteArray(destPubkeyHex), finalCltvValue);
     val route = Route.of(
       arrayOf(
         path
@@ -473,8 +478,6 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
   @ReactMethod
   fun payInvoice(bolt11: String, amtSat: Int, promise: Promise) {
-    if (channel_manager_constructor?.payer == null) return promise.reject("payer is null, probably trying to pay invoice without having graph sync enabled");
-
     println("paying $bolt11 for $amtSat sat");
 
     val parsedInvoice = Invoice.from_str(bolt11)
@@ -484,9 +487,9 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
     }
 
     val sendRes = if (amtSat != 0) {
-      channel_manager_constructor!!.payer!!.pay_zero_value_invoice(parsedInvoice.res, amtSat.toLong() * 1000)
+      UtilMethods.pay_zero_value_invoice(parsedInvoice.res, amtSat.toLong() * 1000, Retry.timeout(6), channel_manager)
     } else {
-      channel_manager_constructor!!.payer!!.pay_invoice(parsedInvoice.res)
+      UtilMethods.pay_invoice(parsedInvoice.res, org.ldk.structs.Retry.timeout(6), channel_manager);
     }
 
     if (sendRes !is Result_PaymentIdPaymentErrorZ.Result_PaymentIdPaymentErrorZ_OK) {
@@ -505,12 +508,13 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     val invoice = UtilMethods.create_invoice_from_channelmanager(
       channel_manager,
-      keys_manager?.as_KeysInterface(),
+      keys_manager?.as_NodeSigner(),
       logger,
       Currency.LDKCurrency_Bitcoin,
       amountStruct,
       description,
-      24 * 3600
+      24 * 3600,
+      org.ldk.structs.Option_u16Z.none()
     );
 
     if (invoice is Result_InvoiceSignOrCreationErrorZ.Result_InvoiceSignOrCreationErrorZ_OK) {
@@ -527,7 +531,13 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
       promise.reject("no peer manager inited");
       return;
     }
-    val peer_node_ids: Array<ByteArray> = peer_manager!!.get_peer_node_ids()
+
+    var tempByteArr : Array<ByteArray> = emptyArray();
+    peer_manager!!.get_peer_node_ids().iterator().forEach {
+      tempByteArr = tempByteArr.plus(it.get_a());
+    }
+
+    val peer_node_ids: Array<ByteArray> = tempByteArr
     var json: String = "[";
     var first = true;
     peer_node_ids.iterator().forEach {
@@ -566,7 +576,7 @@ class RnLdkModule(private val reactContext: ReactApplicationContext) : ReactCont
 
     if (event is Event.PaymentPathFailed) {
       println("ReactNativeLDK: " + "payment path failed, payment_hash: " + byteArrayToHex(event.payment_hash));
-      if (channel_manager_constructor?.payer == null) {
+      if (router === null) {
         println("ReactNativeLDK: " + "abandoning payment");
         // since we aparently dont sync graph, payment was probably initiated via trying to pay a specific route - and that route failed!
         // so no reason to wait for a timeout, we abandon payment immediately
