@@ -6,7 +6,7 @@
 	<dict>
 		<key>Resources/Info.plist</key>
 		<data>
-		NxzDPlxEc6MmaK2IoYOheuXNJU4=
+		u5vlTasgk30uWol0Mu/xKD9n32I=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -36,105 +36,105 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			1ohc/at68l4DpZdz+I+qRP3g/iccDRW/Tuis1HH4J+k=
+			5JIef1C/aH8I3ElK7tNjiyx9aPOggdASNQ9vc4NuJA8=
 			</data>
 		</dict>
 		<key>Headers/ldk_ver.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			+xArDSjD8/9y7MRscOHSmhmMnWaZCVAvq4ONiqZ2w68=
+			NpesGpwRvUnhkXmoPcFII9reYLOBL7eTdYVGH4ElVG8=
 			</data>
 		</dict>
 		<key>Headers/lightning.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			7upflvcaaRFVMatTdzoC4ggQW4iGl7wlEaQkFbhFI58=
+			yDlZN9O3rMPOPwDIq/O6aNgdEd1HLwPDKqjR2hMOUPE=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/arm64-apple-macos.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			0CghYts/M2zhZktvRj2XDJMwkOuCC21TmyZxopPca+g=
+			PGPdAPnu/lYdnHAzFJ6SXslav0xGLL3sDnnrgoRFkPg=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/arm64-apple-macos.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			nv1ogFh/SPxunCs7CLY7h8mWUSg4eEYH30QvDDfxed0=
+			GYJkzUExwhf9ZPbhLIlBReDEKmtOgyZ4KOmG9903rH0=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/arm64-apple-macos.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			zv1Tg+NcM3zqVxE538z1BdxEmMKDz2S8yXR04Ka2jpM=
+			eiyrHgiDS/Xn388SWkSjWAjWF1RhWL5h7EsbmlYbj+M=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/arm64.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			0CghYts/M2zhZktvRj2XDJMwkOuCC21TmyZxopPca+g=
+			PGPdAPnu/lYdnHAzFJ6SXslav0xGLL3sDnnrgoRFkPg=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/arm64.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			nv1ogFh/SPxunCs7CLY7h8mWUSg4eEYH30QvDDfxed0=
+			GYJkzUExwhf9ZPbhLIlBReDEKmtOgyZ4KOmG9903rH0=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/arm64.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			zv1Tg+NcM3zqVxE538z1BdxEmMKDz2S8yXR04Ka2jpM=
+			eiyrHgiDS/Xn388SWkSjWAjWF1RhWL5h7EsbmlYbj+M=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/x86_64-apple-macos.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			VwDy+8iFtc/uzMYNhOBo2WsEQCSp1d7hPRDC1wtziOM=
+			50fxs0Y4irmnextxDzP5aI6h0vJRWrSZUhc5+MqHsHk=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/x86_64-apple-macos.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			C3bLvYayOrOplJIC7JmdiCa/o6KxSfAw3Edurk1KTlA=
+			WznLrc5X4ZixL1ht84vvSnpAYywkQWLxniJiAHSCqJQ=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/x86_64-apple-macos.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			IeKJJ2bRHxUW1h837DgcS+Tok9OepSJNRRSINl6D72Q=
+			YUqrx9QqsZpRBcSAFSDx4ddfIpFALZwZQHC0i7rTZjg=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/x86_64.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			VwDy+8iFtc/uzMYNhOBo2WsEQCSp1d7hPRDC1wtziOM=
+			50fxs0Y4irmnextxDzP5aI6h0vJRWrSZUhc5+MqHsHk=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/x86_64.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			C3bLvYayOrOplJIC7JmdiCa/o6KxSfAw3Edurk1KTlA=
+			WznLrc5X4ZixL1ht84vvSnpAYywkQWLxniJiAHSCqJQ=
 			</data>
 		</dict>
 		<key>Modules/LightningDevKit.swiftmodule/x86_64.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			IeKJJ2bRHxUW1h837DgcS+Tok9OepSJNRRSINl6D72Q=
+			YUqrx9QqsZpRBcSAFSDx4ddfIpFALZwZQHC0i7rTZjg=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -148,7 +148,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			KnINQ0fOPB3LRJjbhVqWtI9qHQLomSN9UdNlk1fHgQg=
+			1KOp+eyXp/gHxvh8Q/OvIQnC08iTkDr9hjUjVcdU2uc=
 			</data>
 		</dict>
 	</dict>
