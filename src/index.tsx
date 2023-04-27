@@ -1,4 +1,5 @@
 import { NativeEventEmitter, NativeModules, Alert } from 'react-native';
+import * as bitcoin from 'bitcoinjs-lib';
 import utils from './util';
 const { RnLdk: RnLdkNative } = NativeModules;
 const pckg = require('../package.json');
@@ -269,9 +270,7 @@ class RnLdkImplementation {
     if (this.injectedScript2address) {
       return await this.injectedScript2address(scriptHex);
     }
-
-    const response = await fetch('https://runkit.io/overtorment/output-script-to-address/branches/master/' + scriptHex);
-    return response.text();
+    return bitcoin.address.fromOutputScript(Buffer.from(scriptHex, 'hex'));
   }
 
   /**
