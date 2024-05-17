@@ -747,6 +747,7 @@ class RnLdk: NSObject {
         channelObject += "\"is_usable\":" + (it.get_is_usable() ? "true" : "false") + ","
         channelObject += "\"is_outbound\":" + (it.get_is_outbound() ? "true" : "false") + ","
         channelObject += "\"is_public\":" + (it.get_is_public() ? "true" : "false") + ","
+        channelObject += "\"is_channel_ready\":" + (it.get_is_channel_ready() ? "true" : "false") + ","
         channelObject += "\"remote_node_id\":" + "\"" + bytesToHex(bytes: it.get_counterparty().get_node_id()) + "\"," // @deprecated fixme
 
         // fixme:
